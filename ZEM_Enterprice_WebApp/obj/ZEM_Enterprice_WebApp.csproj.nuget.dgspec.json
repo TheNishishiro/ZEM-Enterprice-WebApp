@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj": {}
+    "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp_Release\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj": {}
   },
   "projects": {
-    "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj": {
+    "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp_Release\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj",
+        "projectUniqueName": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp_Release\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj",
         "projectName": "ZEM_Enterprice_WebApp",
-        "projectPath": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj",
+        "projectPath": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp_Release\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp.csproj",
         "packagesPath": "C:\\Users\\nishi\\.nuget\\packages\\",
-        "outputPath": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp\\ZEM_Enterprice_WebApp\\obj\\",
+        "outputPath": "D:\\Programming\\C_sharp\\ZEM_Enterprice_WebApp_Release\\ZEM_Enterprice_WebApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nishi\\AppData\\Roaming\\NuGet\\NuGet.Config",

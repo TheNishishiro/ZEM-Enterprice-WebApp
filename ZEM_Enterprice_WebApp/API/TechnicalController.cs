@@ -25,12 +25,21 @@ namespace ZEM_Enterprice_WebApp.API
             _db = db;
         }
 
+        /// <summary>
+        /// Returns all records for technical department table
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Technical>>> GetTech()
         {
             return await _db.Technical.ToListAsync();
         }
 
+        /// <summary>
+        /// Returns BIN for given cut-code
+        /// </summary>
+        /// <param name="przewod">Cable cut-code</param>
+        /// <returns></returns>
         [HttpGet("{przewod}")]
         public async Task<ActionResult<PacketToSend>> GetTech(string przewod)
         {
@@ -52,6 +61,25 @@ namespace ZEM_Enterprice_WebApp.API
             return pts;
         }
 
+
+        /// <summary>
+        /// Manages scanning for web application
+        /// </summary>
+        /// <param name="kodWiazkiTextbox">Cable cut-code</param>
+        /// <param name="forcedQuantity">Amount manualy inserted by user scanning</param>
+        /// <param name="isLookingBack">Flag to control lookback for scans</param>
+        /// <param name="dostDay">Day of delivery</param>
+        /// <param name="dostMonth">Month of delivery</param>
+        /// <param name="dostYear">Year of delivery</param>
+        /// <param name="dokDostawy">Delivery document number</param>
+        /// <param name="isForcedQuantity"></param>
+        /// <param name="isForcedOverLimit"></param>
+        /// <param name="isForcedBackAck"></param>
+        /// <param name="isForcedBack"></param>
+        /// <param name="isForcedInsert"></param>
+        /// <param name="isForcedUndeclared"></param>
+        /// <param name="User"></param>
+        /// <returns></returns>
         [HttpGet("{kodWiazkiTextbox},{forcedQuantity},{isLookingBack},{dostYear}-{dostMonth}-{dostDay},{dokDostawy}," +
             "{isForcedQuantity},{isForcedOverLimit}," +
             "{isForcedBackAck},{isForcedBack},{isForcedInsert},{isForcedUndeclared}," +
@@ -142,7 +170,7 @@ namespace ZEM_Enterprice_WebApp.API
                 sc.isFullSet = VTFuncs.CheckIfFullSetOfSupply(sc);
                 sc.sztukiDeklarowane = dostawaEntry.Ilosc;
                 sc.Declared = true;
-                // Dostawa nie zawiera dosłanych
+                // Delivery doesn't contain any extras
                 if (sc.isFullSet)
                 {
                     // if codes to complete set are missing check back
@@ -157,7 +185,7 @@ namespace ZEM_Enterprice_WebApp.API
                             return response;
                     }
                 }
-                else // Dostawa zawiera dosłane
+                else // Delivery does contain extras
                 {
                     if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
                     {

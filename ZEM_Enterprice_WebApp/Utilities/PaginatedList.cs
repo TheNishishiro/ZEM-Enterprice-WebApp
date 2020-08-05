@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ZEM_Enterprice_WebApp.Utilities
 {
+    /// <summary>
+    /// Create a paged result from database query 
+    /// </summary>
+    /// <typeparam name="T">Type of table to create page for</typeparam>
     public class PaginatedList<T> : List<T>
     {
         public int PageIndex { get; private set; }
@@ -35,6 +39,13 @@ namespace ZEM_Enterprice_WebApp.Utilities
             }
         }
 
+        /// <summary>
+        /// Create page for paginated view
+        /// </summary>
+        /// <param name="source">Query to base page off of</param>
+        /// <param name="pageIndex">Page to show off</param>
+        /// <param name="pageSize">Amount of records per page</param>
+        /// <returns></returns>
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var count = await source.CountAsync();

@@ -29,8 +29,14 @@ namespace ZEM_Enterprice_WebApp.API
             _logger = logger;
         }
 
+        /// <summary>
+        /// Returns loging in status for given credentials 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         [HttpGet("{username},{password}")]
-        public async Task<ActionResult<bool>> GetTech(string username, string password)
+        public async Task<ActionResult<bool>> GetUserAuth(string username, string password)
         {
             var user = await _userManager.FindByNameAsync(username);
 

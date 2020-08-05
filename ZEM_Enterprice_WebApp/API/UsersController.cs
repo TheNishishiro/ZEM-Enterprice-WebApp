@@ -26,6 +26,16 @@ namespace ZEM_Enterprice_WebApp.API
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Returns scans conducted by each worker
+        /// </summary>
+        /// <param name="day1"></param>
+        /// <param name="month1"></param>
+        /// <param name="year1"></param>
+        /// <param name="day2"></param>
+        /// <param name="month2"></param>
+        /// <param name="year2"></param>
+        /// <returns></returns>
         [HttpGet("{day1},{month1},{year1},{day2},{month2},{year2}")]
         public async Task<ActionResult<IEnumerable<UserData>>> GetUserPerformence(int day1, int month1, int year1, int day2, int month2, int year2)
         {
@@ -63,6 +73,16 @@ namespace ZEM_Enterprice_WebApp.API
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Returns scans conducted by each worker per day
+        /// </summary>
+        /// <param name="day1"></param>
+        /// <param name="month1"></param>
+        /// <param name="year1"></param>
+        /// <param name="day2"></param>
+        /// <param name="month2"></param>
+        /// <param name="year2"></param>
+        /// <returns></returns>
         [HttpGet("{day1},{month1},{year1},{day2},{month2},{year2}")]
         public async Task<ActionResult<IEnumerable<UserTimeSeries>>> GetUserPerformence(int day1, int month1, int year1, int day2, int month2, int year2)
         {

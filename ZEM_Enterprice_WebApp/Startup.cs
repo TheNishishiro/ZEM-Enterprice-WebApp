@@ -24,8 +24,6 @@ using Serilog;
 using Serilog.Core;
 using Microsoft.Extensions.Logging;
 
-//todo Soft remove VT records instead of hard remove
-
 namespace ZEM_Enterprice_WebApp
 {
     public class Startup

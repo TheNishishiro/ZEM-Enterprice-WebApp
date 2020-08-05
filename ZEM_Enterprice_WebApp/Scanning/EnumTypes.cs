@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 
 namespace ZEM_Enterprice_WebApp.Scanning
 {
+    /// <summary>
+    /// Header type to control whether scan have been completed successfully 
+    /// </summary>
     public enum HeaderTypes
     {
         basic = 0,
         error = 1
     };
 
+    /// <summary>
+    /// Types of errors and notifications scanning might return
+    /// </summary>
     public enum FlagType
     {
         basic = -1,

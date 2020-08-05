@@ -17,6 +17,11 @@ namespace ZEM_Enterprice_WebApp.Scanning
             _db = db;
         }
 
+        /// <summary>
+        /// Update relation between Dostawa and VTMagazyn when adding to already existing scan
+        /// </summary>
+        /// <param name="dostawaEntry"></param>
+        /// <param name="vt">Scan to update</param>
         public void UpdateVT(Dostawa dostawaEntry, VTMagazyn vt)
         {
             VtToDostawa vttd = new VtToDostawa();
@@ -28,23 +33,31 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 vt.Dostawy.Add(vttd);
         }
 
-        //todo Handle adding to different sets similar to how on current day is handling it (should work now)
+        /// <summary>
+        /// Browse old scans in hope to find somewhere to add current scan to
+        /// </summary>
+        /// <param name="technical"></param>
+        /// <param name="scanned"></param>
+        /// <param name="dostawa"></param>
+        /// <returns></returns>
         public bool SearchBack(Technical technical, ScannedCode scanned, Dostawa dostawa)
         {
             if (!scanned.isLookingBack)
                 return false;
 
+            // Find all scans between dates
             var pastScans = _db.VTMagazyn.Where(c =>
                 c.Wiazka == scanned.Wiazka &&
                 c.DataDostawy.Date < scanned.dataDostawy.Date &&
-                /*c.Komplet == false &&*/ c.autocompleteEnabled == true &&
+                c.autocompleteEnabled == true &&
                 c.DataDostawy.Date > scanned.dataDostawy.Date.AddDays(-7))
                 .OrderBy(c => c.DataDostawy).ToList().GroupBy(c => c.DataDostawy).Select(g => g.ToList()).ToList();
 
             foreach (var scanPerDate in pastScans)
             {
+                // Look if there are any duplicate scans (multiple sets)
                 var duplicateScans = scanPerDate.Where(c => c.KodCiety == scanned.kodCiety).OrderBy(c => c.NumerKompletu).ToList();
-                int mostFrequentCount = 0;//scanPerDate.GroupBy(i => i.SztukiZeskanowane).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First();
+                int mostFrequentCount = 0;
 
                 if (duplicateScans.Count > 0)
                 {
@@ -52,6 +65,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                     {
                         mostFrequentCount = GetPossibleDeclaredValue(new ScannedCode { Wiazka = scan.Wiazka, dataDostawyOld = scan.DataDostawy }, scan.NumerKompletu);
 
+                        // If this scan have already been added set flags and notify user
                         if (scan.DataDopisu != null &&
                             ((DateTime)scan.DataDopisu).Date == scanned.dataDostawy.Date
                             && !scanned.isForcedInsert)
@@ -60,6 +74,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                             return false;
                         }
 
+                        // Check if we can add current scan to previous one
                         if (scan.SztukiZeskanowane + scanned.sztukiSkanowane == mostFrequentCount
                            && scan.SztukiZeskanowane != mostFrequentCount)
                         {
@@ -75,6 +90,8 @@ namespace ZEM_Enterprice_WebApp.Scanning
                             return true;
                         }
                     }
+
+                    // Check if any set is missing current scan
                     int[] setIDs = scanPerDate.Where(c => c.Komplet == false).Select(c => c.NumerKompletu).Distinct().ToArray();
                     foreach (int setID in setIDs)
                     {
@@ -109,11 +126,18 @@ namespace ZEM_Enterprice_WebApp.Scanning
         }
 
         //todo try to optimize the setID == 0 route
+        /// <summary>
+        /// Function tries to guess what's the declared value for a choosen set 
+        /// </summary>
+        /// <param name="scanned"></param>
+        /// <param name="setID">ID of a set to get declared ammount for</param>
+        /// <returns></returns>
         public int GetPossibleDeclaredValue(ScannedCode scanned, int setID = 0)
         {
             List<VTMagazyn> pastScans = new List<VTMagazyn>();
             List<Dostawa> declaredScans = new List<Dostawa>();
 
+            // For first set try to guess based off of delivery file
             if (setID == 0)
             {
                 List<string> techCodes = _db.Technical.AsNoTracking().Where(c => c.Wiazka == scanned.Wiazka && c.KanBan == false).Select(c => c.IndeksScala).ToList();
@@ -124,6 +148,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                        c.autocompleteEnabled == true &&
                        c.NumerKompletu == setID).ToList();
             }
+            // For any subsequent set guess based off of current scans
             else
             {
                 pastScans = _db.VTMagazyn.AsNoTracking().Where(c =>
@@ -133,6 +158,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                        c.NumerKompletu == setID).ToList();
             }
 
+            // If declared value have been forced by manager use it
             if (pastScans.Count > 0 && pastScans[0].wymuszonaIlosc)
                 return pastScans[0].SztukiDeklarowane;
 
@@ -142,12 +168,20 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 return pastScans.OrderByDescending(c => c.SztukiZeskanowane).GroupBy(i => i.SztukiZeskanowane).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First();
             else return 0;
         }
-        //todo When creating new set check if there are any missing set id's before assigning new id, in case previous id have been deleted
+
+        /// <summary>
+        /// Adds scan to the database
+        /// </summary>
+        /// <param name="technical"></param>
+        /// <param name="scanned"></param>
+        /// <param name="dostawa"></param>
+        /// <param name="newCmplt">Does it need to create new set</param>
         public void AddToVT(Technical technical, ScannedCode scanned, Dostawa dostawa, bool newCmplt = false)
         {
             if (dostawa != null && dostawa.Uwagi != "")
                 scanned.complete = true;
 
+            // Set proper set ID depending which set ID is missing
             if (!newCmplt)
                 scanned.NumerKompletu = 0;
             else
@@ -193,12 +227,19 @@ namespace ZEM_Enterprice_WebApp.Scanning
             };
             vtToDostawa.VTMagazyn = vt;
 
+            // Create a relation between Dostawa and VTMagazyn scan
             vt.Dostawy = new List<VtToDostawa>();
             if (dostawa != null)
                 vt.Dostawy.Add(vtToDostawa);
 
             _db.VTMagazyn.Add(vt);
         }
+
+        /// <summary>
+        /// Get set ids for current cable id
+        /// </summary>
+        /// <param name="scanned"></param>
+        /// <returns></returns>
         public List<int> GetCompleteID(ScannedCode scanned)
         {
             try
@@ -210,6 +251,15 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 return new List<int>();
             }
         }
+
+        /// <summary>
+        /// Automates the process of completing bundle sets and setting proper values for amount of cables scanned per bundle
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="numToComplete">Amount of cables scanned counting towards completion of a bundle</param>
+        /// <param name="numScanned">Amount of cables scanned overall for this bundle</param>
+        /// <param name="numScannedToComplete">Amount of cables going into that bundle</param>
+        /// <returns></returns>
         public bool checkComplete(ScannedCode sc, out int numToComplete, out int numScanned, out int numScannedToComplete)
         {
             int completeID = sc.NumerKompletu;
@@ -221,11 +271,11 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 c.Wiazka == sc.Wiazka &&
                 c.DataDostawy.Date == sc.dataDostawyOld.Date &&
                 possibleDeclared <= c.SztukiZeskanowane &&
-                /*c.Komplet == false &&*/ c.autocompleteEnabled == true &&
+                c.autocompleteEnabled == true &&
                 c.NumerKompletu == completeID).Count();
 
 
-
+            // Update values depending on scans
             foreach (var scan in Scanned)
             {
                 if (numToComplete == numScannedToComplete)
@@ -240,24 +290,41 @@ namespace ZEM_Enterprice_WebApp.Scanning
             _db.UpdateRange(Scanned);
             _db.SaveChanges();
 
+            // decide whether bundle have been completed
             if (numToComplete == numScannedToComplete)
                 return true;
             return false;
         }
 
+        /// <summary>
+        /// Returns previous scan if it exists
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <returns></returns>
         public VTMagazyn ExistsInVT(ScannedCode sc)
         {
             return _db.VTMagazyn.FirstOrDefault(c =>
                 c.KodCiety == sc.kodCiety &&
                 c.DataDostawy.Date == sc.dataDostawyOld.Date);
         }
-        // Returns a list of incomplete records of code in VT for a date
+        /// <summary>
+        /// Returns a list of incomplete records of code in VT for a date
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <returns></returns>
         public List<VTMagazyn> ExistInVTList(ScannedCode sc)
         {
             return _db.VTMagazyn.Where(c => c.KodCiety == sc.kodCiety
                 && c.DataDostawy.Date == sc.dataDostawyOld.Date)
                 .Include(c => c.Dostawy).OrderBy(c => c.NumerKompletu).ThenBy(c => c.SztukiZeskanowane).ToList();
         }
+
+        /// <summary>
+        /// Returns a scan which current scan would complete perfectly
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="setID"></param>
+        /// <returns></returns>
         public VTMagazyn GetPerfectMatchVT(ScannedCode sc, int setID)
         {
             int declared = GetPossibleDeclaredValue(sc, setID);
@@ -267,6 +334,13 @@ namespace ZEM_Enterprice_WebApp.Scanning
                   c.SztukiZeskanowane + sc.sztukiSkanowane == declared &&
                   c.autocompleteEnabled == true && c.NumerKompletu == setID);
         }
+
+        /// <summary>
+        /// Returns a list of scans which current scan could contribute to completing 
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="setID"></param>
+        /// <returns></returns>
         public List<VTMagazyn> GetBelowDeclaredMatches(ScannedCode sc, int setID)
         {
             int declared = GetPossibleDeclaredValue(sc, setID);
@@ -276,6 +350,12 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 c.SztukiZeskanowane + sc.sztukiSkanowane < declared &&
                 c.autocompleteEnabled == true && c.NumerKompletu == setID).Include(c => c.Dostawy).ToList().OrderByDescending(c => c.SztukiZeskanowane).ToList();
         }
+
+        /// <summary>
+        /// Checks if all of codes per bundle exist in delivery file
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <returns></returns>
         public bool CheckIfFullSetOfSupply(ScannedCode sc)
         {
             List<string> techCodes = _db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka && c.KanBan == false).Select(c => c.IndeksScala).ToList();
@@ -285,18 +365,27 @@ namespace ZEM_Enterprice_WebApp.Scanning
             return false;
         }
 
-        //todo Analize if this function works well with multiple sets (it should)
+        /// <summary>
+        /// Tries to add current scan as a whole
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="techEntry"></param>
+        /// <param name="sc"></param>
+        /// <param name="dostawaEntry"></param>
+        /// <returns></returns>
         public bool AddOrCreateNewSet(ScannedResponse response, Technical techEntry, ScannedCode sc, Dostawa dostawaEntry)
         {
             VTMagazyn VT = ExistsInVT(sc);
             if (VT == null && !sc.addedBefore)
             {
+                // If no instance of this scan exists
                 AddToVT(techEntry, sc, dostawaEntry);
             }
             else if (VT == null && sc.addedBefore)
             {
                 if (sc.isForcedInsert)
                 {
+                    // If instance of this code have been added to previous scans
                     AddToVT(techEntry, sc, dostawaEntry);
                 }
                 else
@@ -310,6 +399,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
             {
                 if (sc.isForcedInsert)
                 {
+                    // If instance of this scan have been added for todays delivery
                     if (VT.SztukiZeskanowane < GetPossibleDeclaredValue(sc))
                         return AddQuantityIncorrect(response, techEntry, sc, dostawaEntry);
                     else
@@ -325,6 +415,15 @@ namespace ZEM_Enterprice_WebApp.Scanning
 
             return true;
         }
+
+        /// <summary>
+        /// Functions searches previous scans and adds current scan there or if it can't tries to add it for today
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="techEntry"></param>
+        /// <param name="sc"></param>
+        /// <param name="dostawaEntry"></param>
+        /// <returns></returns>
         public bool CheckBackOrAdd(ScannedResponse response, Technical techEntry, ScannedCode sc, Dostawa dostawaEntry)
         {
             if (!SearchBack(techEntry, sc, dostawaEntry))
@@ -333,6 +432,15 @@ namespace ZEM_Enterprice_WebApp.Scanning
             }
             return true;
         }
+
+        /// <summary>
+        /// Functions searches previous scans and adds current scan there or if it can't tries to add it for today if scan wasn't complete according to delivery
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="techEntry"></param>
+        /// <param name="sc"></param>
+        /// <param name="dostawaEntry"></param>
+        /// <returns></returns>
         public bool CheckBackOrAddQuantityIncorrect(ScannedResponse response, Technical techEntry, ScannedCode sc, Dostawa dostawaEntry)
         {
             if (!SearchBack(techEntry, sc, dostawaEntry))
@@ -341,7 +449,15 @@ namespace ZEM_Enterprice_WebApp.Scanning
             }
             return true;
         }
-        //todo check next record if quantityOverLimit have been triggered (maybe fixed)
+        
+        /// <summary>
+        /// Adds record to current scan or if it can't adds it as a brand new one
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="techEntry"></param>
+        /// <param name="sc"></param>
+        /// <param name="dostawaEntry"></param>
+        /// <returns></returns>
         public bool AddQuantityIncorrect(ScannedResponse response, Technical techEntry, ScannedCode sc, Dostawa dostawaEntry)
         {
             if (!sc.isForcedQuantity)
@@ -350,6 +466,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 response.Flag = FlagType.quantityIncorrect;
                 response.Args.Add(dostawaEntry.Ilosc.ToString());
                 var vt = ExistsInVT(sc);
+                // Set declared value for current scan
                 if (vt != null)
                     response.Args.Add(vt.SztukiZeskanowane.ToString());
                 else
@@ -361,12 +478,14 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 var VTList = ExistInVTList(sc);
                 if (VTList.Count <= 0 && !sc.addedBefore)
                 {
+                    // if record doesn't exist add it
                     AddToVT(techEntry, sc, dostawaEntry);
                 }
                 else if (VTList.Count <= 0 && sc.addedBefore)
                 {
                     if (sc.isForcedInsert)
                     {
+                        // if record have been added previously add for today
                         AddToVT(techEntry, sc, dostawaEntry);
                     }
                     else
@@ -381,13 +500,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                     List<VTMagazyn> forceOverLimit = new List<VTMagazyn>();
                     foreach (var vt in VTList)
                     {
-                        //if(sc.sztukiSkanowane == vt.SztukiZeskanowane && !sc.isForcedInsert)
-                        //{
-                        //    response.Header = HeaderTypes.error;
-                        //    response.Flag = FlagType.codeExists;
-                        //    return false;
-                        //}
-
+                        // Check if we can add current scan to complete one today
                         var perfectVT = GetPerfectMatchVT(sc, vt.NumerKompletu);
                         if (perfectVT != null)
                         {
@@ -402,6 +515,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                     }
                     foreach (var vt in VTList)
                     {
+                        // check if there are any scans we can add current scan to
                         var belowMatches = GetBelowDeclaredMatches(sc, vt.NumerKompletu);
                         if (belowMatches.Count() == 0)
                         {
@@ -409,6 +523,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                             {
                                 int possibleDeclaredValue = GetPossibleDeclaredValue(sc, vt.NumerKompletu);
 
+                                // if adding would exceed declared value
                                 if (vt.SztukiZeskanowane < possibleDeclaredValue && vt.SztukiZeskanowane + sc.sztukiSkanowane > possibleDeclaredValue)
                                 {
                                     forceOverLimit.Add(vt);

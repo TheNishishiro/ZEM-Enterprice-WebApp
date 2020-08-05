@@ -33,6 +33,8 @@ namespace ZEM_Enterprice_WebApp.Utilities
 
     public class CreateRoles
     {
+
+        // Initialize all basic roles for page viewing 
         public static void Default(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -51,6 +53,7 @@ namespace ZEM_Enterprice_WebApp.Utilities
                 }
             }
 
+            // Create an administrator account
             var superUser = UserManager.FindByNameAsync("Administrator").Result;
             if(superUser == null)
             {

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ZEM_Enterprice_WebApp.Scanning
 {
+    /// <summary>
+    /// Class to contain most informations during scanning process
+    /// </summary>
     public class ScannedCode
     {
         public bool Declared { get; set; }

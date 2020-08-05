@@ -2,7 +2,7 @@
 
 
 async function checkBIN() {
-    var constructed_api_url = api_url + "scannerInfo/" + document.getElementById("code-field").value;
+    var constructed_api_url = api_url + "scannerInfo/" + document.getElementById("code-field").value.replace("PLC", "");
 
     const response = await fetch(constructed_api_url);
     const d = await response.json();

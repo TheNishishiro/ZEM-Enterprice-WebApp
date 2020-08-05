@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ZEM_Enterprice_WebApp.Scanning
 {
+    /// <summary>
+    /// Class used to store informations which are supposed to be returned after scan have been successful
+    /// </summary>
     public class ScannedResponse
     {
         public string PrzewodCiety { get; set; }
