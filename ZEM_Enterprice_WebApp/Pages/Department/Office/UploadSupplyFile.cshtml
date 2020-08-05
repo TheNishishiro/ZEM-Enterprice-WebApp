@@ -1,0 +1,21 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.UploadSupplyFileModel
+@{
+    ViewData["Title"] = "Wyślij dostawy";
+}
+
+<div class="login-clean">
+    <form id="upload-file-form" method="post" enctype="multipart/form-data">
+        <h2 class="sr-only">Login Form</h2>
+        <div class="illustration">
+            <i class="la la-upload" style="color: rgb(71,161,244);"></i>
+            <h1 style="color: rgb(71,140,244);font-size: 20px;">Wysyłanie pliku dostawy</h1>
+        </div>
+        <div asp-validation-summary="All"></div>
+        <div class="form-group"><label asp-for="@Model.date"></label></div>
+        <div class="form-group"><input class="form-control" asp-for="@Model.date"></div>
+        <div class="form-group"><input asp-for="@Model.dataFile"></div>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">Wyślij</button></div>
+    </form>
+</div>
+

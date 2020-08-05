@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MyUser> SignInManager
+@inject UserManager<MyUser> UserManager
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<div id="main-block">
+    <div class="container" id="main-container">
+        <div class="row">
+            <div class="col-md-4 text-left side-bar">
+                <div class="text-left border rounded shadow-sm" id="side-bar-div">
+                    <h3 class="text-center" id="User-Heading" style="padding-bottom: 20px;">Opcje użytkownika</h3>
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link active" asp-page="/Manager/ChangePassword"><i class="icon ion-android-unlock"></i>&nbsp; &nbsp;Zmień hasło</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Manager/EditPersonal"><i class="fa fa-user"></i>&nbsp; &nbsp;Edytuj dane</a></li>
+                    </ul>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <h3 class="text-center" id="Admin-Heading">Panel administracyjny</h3>
+                        <h5 class="text-center" id="Admin-Heading-1">Zarządzaj użytkownikami</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link active" asp-page="/Manager/AdminManager/ManageUsers"><i class="icon ion-checkmark"></i>&nbsp; &nbsp;Zarządzaj kontami</a></li>
+                        </ul>
+                        <h5 class="text-center" id="Admin-Heading-2">Zarządzaj danymi</h5>
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link" asp-page="/Manager/AdminManager/VTArchive"><i class="fa fa-server"></i>&nbsp; &nbsp;Archiwizuj skany</a></li>
+                            <br>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Manager/AdminManager/DumpDatabase"><i class="fa fa-server"></i>&nbsp; &nbsp;Zrzuć bazę do pliku</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-page="/Manager/AdminManager/LoadDbFromFiles"><i class="fa fa-server"></i>&nbsp; &nbsp;Załaduj bazę z pliku</a></li>
+                        </ul>
+                    }
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="text-center border rounded shadow-sm" id="actual-stuff-here">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@page  "{day:int},{month:int},{year:int}"
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.DifferenceReportModel
+@{
+    ViewData["Title"] = "Różnice - raport";
+}
+
+
+
+    <form method="post">
+        <input type="hidden" asp-for="@Model.ForDate" />
+        <div class="text-center" style="width:50%; margin:auto">
+            <a class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1" role="button" id="collapse-button" style="width:50%">Pokaż opcje filtrowania</a>
+            <div class="collapse" id="collapse-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li role="presentation" class="nav-item"><a class="nav-link" asp-page="/Department/Office/DifferenceReport" asp-route-Filter_Niedomiary="true">Pokaż niedomiary</a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" asp-page="/Department/Office/DifferenceReport" asp-route-Filter_Nadmiary="true">Pokaż nadmiary</a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" asp-page="/Department/Office/DifferenceReport" asp-route-Filter_Braki="true">Pokaż braki</a></li>
+                    <li role="presentation" class="nav-item"><a class="nav-link" asp-page="/Department/Office/DifferenceReport">Resetuj</a></li>
+                </ul>
+            </div>
+            <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit" style="width:50%">
+                Pobierz plik csv
+            </button>
+        </div>
+       
+        <hr>
+        <div class="tableFixHead">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Wiązka</th>
+                        <th>Kod cięty</th>
+                        <th>BIN</th>
+                        <th>Zeskanowane</th>
+                        <th>Deklarowane</th>
+                        <th>Różnica</th>
+                        <th>Uwagi</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var record in Model.differencesFiltered)
+                    {
+                        if (record.Value.Zeskanowanych - record.Value.Deklarowanych != 0)
+                        {
+                            <tr>
+                                <td>@record.Value.Wiazka</td>
+                                <td>@record.Key</td>
+                                <td>@record.Value.BIN</td>
+                                <td>@record.Value.Zeskanowanych</td>
+                                <td>@record.Value.Deklarowanych</td>
+                                <td>@(record.Value.Zeskanowanych - record.Value.Deklarowanych)</td>
+                                @if (record.Value.Zeskanowanych == 0)
+                                {
+                                    <td style="color:rgb(255, 0, 0)">BRAK</td>
+                                }
+                                else if (record.Value.Zeskanowanych - record.Value.Deklarowanych < 0)
+                                {
+                                    <td style="color:rgb(117, 0, 0)">NIEDOMIAR</td>
+                                }
+                                else
+                                {
+                                    <td style="color:rgb(22, 121, 0)">NADMIAR</td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+</form>

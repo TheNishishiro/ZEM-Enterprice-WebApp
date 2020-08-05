@@ -1,0 +1,16 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Manager.ProfileModel
+@inject SignInManager<MyUser> SignInManager
+@inject UserManager<MyUser> UserManager
+@{
+    ViewData["Title"] = "Profil";
+    Layout = "~/Pages/Shared/_ProfileLayout.cshtml";
+}
+
+<div class="text-center bg-info border rounded" id="information-div">
+    <h5 id="infor-heading">@Model.StatusHeader</h5>
+    <p id="information-para" style="color: rgb(255,255,255);font-size: 15px;">@Model.StatusMessage</p>
+</div>
+<h1>Panel użytkownika</h1>
+<p>Witaj @User.Identity.Name!</p>
+<p>Tutaj możesz zmienić kilka rzeczy odnośnie Twojego konta, użyj panelu nawigacyjnego po lewej aby przejść do odpowiedniej skecji.</p>

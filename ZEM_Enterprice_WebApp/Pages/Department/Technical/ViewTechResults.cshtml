@@ -1,0 +1,237 @@
+﻿@page "{CurrentPage?}"
+@using Microsoft.AspNetCore.Authorization
+@using ZEM_Enterprice_WebApp.Utilities
+@inject IAuthorizationService _AuthService
+@model ZEM_Enterprice_WebApp.Pages.Department.Technical.ViewTechResultsModel
+@{
+    ViewData["Title"] = "Wykaz wiązek VT";
+    ViewData["ResetLink"] = "/Department/Technical/ViewTechResults";
+}
+<script src="~/assets/js/jquery.min.js"></script>
+<div class="login-clean">
+    <div>
+        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1" role="button" id="collapse-button" style="width: 100%">Pokaż opcje filtrowania</a>
+        <div class="collapse" id="collapse-1">
+            <form id="record-filter-form">
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration">
+                    <h1 id="filter-heading">Filtruj wyniki</h1>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.Filter_Rodzina"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Rodzina">
+                        <label asp-for="@Model.Filter_Wiazka"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Wiazka">
+                        <label asp-for="@Model.Filter_PrzewodCiety"></label>
+                        <input class="form-control" asp-for="@Model.Filter_PrzewodCiety">
+                        <label asp-for="@Model.Filter_IlePrzedowow"></label>
+                        <input class="form-control" asp-for="@Model.Filter_IlePrzedowow">
+                    </div>
+                    <div class="col">
+                        <label asp-for="@Model.Filter_KodWiazki"></label>
+                        <input class="form-control" asp-for="@Model.Filter_KodWiazki">
+                        <label asp-for="@Model.Filter_BIN"></label>
+                        <input class="form-control" asp-for="@Model.Filter_BIN">
+                        <label asp-for="@Model.Filter_LiteraRodziny"></label>
+                        <input class="form-control" asp-for="@Model.Filter_LiteraRodziny">
+                        <label asp-for="@Model.Filter_Uwagi"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Uwagi">
+                        <label asp-for="@Model.ShowDeleted"></label>
+                        <input class="form-control" asp-for="@Model.ShowDeleted">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.SortColumn"></label>
+                        <select asp-for="@Model.SortColumn" asp-items="@Model.availableSortings" class="form-control">
+                            <option value="">Brak sortowania</option>
+                        </select>
+                        <label asp-for="@Model.OrderDescent"></label>
+                        <input class="form-control" asp-for="@Model.OrderDescent">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit">
+                        Akceptuj
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#myModal" style="width: 100%">Pokaż opcje filtrowania</a>
+<div class="modal fade" id="myModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <a href="#" class="close" data-dismiss="modal">&times;</a>
+            <h3 class="modal-title">Edytuj rekord</h3>
+        </div>
+        <div class="modal-body">
+
+        </div>
+        <div class="modal-footer">
+
+        </div>
+    </div>
+</div>*@
+
+<form method="post">
+    <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rodzina</th>
+                    <th>Wiązka</th>
+                    <th>Indeks Scala</th>
+                    <th>Litera rodziny</th>
+                    <th>Kod wiązki</th>
+                    <th>Ilość przewodów</th>
+                    <th>Przew. Cięty</th>
+                    <th>BIN</th>
+                    <th>Uwagi</th>
+                    <th>KanBan</th>
+                    <th>Opcje</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.Data)
+                {
+                <tr style="@(record.Deleted ? "Background-color: red" : "")">
+                    <td>@record.Rodzina</td>
+                    <td>@record.Wiazka</td>
+                    <td>@record.IndeksScala</td>
+                    <td>@record.LiterRodziny</td>
+                    <td>@record.KodWiazki</td>
+                    <td>@record.IlePrzewodow</td>
+                    <td>@record.PrzewodCiety</td>
+                    <td>@record.BIN</td>
+                    <td>@record.Uwagi</td>
+                    <td>@record.KanBan</td>
+                    @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrTech.ToString())).Succeeded)
+                    {
+                        <td>
+
+                            <a asp-page="/Department/Technical/EditTechRecord" asp-route-id="@record.CietyWiazka">Edit</a>
+                        </td>
+                        <td>
+                            <button type="submit" asp-page-handler="DeleteRecord"
+                                    asp-route-id="@record.CietyWiazka"
+                                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                                    asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                                    asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                                    asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                                    asp-route-Filter_BIN="@Model.Filter_BIN"
+                                    asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                                    asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                                    asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                                    asp-route-SortColumn="@Model.SortColumn"
+                                    asp-route-OrderDescent="@Model.OrderDescent"
+                                    asp-route-ShowDeleted="@Model.ShowDeleted"
+                                    class="@(record.Deleted ? "tn btn-sm btn-warning" : "tn btn-sm btn-danger")">
+                                @(record.Deleted ? "Przywróć" : "Usuń")
+                            </button>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <div>
+        <ul class="pagination">
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="1"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                   asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                   asp-route-Filter_BIN="@Model.Filter_BIN"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   asp-route-ShowDeleted="@Model.ShowDeleted"
+                   class="page-link">Pierwsza</a>
+            </li>
+
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                   asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                   asp-route-Filter_BIN="@Model.Filter_BIN"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   asp-route-ShowDeleted="@Model.ShowDeleted"
+                   class="page-link">Poprzednia</a>
+            </li>
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                   asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                   asp-route-Filter_BIN="@Model.Filter_BIN"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   asp-route-ShowDeleted="@Model.ShowDeleted"
+                   class="page-link">Następna</a>
+            </li>
+
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@Model.Data.TotalPages"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                   asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                   asp-route-Filter_BIN="@Model.Filter_BIN"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   asp-route-ShowDeleted="@Model.ShowDeleted"
+                   class="page-link">Ostatnia</a>
+            </li>
+        </ul>
+    </div>
+
+    <div style="text-align: center;">
+        <button type="submit" asp-page-handler="PageDownloadCsv" class="btn btn-sm btn-primary"
+                asp-route-CurrentPage="@Model.Data.PageIndex"
+                asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                asp-route-Filter_Rodzina="@Model.Filter_Rodzina"
+                asp-route-Filter_PrzewodCiety="@Model.Filter_PrzewodCiety"
+                asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
+                asp-route-Filter_BIN="@Model.Filter_BIN"
+                asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
+                asp-route-SortColumn="@Model.SortColumn"
+                asp-route-OrderDescent="@Model.OrderDescent"
+                asp-route-ShowDeleted="@Model.ShowDeleted">
+            Pobierz stronę jako CSV
+        </button>
+        <button type="submit" asp-page-handler="DownloadCsv" class="btn btn-sm btn-primary">
+            Pobierz jako CSV
+        </button>
+    </div>
+</form>

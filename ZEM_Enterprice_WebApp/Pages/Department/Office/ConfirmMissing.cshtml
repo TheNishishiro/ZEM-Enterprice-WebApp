@@ -1,0 +1,69 @@
+﻿@page
+@using Microsoft.AspNetCore.Authorization
+@using ZEM_Enterprice_WebApp.Utilities
+@inject IAuthorizationService _AuthService
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.ConfirmMissingModel
+@{
+    ViewData["Title"] = "Brakujące kody (dostawa)";
+}
+
+
+<h1>Nie znaleziono podanych kodów w bazie technicznych</h1>
+
+@if (Model.pendingDostawas != null)
+{
+    <div class="pull-right">
+        <input type="checkbox" onClick="toggle(this)" /> Zaznacz wszystko<br />
+    </div><br>
+    <form method="post">
+        <div class="tableFixHead">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Kod</th>
+                        <th>Ilosc</th>
+                        <th>Data</th>
+                        <th>Uwagi</th>
+                        <th>Ponów</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model._input.Count; i++)
+                    {
+                    <tr>
+                        <td>"@Model._input[i].Kod"</td>
+                        <td>"@Model._input[i].Ilosc"</td>
+                        <td>"@Model._input[i].Data.ToShortDateString()"</td>
+                        <td>"@Model._input[i].Uwagi"</td>
+                        <td>
+                            <input type="hidden" asp-for="@Model._input[i].KodIloscData" />
+                            <input name="AreChecked" type="checkbox" value="@Model._input[i].KodIloscData" />
+                        </td>
+                        <td>
+                            <button asp-page-handler="DeleteRecord" asp-route-id="@Model._input[i].KodIloscData" type="submit" class="btn btn-sm btn-danger">
+                                Usuń
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.CanViewSupply.ToString())).Succeeded)
+        {
+            <button asp-page-handler="AcceptChanges" type="submit" class="btn btn-sm btn-warning">
+                Ponów dla oznaczonych
+            </button>
+        }
+    </form>
+}
+
+<script>
+    function toggle(source) {
+        checkboxes = document.getElementsByName('AreChecked');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>

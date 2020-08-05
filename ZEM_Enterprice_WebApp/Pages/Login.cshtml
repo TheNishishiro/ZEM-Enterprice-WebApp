@@ -1,0 +1,19 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.LoginModel
+@{
+    ViewData["Title"] = "Logowanie";
+}
+
+<div class="login-clean">
+    <form method="post">
+        <h2 class="sr-only">Login Form</h2>
+        <div class="illustration" style="color: rgb(71,151,244);"><i class="icon ion-ios-locked-outline"></i></div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group"><input class="form-control" asp-for="Input.Username" placeholder="Użytkownik"></div>
+        <div class="form-group"><input class="form-control" asp-for="Input.Password" placeholder="Hasło"></div>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,119,244);">Zaloguj</button></div>
+    </form>
+</div>
+<script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>
+

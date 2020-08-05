@@ -1,0 +1,279 @@
+﻿@page "{CurrentPage?}"
+@using Microsoft.AspNetCore.Authorization
+@using ZEM_Enterprice_WebApp.Utilities
+@inject IAuthorizationService _AuthService
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.ViewVTMagazynModel
+@{
+    ViewData["Title"] = "Skany VT";
+    ViewData["ResetLink"] = "/Department/Office/ViewVTMagazyn";
+}
+
+<div class="login-clean">
+    <div>
+        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1" role="button" id="collapse-button" style="width: 100%">Pokaż opcje filtrowania</a>
+        <div class="collapse" id="collapse-1">
+            <form id="record-filter-form">
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration">
+                    <h1 id="filter-heading">Filtruj wyniki</h1>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.Filter_DataDostawyFrom"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataDostawyFrom">
+                        <label asp-for="@Model.Filter_DataUtworzeniaFrom"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataUtworzeniaFrom">
+                        <label asp-for="@Model.Filter_DataDopisuFrom"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataDopisuFrom">
+                        <label asp-for="@Model.Filter_DokDostawy"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DokDostawy">
+                        <label asp-for="@Model.Filter_Pracownik"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Pracownik">
+                        <label asp-for="@Model.Filter_KodCiety"></label>
+                        <input class="form-control" asp-for="@Model.Filter_KodCiety">
+                        <label asp-for="@Model.Filter_Wiazka"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Wiazka">
+                    </div>
+                    <div class="col">
+                        <label asp-for="@Model.Filter_DataDostawyTo"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataDostawyTo">
+                        <label asp-for="@Model.Filter_DataUtworzeniaTo"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataUtworzeniaTo">
+                        <label asp-for="@Model.Filter_DataDopisuTo"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataDopisuTo">
+                        <label asp-for="@Model.Filter_NumerKompletu"></label>
+                        <input class="form-control" asp-for="@Model.Filter_NumerKompletu">
+                        <label asp-for="@Model.Filter_SztukiZeskanowane"></label>
+                        <input class="form-control" asp-for="@Model.Filter_SztukiZeskanowane">
+                        <label asp-for="@Model.Filter_Uwagi"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Uwagi">
+                        <label asp-for="@Model.Filter_Komplet"></label>
+                        <select asp-for="@Model.Filter_Komplet" asp-items="@Model.completeFilter" class="form-control">
+                            <option value="">Wszystko</option>
+                        </select>
+                        <label asp-for="@Model.Filter_Deklaracja"></label>
+                        <select asp-for="@Model.Filter_Deklaracja" asp-items="@Model.declaredFilter" class="form-control">
+                            <option value="">Wszystko</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.SortColumn"></label>
+                        <select asp-for="@Model.SortColumn" asp-items="@Model.availableSortings" class="form-control">
+                            <option value="">Brak sortowania</option>
+                        </select>
+                        <label asp-for="@Model.OrderDescent"></label>
+                        <input class="form-control" asp-for="@Model.OrderDescent">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit">
+                        Akceptuj
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<form method="post">
+    <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Dokument</th>
+                    <th>Wiązka</th>
+                    <th>Kod cięty</th>
+                    <th>Zeskanowane</th>
+                    <th>Na komplet</th>
+                    <th>Nr. Kompletu</th>
+                    <th>Komplet</th>
+                    <th>Deklarowany</th>
+                    <th>Data utworzenia</th>
+                    <th>Data dostawy</th>
+                    <th>Data dopisu</th>
+                    <th>Dopisana ilość</th>
+                    <th>Pracownik</th>
+                    <th>Uwagi</th>
+                    <th>Autokompletacja</th>
+                    <th>Wymuszone deklarowane</th>
+                    <th>Opcje</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.Data)
+                {
+                <tr>
+                    <td>@record.DokDostawy</td>
+                    <td>@record.Wiazka</td>
+                    <td>@record.KodCiety</td>
+                    <td>@record.SztukiZeskanowane/@record.SztukiDeklarowane</td>
+                    <td>@record.ZeskanowanychNaKomplet/@record.NaKomplet</td>
+                    <td>@record.NumerKompletu</td>
+                    <td>@record.Komplet</td>
+                    <td>@record.Deklarowany</td>
+                    <td>@record.DataUtworzenia</td>
+                    <td>@record.DataDostawy.ToShortDateString()</td>
+                    <td>@record.DataDopisu</td>
+                    <td>@record.DopisanaIlosc</td>
+                    <td>@record.Pracownik</td>
+                    <td>@record.Uwagi</td>
+                    <td>@record.autocompleteEnabled</td>
+                    <td>@record.wymuszonaIlosc</td>
+
+                    @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded)
+                    {
+                        <td>
+
+                            <a asp-page="/Department/Office/EditVTRecord" asp-route-id="@record.VTMagazynId">Edit</a>
+                        </td>
+                        <td>
+                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.VTMagazynId" class="btn btn-sm btn-danger"
+                                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                                    asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                                    asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                                    asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                                    asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                                    asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                                    asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                                    asp-route-SortColumn="@Model.SortColumn"
+                                    asp-route-OrderDescent="@Model.OrderDescent">
+                                Usuń
+                            </button>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <div>
+        <ul class="pagination">
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="1"
+                   asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                   asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_Wiazka="@Model.Filter_NumerKompletu"
+                   asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                   asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                   asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                   asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                   asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                   asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                   asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                   asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                   asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Pierwsza</a>
+            </li>
+
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
+                   asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                   asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                   asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                   asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                   asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                   asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                   asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                   asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                   asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                   asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Poprzednia</a>
+            </li>
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
+                   asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                   asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                   asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                   asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                   asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                   asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                   asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                   asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                   asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                   asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Następna</a>
+            </li>
+
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Technical/ViewTechResults"
+                   asp-route-CurrentPage="@Model.Data.TotalPages"
+                   asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                   asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                   asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                   asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                   asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                   asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                   asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                   asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                   asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                   asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Ostatnia</a>
+            </li>
+        </ul>
+    </div>
+    <div style="text-align: center;">
+        <button type="submit" asp-page-handler="PageDownloadCsv" class="btn btn-sm btn-primary"
+                    asp-route-CurrentPage="@Model.Data.PageIndex"
+                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                    asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                    asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                    asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                    asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                    asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                    asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                    asp-route-SortColumn="@Model.SortColumn"
+                    asp-route-OrderDescent="@Model.OrderDescent">
+            Pobierz stronę jako CSV
+        </button>
+    </div>
+</form>

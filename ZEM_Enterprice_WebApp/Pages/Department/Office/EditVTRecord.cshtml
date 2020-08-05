@@ -1,0 +1,135 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.EditVTRecordModel
+@{
+    ViewData["Title"] = "Zarządzaj skanem";
+    ViewData["GoBack"] = "/Department/Office/ViewVTMagazyn";
+}
+
+<div class="register-photo">
+    <div class="form-container">
+        <form id="Register-Form" method="post">
+            <h2 class="text-center"><strong>Edycja rekordu</strong></h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" class="form-control" asp-for="@Model.Input.VTMagazynID">
+                <label asp-for="@Model.Input.Wiazka">Wiązka: @Model.Input.Wiazka</label>
+                <input type="hidden" c lass="form-control" asp-for="@Model.Input.Wiazka">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.KodCiety">Kod cięty: @Model.Input.KodCiety</label>
+                <input type="hidden" class="form-control" asp-for="@Model.Input.KodCiety">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.SetID">Numer kompletu: @Model.Input.SetID</label>
+                <input type="hidden" class="form-control" asp-for="@Model.Input.SetID">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.dokumentDostawy"></label>
+                <input class="form-control" asp-for="@Model.Input.dokumentDostawy">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.NaKomplet"></label>
+                <input class="form-control" asp-for="@Model.Input.NaKomplet">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.ZeskanowanychNaKomplet"></label>
+                <input class="form-control" asp-for="@Model.Input.ZeskanowanychNaKomplet">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.DeliveryDate"></label>
+                <input class="form-control" asp-for="@Model.Input.DeliveryDate">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.ScannedValue"></label>
+                <input class="form-control" asp-for="@Model.Input.ScannedValue">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.DeclaredValue"></label>
+                <input class="form-control" asp-for="@Model.Input.DeclaredValue">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Uwagi"></label>
+                <input class="form-control" asp-for="@Model.Input.Uwagi">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.isCompleteSet"></label>
+                <input class="form-control" asp-for="@Model.Input.isCompleteSet">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.isAutocompleteEnabled"></label>
+                <input class="form-control" asp-for="@Model.Input.isAutocompleteEnabled">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.isDeclared"></label>
+                <input class="form-control" asp-for="@Model.Input.isDeclared">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.isForcedDeclared"></label>
+                <input class="form-control" asp-for="@Model.Input.isForcedDeclared">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="AcceptCable" asp-route-id="@Model.Input.VTMagazynID" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Zatwierdź dla kabla
+                </button>
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="AcceptSet" asp-route-wiazka="@Model.Input.Wiazka" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Zatwierdź dla wiązki
+                </button>
+            </div>
+            <hr>
+            <h2 class="text-center"><strong>Rozdziel rekord wstecz</strong></h2>
+            <div class="form-group">
+                <label asp-for="@Model.Input.DateFrom"></label>
+                <input class="form-control" asp-for="@Model.Input.DateFrom">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.DateTo"></label>
+                <input class="form-control" asp-for="@Model.Input.DateTo">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.SplitValue"></label>
+                <input class="form-control" asp-for="@Model.Input.SplitValue">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="SplitCable" asp-route-id="@Model.Input.VTMagazynID" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Rozdziel skan na dni
+                </button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label asp-for="@Model.Input.SplitSetValue"></label>
+                <input class="form-control" asp-for="@Model.Input.SplitSetValue">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="SplitSetCable" asp-route-id="@Model.Input.VTMagazynID" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Rozdziel skan na komplety
+                </button>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label asp-for="@Model.Input.MergeSetsString"></label>
+                <input class="form-control" asp-for="@Model.Input.MergeSetsString">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="MergeSetsCable" asp-route-id="@Model.Input.VTMagazynID" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Połącz komplety
+                </button>
+            </div>
+            <hr>
+            <h2 class="text-center"><strong>Usuń dopis</strong></h2>
+            <div class="form-group">
+                <button asp-page-handler="DeleteDopis" asp-route-id="@Model.Input.VTMagazynID" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(255, 86, 86);">
+                    Usuń dopis
+                </button>
+            </div>
+            <hr>
+            <h2 class="text-center"><strong>Zmień datę dla dokumentu</strong></h2>
+            <div class="form-group">
+                <button asp-page-handler="UpdateDokDostawyDate" asp-route-dokDostawy="@Model.Input.dokumentDostawy" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(255, 86, 86);">
+                    Aktualizuj daty
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

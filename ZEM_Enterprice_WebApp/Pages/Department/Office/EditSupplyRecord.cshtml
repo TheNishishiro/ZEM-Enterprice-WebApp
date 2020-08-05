@@ -1,0 +1,51 @@
+﻿@page 
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.EditSupplyRecordModel
+@{
+    ViewData["Title"] = "Edytuj dostawę";
+    ViewData["GoBack"] = "/Department/Office/ViewSupply";
+}
+    
+<div class="register-photo">
+    <div class="form-container">
+        <form id="Register-Form" method="post">
+            <h2 class="text-center"><strong>Edycja rekordu</strong></h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" class="form-control" asp-for="@Model.Input.Id">
+                <label asp-for="@Model.Input.Kod"></label>
+                <input class="form-control" asp-for="@Model.Input.Kod">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Ilosc"></label>
+                <input class="form-control" asp-for="@Model.Input.Ilosc">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Data"></label>
+                <input class="form-control" asp-for="@Model.Input.Data">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Uwagi"></label>
+                <input class="form-control" asp-for="@Model.Input.Uwagi">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="SaveChanges" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">
+                    Zapisz zmiany
+                </button>
+            </div>
+            <hr><br><hr>
+            <div class="form-group">
+                <label asp-for="@Model.Input.UploadDate"></label>
+                <input class="form-control" asp-for="@Model.Input.UploadDate">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.DeliveryDate"></label>
+                <input class="form-control" asp-for="@Model.Input.DeliveryDate">
+            </div>
+            <div class="form-group">
+                <button asp-page-handler="DeleteDelivery" class="btn btn-primary btn-block" type="submit" style="background-color: rgb(255, 28, 28);">
+                    Usuń dostawę
+                </button>
+            </div>
+        </form>
+    </div>   
+</div>

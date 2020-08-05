@@ -1,0 +1,61 @@
+﻿@page 
+@model ZEM_Enterprice_WebApp.Pages.Department.Technical.EditTechRecordModel
+@{
+    ViewData["Title"] = "Edytuj wykaz VT";
+    ViewData["GoBack"] = "/Department/Technical/ViewTechResults";
+}
+    
+<div class="register-photo">
+    <div class="form-container">
+        <form id="Register-Form" method="post">
+            <h2 class="text-center"><strong>Edycja rekordu</strong></h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" class="form-control" asp-for="@Model.Input.CietyWiazka">
+                <label asp-for="@Model.Input.Rodzina"></label>
+                <input class="form-control" asp-for="@Model.Input.Rodzina">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Wiazka"></label>
+                <input class="form-control" asp-for="@Model.Input.Wiazka">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.IndeksScala"></label>
+                <input class="form-control" asp-for="@Model.Input.IndeksScala">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.LiterRodziny"></label>
+                <input class="form-control" asp-for="@Model.Input.LiterRodziny">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.KodWiazki"></label>
+                <input class="form-control" asp-for="@Model.Input.KodWiazki">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.IlePrzewodow"></label>
+                <input class="form-control" asp-for="@Model.Input.IlePrzewodow">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.PrzewodCiety"></label>
+                <input class="form-control" asp-for="@Model.Input.PrzewodCiety">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.BIN"></label>
+                <input class="form-control" asp-for="@Model.Input.BIN">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.Uwagi"></label>
+                <input class="form-control" asp-for="@Model.Input.Uwagi">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.KanBan"></label>
+                <input class="form-control" asp-for="@Model.Input.KanBan">
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Input.isDeleted"></label>
+                <input class="form-control" asp-for="@Model.Input.isDeleted">
+            </div>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">Zapisz zmiany</button></div>
+        </form>
+    </div>   
+</div>

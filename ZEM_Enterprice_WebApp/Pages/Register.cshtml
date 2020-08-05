@@ -1,0 +1,23 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.RegisterModel
+@{
+    ViewData["Title"] = "Rejestracja";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="register-photo">
+    <div class="form-container">
+        <form id="Register-Form" method="post">
+            <h2 class="text-center"><strong>Stwórz konto</strong></h2>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.Imie" placeholder="Imię"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.Nazwisko" placeholder="Nazwisko"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.UserName" placeholder="Nazwa użytkownika"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.Email" placeholder="Email"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.Password" placeholder="Hasło"></div>
+            <div class="form-group"><input class="form-control" asp-for="NewUser.ConfirmPassword" placeholder="Powtórz hasło"></div>
+            <div class="form-group"><button class="btn btn-primary btn-block" type="submit" style="background-color: rgb(71,151,244);">Stwórz konto</button></div><a class="already" asp-page="/Login">Posiadasz już konto? Zaloguj się tutaj.</a>
+        </form>
+    </div>
+</div>
+

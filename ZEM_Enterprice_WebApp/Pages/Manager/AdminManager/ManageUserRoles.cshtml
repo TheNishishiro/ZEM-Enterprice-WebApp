@@ -1,0 +1,40 @@
+﻿@page "{id:guid}"
+@model ZEM_Enterprice_WebApp.Pages.Manager.AdminManager.ManageUserRolesModel
+@{
+    ViewData["Title"] = "Przypisz role";
+    Layout = "~/Pages/Shared/_ProfileLayout.cshtml";
+}
+
+<h1>Zarządzaj rolą użytkownika</h1>
+<div class="contact-clean">
+    <form method="post">
+        <h2 class="text-center">Edytuj dane</h2>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="tableFixHead">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rola</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Input.Count; i++)
+                    {
+                        <tr>
+                            <td><input asp-for="@Model.Input[i].RoleName" type="hidden"/>@Model.Input[i].RoleName</td>
+                            <td>
+                                <input asp-for="@Model.Input[i].Add" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Zapisz&nbsp;</button>
+        </div>
+    </form>
+</div>
+
+

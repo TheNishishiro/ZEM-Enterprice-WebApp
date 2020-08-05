@@ -1,0 +1,42 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Manager.EditPersonalModel
+@inject SignInManager<MyUser> SignInManager
+@inject UserManager<MyUser> UserManager
+@{
+    ViewData["Title"] = "Edytuj dane";
+    Layout = "~/Pages/Shared/_ProfileLayout.cshtml";
+}
+
+<div class="contact-clean">
+    <form method="post" style="width: 100%;">
+        <h2 class="text-center">Edytuj dane</h2>
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Input.Imie"></label>
+            <input class="form-control" asp-for="Input.Imie">
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Nazwisko"></label>
+            <input class="form-control" asp-for="Input.Nazwisko">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Zapisz&nbsp;</button>
+        </div>
+
+        <div class="form-group">
+            <label>Rekordów na stronę:</label>
+            <input class="form-control" type="number" id="PageSize" min="10" max="3000" value="@(Request.Cookies["pagesize"] == null ? 100 : int.Parse(Request.Cookies["pagesize"]))">
+        </div>
+        <div class="form-group">
+            <button id="acceptButton" onclick="setCookie()" class="btn btn-primary" type="button">Zatwierdź</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function setCookie() {
+        var cookieValue = encodeURIComponent(document.getElementById("PageSize").value);
+        document.cookie = "pagesize=" + cookieValue + "; expires=Thu, 18 Dec 2200 12:00:00 UTC; path=/";
+    }
+</script>

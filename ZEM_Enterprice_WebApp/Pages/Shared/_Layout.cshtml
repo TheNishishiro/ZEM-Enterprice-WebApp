@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MyUser> SignInManager
+@inject UserManager<MyUser> UserManager
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>ZemEnt. - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/assets/customcss/FixedTable.css" />
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css?h=07954550059301f8617ecdd11f08efba">
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700">*@
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css?h=18313f04cea0e078412a028c5361bd4e">
+    <link rel="stylesheet" href="/assets/fonts/ionicons.min.css?h=18313f04cea0e078412a028c5361bd4e">
+    <link rel="stylesheet" href="/assets/fonts/line-awesome.min.css?h=18313f04cea0e078412a028c5361bd4e">
+    <link rel="stylesheet" href="/assets/css/Contact-Form-Clean.css?h=b81e25cc3c952524624913c411b963fa">
+    <link rel="stylesheet" href="/assets/css/Features-Boxed.css?h=51d93bf3699a7893d9c7624fdc578192">
+    <link rel="stylesheet" href="/assets/css/Footer-Clean.css?h=8f120d33c0bf092c48e3c98c6b1cd5d3">
+    <link rel="stylesheet" href="/assets/css/Highlight-Blue.css?h=91a04f2b18410bc09760f3473788176a">
+    <link rel="stylesheet" href="/assets/css/Login-Form-Clean.css?h=46f1990f3a63f1699f755c8f3196faad">
+    <link rel="stylesheet" href="/assets/css/menu-collapse-ultimate.css?h=b102dc932f31031e46c7fe3026786526">
+    <link rel="stylesheet" href="/assets/css/Navigation-Clean.css?h=bd36a0e1e15ca19cbc401cc5f46ca8ca">
+    <link rel="stylesheet" href="/assets/css/Navigation-with-Button.css?h=8e2589cc34975c643ca1f6258a9dfe78">
+    <link rel="stylesheet" href="/assets/css/Registration-Form-with-Photo.css?h=1392db87befbde7339aaa770bfb06688">
+    <link rel="stylesheet" href="/assets/css/sidebar-1.css?h=c234f943e0d37ce61012bee59767270b">
+    <link rel="stylesheet" href="/assets/css/SIdebar-Responsive-2.css?h=e002231cfa4b95ac48cd62c675bed23a">
+    <link rel="stylesheet" href="/assets/css/styles.css?h=d41d8cd98f00b204e9800998ecf8427e">
+</head>
+
+<body>
+    <section class="d-flex flex-column justify-content-between" style="width: 100%;">
+        <div id="header-div">
+            <nav class="navbar navbar-light navbar-expand-md navigation-clean-button" id="navbar-main" style="font-family: 'Exo 2', sans-serif;">
+                <div class="container">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <img src="/assets/img/ZEM-logo.png?h=9404069d59e0976a48e9c3b3a3c5ba62" style="height: 83px;"><a class="navbar-brand text-center" asp-page="/MainPage">ZEM Enterprise<br>WebApp</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                    }
+                    else
+                    {
+                        <img src="/assets/img/ZEM-logo.png?h=9404069d59e0976a48e9c3b3a3c5ba62" style="height: 83px;"><a class="navbar-brand text-center" asp-page="/Index">ZEM Enterprise<br>WebApp</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                    }
+                    <div class="collapse navbar-collapse text-right" id="navcol-1">
+                        <ul class="nav navbar-nav mx-auto">
+                            @if (ViewData["ResetLink"] != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page=@ViewData["ResetLink"]>Resetuj widok</a>
+                                </li>
+                            }
+                            @if (ViewData["GoBack"] != null)
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-page=@ViewData["GoBack"]>Powrót</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <span class="navbar-text actions">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <a class="login" asp-page="/Manager/Profile">Dzień dobry @User.Identity.Name</a>
+                                <a class="btn btn-primary action-button ZemButton" role="button" asp-page="/Logout">Wyloguj</a>
+                            }
+                            else
+                            {
+                                <a class="login" asp-page="/Login">Zaloguj</a>
+                                <a class="btn btn-primary action-button ZemButton" role="button" asp-page="/Register">Stwórz konto</a>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id="main-div">
+            @RenderBody()
+        </div>
+    </section>
+    <div class="footer-clean">
+        <footer>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>Twórca</h3>
+                        <ul>
+                            <li><a href="https://github.com/TheNishishiro">Github</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3>ZEM</h3>
+                        <ul>
+                            <li><a href="http://zem.elk.pl/">Strona główna</a></li>
+                            <li><a href="http://zem.elk.pl/kontakt/">Kontakt</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-4 col-md-3 item">
+                        <h3></h3>
+                        <ul>
+
+                        </ul>
+                    </div>
+                    <div class="col-lg-3 item social">
+                        <p class="d-flex flex-column copyright">Zakład Elektrotechniki Motoryzacyjnej © 2020</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>
+</body>
+
+</html>

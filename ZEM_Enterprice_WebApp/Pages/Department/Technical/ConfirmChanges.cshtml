@@ -1,0 +1,76 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Department.Technical.ConfirmChangesModel
+@{
+    ViewData["Title"] = "Zatwierdź zmiany";
+}
+
+<h1>Znaleziono powtórzenia</h1>
+
+@if (Model.technicalDuplicates != null)
+{
+    <div class="pull-right">
+        <input type="checkbox" onClick="toggle(this)" /> Zaznacz wszystko<br />
+    </div>
+    <form method="post">
+        <div class="text-center" style="width:50%; margin:auto">
+            <button asp-page-handler="DownloadCsv" class="btn btn-primary btn-block" id="filter-confirm-button" type="submit" style="width:50%">
+                Pobierz plik csv
+            </button>
+        </div>
+
+        <div class="tableFixHead">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Data modyfikacji</th>
+                        <th>Rodzina</th>
+                        <th>Wiązka</th>
+                        <th>Indeks Scala</th>
+                        <th>Litera rodziny</th>
+                        <th>Kod wiązki</th>
+                        <th>Ilość przewodów</th>
+                        <th>Przew. Cięty</th>
+                        <th>BIN</th>
+                        <th>Uwagi</th>
+                        <th>KanBan</th>
+                        <th>Zamień</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model._input.Count; i++)
+                    {
+                    <tr>
+                        <td>"@Model._input[i].DataModyfikacji"</td>
+                        <td>"@Model._input[i].Rodzina"</td>
+                        <td>"@Model._input[i].Wiazka"</td>
+                        <td>"@Model._input[i].IndeksScala"</td>
+                        <td>"@Model._input[i].LiterRodziny"</td>
+                        <td>"@Model._input[i].KodWiazki"</td>
+                        <td>"@Model._input[i].IlePrzewodow"</td>
+                        <td>"@Model._input[i].PrzewodCiety"</td>
+                        <td>"@Model._input[i].BIN"</td>
+                        <td>"@Model._input[i].Uwagi"</td>
+                        <td>"@Model._input[i].KanBan"</td>
+                        <td>
+                            <input type="hidden" asp-for="@Model._input[i].Id" />
+                            <input name="AreChecked" type="checkbox" value="@Model._input[i].Id" />
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <button asp-page-handler="AcceptChanges" type="submit" class="btn btn-sm btn-warning">
+            Akceptuj
+        </button>
+    </form>
+}
+
+<script>
+    function toggle(source) {
+        checkboxes = document.getElementsByName('AreChecked');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>

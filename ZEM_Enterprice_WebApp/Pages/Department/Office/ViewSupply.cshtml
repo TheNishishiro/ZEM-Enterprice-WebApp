@@ -1,0 +1,170 @@
+﻿@page "{CurrentPage?}"
+@using Microsoft.AspNetCore.Authorization
+@using ZEM_Enterprice_WebApp.Utilities
+@inject IAuthorizationService _AuthService
+@model ZEM_Enterprice_WebApp.Pages.Department.Office.ViewSupplyModel
+@{
+    ViewData["Title"] = "Dostawy";
+    ViewData["ResetLink"] = "/Department/Office/ViewSupply";
+}
+
+<div class="login-clean">
+    <div>
+        <a class="btn btn-primary" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-1" href="#collapse-1" role="button" id="collapse-button" style="width: 100%">Pokaż opcje filtrowania</a>
+        <div class="collapse" id="collapse-1">
+            <form id="record-filter-form">
+                <h2 class="sr-only">Login Form</h2>
+                <div class="illustration">
+                    <h1 id="filter-heading">Filtruj wyniki</h1>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.Filter_Kod"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Kod">
+                        <label asp-for="@Model.Filter_Wiazka"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Wiazka">
+                        <label asp-for="@Model.Filter_DataFrom"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataFrom">
+                    </div>
+                    <div class="col">
+                        <label asp-for="@Model.Filter_Ilosc"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Ilosc">
+                        <label asp-for="@Model.Filter_Uwagi"></label>
+                        <input class="form-control" asp-for="@Model.Filter_Uwagi">
+                        <label asp-for="@Model.Filter_DataTo"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DataTo">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label asp-for="@Model.SortColumn"></label>
+                        <select asp-for="@Model.SortColumn" asp-items="@Model.availableSortings" class="form-control">
+                            <option value="">Brak sortowania</option>
+                        </select>
+                        <label asp-for="@Model.OrderDescent"></label>
+                        <input class="form-control" asp-for="@Model.OrderDescent">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit">
+                        Akceptuj
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<form method="post">
+    <div class="tableFixHead">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Wiązka</th>
+                    <th>Kod</th>
+                    <th>Ilość</th>
+                    <th>Data</th>
+                    <th>Data utworzenia</th>
+                    <th>Uwagi</th>
+                    <th>Opcje</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var record in Model.Data)
+                {
+                <tr>
+                    <td>@record.Technical.Wiazka</td>
+                    <td>@record.Kod</td>
+                    <td>@record.Ilosc</td>
+                    <td>@record.Data.ToShortDateString()</td>
+                    <td>@record.DataUtworzenia.ToShortDateString()</td>
+                    <td>@record.Uwagi</td>
+                    @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded)
+                    {
+                        <td>
+
+                            <a asp-page="/Department/Office/EditSupplyRecord" asp-route-id="@record.KodIloscData">Edit</a>
+                        </td>
+                        <td>
+                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.KodIloscData" class="btn btn-sm btn-danger"
+                                    asp-route-Filter_Kod="@Model.Filter_Kod"
+                                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                                    asp-route-Filter_DataFrom="@Model.Filter_DataFrom"
+                                    asp-route-Filter_DataTo="@Model.Filter_DataTo"
+                                    asp-route-Filter_Ilosc="@Model.Filter_Ilosc"
+                                    asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                                    asp-route-Filter_DateCreated="@Model.Filter_DateCreated"
+                                    asp-route-SortColumn="@Model.SortColumn"
+                                    asp-route-OrderDescent="@Model.OrderDescent">
+                                Usuń
+                            </button>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <ul class="pagination">
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Office/ViewSupply"
+                   asp-route-CurrentPage="1"
+                   asp-route-Filter_Kod="@Model.Filter_Kod"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_DataFrom="@Model.Filter_DataFrom"
+                   asp-route-Filter_DataTo="@Model.Filter_DataTo"
+                   asp-route-Filter_Ilosc="@Model.Filter_Ilosc"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_DateCreated="@Model.Filter_DateCreated"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Pierwsza</a>
+            </li>
+
+            <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
+                <a asp-page="/Department/Office/ViewSupply"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
+                   asp-route-Filter_Kod="@Model.Filter_Kod"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_DataFrom="@Model.Filter_DataFrom"
+                   asp-route-Filter_DataTo="@Model.Filter_DataTo"
+                   asp-route-Filter_Ilosc="@Model.Filter_Ilosc"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_DateCreated="@Model.Filter_DateCreated"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Poprzednia</a>
+            </li>
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Office/ViewSupply"
+                   asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
+                   asp-route-Filter_Kod="@Model.Filter_Kod"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_DataFrom="@Model.Filter_DataFrom"
+                   asp-route-Filter_DataTo="@Model.Filter_DataTo"
+                   asp-route-Filter_Ilosc="@Model.Filter_Ilosc"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_DateCreated="@Model.Filter_DateCreated"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Następna</a>
+            </li>
+
+            <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
+                <a asp-page="/Department/Office/ViewSupply"
+                   asp-route-CurrentPage="@Model.Data.TotalPages"
+                   asp-route-Filter_Kod="@Model.Filter_Kod"
+                   asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
+                   asp-route-Filter_DataFrom="@Model.Filter_DataFrom"
+                   asp-route-Filter_DataTo="@Model.Filter_DataTo"
+                   asp-route-Filter_Ilosc="@Model.Filter_Ilosc"
+                   asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                   asp-route-Filter_DateCreated="@Model.Filter_DateCreated"
+                   asp-route-SortColumn="@Model.SortColumn"
+                   asp-route-OrderDescent="@Model.OrderDescent"
+                   class="page-link">Ostatnia</a>
+            </li>
+        </ul>
+    </div>
+</form>

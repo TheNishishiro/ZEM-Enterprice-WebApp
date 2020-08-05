@@ -1,0 +1,20 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Strona powitalna";
+}
+<div class="highlight-blue" style="font-family: 'Exo 2', sans-serif;">
+    <div class="container">
+        <div class="intro">
+            <h3>@Model.Message</h3>
+            <h2 class="text-center">Witaj!</h2>
+            <p class="text-center">
+                Znajdujesz się w aplikacji ZEM Enterprise obsługującej część zakładuj odpowiadającą za zarządzanie przewodami.<br><br>Aby kontynuować musisz posiadać konto.<br>Jeśli posiadasz konto użyj przycisku "Zaloguj" u góry strony.<br><br>Wszelkie zastrzeżenia
+                i uwagi proszę kierować do osób odpowiedzialnych za ten projekt.
+            </p>
+        </div>
+        <div class="buttons"></div>
+    </div>
+</div>
+<script src="/assets/js/jquery.min.js?h=83e266cb1712b47c265f77a8f9e18451"></script>
+<script src="/assets/bootstrap/js/bootstrap.min.js?h=e46528792882c54882f660b60936a0fc"></script>

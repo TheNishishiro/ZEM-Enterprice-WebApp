@@ -1,0 +1,9 @@
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\bin\Release\EnterpriseZEM_Common.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\bin\Release\EnterpriseZEM_Common.pdb
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\bin\Release\Newtonsoft.Json.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\bin\Release\Newtonsoft.Json.xml
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Release\EnterpriseZEM_Common.csprojAssemblyReference.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Release\EnterpriseZEM_Common.csproj.CoreCompileInputs.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Release\EnterpriseZEM_Common.csproj.CopyComplete
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Release\EnterpriseZEM_Common.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Release\EnterpriseZEM_Common.pdb
