@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ZEM_Enterprice_WebApp.Data;
+using ZEM_Enterprice_WebApp.Utilities;
 
 namespace ZEM_Enterprice_WebApp.API
 {
@@ -48,7 +49,8 @@ namespace ZEM_Enterprice_WebApp.API
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
-            if (result.Succeeded)
+            if (result.Succeeded && (await
+                _userManager.IsInRoleAsync(user, DefaultRoles.Scanner.ToString()) || await _userManager.IsInRoleAsync(user, DefaultRoles.Admin.ToString())))
                 return true;
             return false;
         }

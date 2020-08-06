@@ -1,0 +1,21 @@
+﻿@page
+@model ZEM_Enterprice_WebApp.Pages.Department.Scanner.ShowMissingModel
+@{
+    ViewData["Title"] = "Pokaż brakujące";
+}
+
+<script src="~/assets/customjs/ScanCommunicate.js"></script>
+<script src="~/assets/customjs/MissingCables.js"></script>
+<div class="login-clean">
+    <form>
+        <h2 class="sr-only">Login Form</h2>
+        <div class="illustration">
+            <h1 style="color: rgb(71,140,244);font-size: 20px;">Pokaż brakujące kody</h1>
+        </div>
+        <div class="form-group"><label>Przewód cięty</label></div>
+        <div class="form-group"><input onchange="GetMissing()" class="form-control" type="text" id="code-field"></div>
+        <div class="form-group"><input onchange="GetMissing()" class="form-control" type="date" id="date-picker"></div>
+        <div class="form-group"><button class="btn btn-primary btn-block" type="button" style="background-color: rgb(71,119,244);" onclick="GetMissing()">Sprawdź</button></div>
+        <div><h1 id="missing-label" style="color: rgb(0, 0, 0);font-size: 24px;"></h1></div>
+    </form>
+</div>
