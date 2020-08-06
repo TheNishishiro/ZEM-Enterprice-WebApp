@@ -41,6 +41,7 @@ namespace ZEM_Enterprice_WebApp
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddIdentity<MyUser, IdentityRole>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;

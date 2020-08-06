@@ -10,8 +10,8 @@ using ZEM_Enterprice_WebApp.Data;
 namespace ZEM_Enterprice_WebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200804075948_uploaddatefordelivery")]
-    partial class uploaddatefordelivery
+    [Migration("20200806075914_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

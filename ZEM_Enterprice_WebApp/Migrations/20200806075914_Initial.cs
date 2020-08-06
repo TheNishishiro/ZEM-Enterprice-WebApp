@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ZEM_Enterprice_WebApp.Migrations
 {
-    public partial class a : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,6 +62,18 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MovedNotifications",
+                columns: table => new
+                {
+                    MovedNotificationsId = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovedNotifications", x => x.MovedNotificationsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PendingChangesTechnical",
                 columns: table => new
                 {
@@ -86,6 +98,21 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PendingDostawa",
+                columns: table => new
+                {
+                    KodIloscData = table.Column<string>(nullable: false),
+                    Kod = table.Column<string>(nullable: true),
+                    Ilosc = table.Column<int>(nullable: false),
+                    Data = table.Column<DateTime>(nullable: false),
+                    Uwagi = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PendingDostawa", x => x.KodIloscData);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Technical",
                 columns: table => new
                 {
@@ -100,7 +127,8 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     IndeksScala = table.Column<string>(nullable: true),
                     KanBan = table.Column<bool>(nullable: false),
                     Uwagi = table.Column<string>(nullable: true),
-                    DataUtworzenia = table.Column<string>(nullable: true)
+                    DataUtworzenia = table.Column<string>(nullable: true),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,6 +249,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     Kod = table.Column<string>(nullable: true),
                     Ilosc = table.Column<int>(nullable: false),
                     Data = table.Column<DateTime>(nullable: false),
+                    DataUtworzenia = table.Column<DateTime>(nullable: false),
                     Uwagi = table.Column<string>(nullable: true),
                     TechnicalCietyWiazka = table.Column<string>(nullable: false)
                 },
@@ -243,6 +272,8 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     NumerKompletu = table.Column<int>(nullable: false),
                     SztukiZeskanowane = table.Column<int>(nullable: false),
                     SztukiDeklarowane = table.Column<int>(nullable: false),
+                    ZeskanowanychNaKomplet = table.Column<int>(nullable: false),
+                    NaKomplet = table.Column<int>(nullable: false),
                     Wiazka = table.Column<string>(nullable: true),
                     KodCiety = table.Column<string>(nullable: true),
                     Pracownik = table.Column<string>(nullable: true),
@@ -256,6 +287,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     DataDopisu = table.Column<DateTime>(nullable: true),
                     DopisanaIlosc = table.Column<int>(nullable: false),
                     Uwagi = table.Column<string>(nullable: true),
+                    Deleted = table.Column<bool>(nullable: false),
                     TechnicalCietyWiazka = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -367,7 +399,13 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 name: "MissingFromTech");
 
             migrationBuilder.DropTable(
+                name: "MovedNotifications");
+
+            migrationBuilder.DropTable(
                 name: "PendingChangesTechnical");
+
+            migrationBuilder.DropTable(
+                name: "PendingDostawa");
 
             migrationBuilder.DropTable(
                 name: "VtToDostawa");

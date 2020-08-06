@@ -1322,9 +1322,6 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\D
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.csprojAssemblyReference.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.AssemblyInfoInputs.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.AssemblyInfo.cs
-D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.csproj.CoreCompileInputs.cache
-D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cs
-D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.RazorAssemblyInfo.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.RazorAssemblyInfo.cs
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.TagHelpers.input.cache
@@ -1381,3 +1378,9 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\D
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.pdb
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.genruntimeconfig.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\Razor\Pages\Department\Scanner\ShowMissing.cshtml.g.cs
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\Debug\netcoreapp3.1\MySqlConnector.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\Debug\netcoreapp3.1\Pomelo.EntityFrameworkCore.MySql.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\Debug\netcoreapp3.1\Pomelo.JsonObject.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.csproj.CoreCompileInputs.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cs
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cache
