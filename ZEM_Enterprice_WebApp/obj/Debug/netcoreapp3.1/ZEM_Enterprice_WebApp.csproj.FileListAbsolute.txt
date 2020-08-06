@@ -1380,3 +1380,4 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\D
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.dll
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.pdb
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.genruntimeconfig.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\Razor\Pages\Department\Scanner\ShowMissing.cshtml.g.cs

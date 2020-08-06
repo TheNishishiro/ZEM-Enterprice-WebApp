@@ -21,7 +21,7 @@ namespace EnterpriseZEM
                 Directory.CreateDirectory("./LOGS");
             
             var log = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Warning()
                 .WriteTo.File("./LOGS/log.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 

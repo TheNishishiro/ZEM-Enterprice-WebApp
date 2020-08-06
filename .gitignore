@@ -1,4 +1,6 @@
 ZEM_Enterprice_WebApp/bin/
+ZEM_Enterprice_WebApp/appsettings.json
+ZEM_Enterprice_WebApp/hostsettings.json
 EnterpriseZEM/packages/
 EnterpriseZEM/EnterpriseZEM/bin/
 EnterpriseZEM/EnterpriseZEM_Client/bin/

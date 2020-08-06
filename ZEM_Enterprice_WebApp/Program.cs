@@ -24,7 +24,6 @@ namespace ZEM_Enterprice_WebApp
                 Directory.CreateDirectory("./LOGS/");
 
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.RollingFile("./LOGS/Log_Debug_{Date}.txt", LogEventLevel.Information)
                 .WriteTo.RollingFile("./LOGS/Log_{Date}.txt", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .CreateLogger();
