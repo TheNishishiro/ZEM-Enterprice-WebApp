@@ -138,7 +138,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             }
             if (Filter_KodCiety != null)
             {
-                var options = Filter_KodCiety.Split(separator).Select(c => c.Trim());
+                var options = Filter_KodCiety.Split(separator).Select(c => c.Replace("PLC", "").Trim());
                 query = query.Where(c => options.Contains(c.KodCiety));
             }
             if (Filter_Pracownik != null)
