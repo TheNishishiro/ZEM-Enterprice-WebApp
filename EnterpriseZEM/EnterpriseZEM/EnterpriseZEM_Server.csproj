@@ -221,6 +221,7 @@
     <Compile Include="db\tables\Dostawa.cs" />
     <Compile Include="db\tables\MissingFromTech.cs" />
     <Compile Include="db\tables\PendingChangesTechnical.cs" />
+    <Compile Include="db\tables\ScanCache.cs" />
     <Compile Include="db\tables\Technical.cs" />
     <Compile Include="db\tables\VTMagazyn.cs" />
     <Compile Include="db\tables\VtToDostawa.cs" />

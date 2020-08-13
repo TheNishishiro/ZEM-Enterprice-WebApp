@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ZEM_Enterprice_WebApp.Migrations
 {
-    public partial class Initial : Migration
+    public partial class deliveryIdChange : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,18 +62,6 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MovedNotifications",
-                columns: table => new
-                {
-                    MovedNotificationsId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovedNotifications", x => x.MovedNotificationsId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PendingChangesTechnical",
                 columns: table => new
                 {
@@ -101,7 +89,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 name: "PendingDostawa",
                 columns: table => new
                 {
-                    KodIloscData = table.Column<string>(nullable: false),
+                    PendingDostawaId = table.Column<Guid>(nullable: false),
                     Kod = table.Column<string>(nullable: true),
                     Ilosc = table.Column<int>(nullable: false),
                     Data = table.Column<DateTime>(nullable: false),
@@ -109,7 +97,19 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PendingDostawa", x => x.KodIloscData);
+                    table.PrimaryKey("PK_PendingDostawa", x => x.PendingDostawaId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ScanCache",
+                columns: table => new
+                {
+                    ScanCacheId = table.Column<Guid>(nullable: false),
+                    LookedBack = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScanCache", x => x.ScanCacheId);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,7 +245,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 name: "Dostawa",
                 columns: table => new
                 {
-                    KodIloscData = table.Column<string>(nullable: false),
+                    DostawaId = table.Column<Guid>(nullable: false),
                     Kod = table.Column<string>(nullable: true),
                     Ilosc = table.Column<int>(nullable: false),
                     Data = table.Column<DateTime>(nullable: false),
@@ -255,7 +255,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dostawa", x => x.KodIloscData);
+                    table.PrimaryKey("PK_Dostawa", x => x.DostawaId);
                     table.ForeignKey(
                         name: "FK_Dostawa_Technical_TechnicalCietyWiazka",
                         column: x => x.TechnicalCietyWiazka,
@@ -305,7 +305,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 name: "VtToDostawa",
                 columns: table => new
                 {
-                    DostawaId = table.Column<string>(nullable: false),
+                    DostawaId = table.Column<Guid>(nullable: false),
                     VTMagazynId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -315,7 +315,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                         name: "FK_VtToDostawa_Dostawa_DostawaId",
                         column: x => x.DostawaId,
                         principalTable: "Dostawa",
-                        principalColumn: "KodIloscData");
+                        principalColumn: "DostawaId");
                     table.ForeignKey(
                         name: "FK_VtToDostawa_VTMagazyn_VTMagazynId",
                         column: x => x.VTMagazynId,
@@ -399,13 +399,13 @@ namespace ZEM_Enterprice_WebApp.Migrations
                 name: "MissingFromTech");
 
             migrationBuilder.DropTable(
-                name: "MovedNotifications");
-
-            migrationBuilder.DropTable(
                 name: "PendingChangesTechnical");
 
             migrationBuilder.DropTable(
                 name: "PendingDostawa");
+
+            migrationBuilder.DropTable(
+                name: "ScanCache");
 
             migrationBuilder.DropTable(
                 name: "VtToDostawa");

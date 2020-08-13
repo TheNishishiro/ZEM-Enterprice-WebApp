@@ -55,11 +55,19 @@ namespace EnterpriseZEM
         protected CustomPacket Scan(CustomPacket packet)
         {
             _db = new ZEMDBContext();
-            VTInsertFunctions VTFuncs = new VTInsertFunctions(_db, _log);
+            ScannedCode sc = (ScannedCode)packet.Payload;
+            var scan = _db.ScanCache.Find(sc.SessionGUID);
+            if (scan == null)
+            {
+                _db.ScanCache.Add(new ScanCache { ScanCacheId = sc.SessionGUID });
+                _db.SaveChanges();
+                scan = _db.ScanCache.Find(sc.SessionGUID);
+            }
+            VTInsertFunctions VTFuncs = new VTInsertFunctions(_db, _log, scan);
             ScannedResponse sr = new ScannedResponse();
             CustomPacket response = new CustomPacket(FlagType.basic, HeaderTypes.basic, "scan", new List<string>(), sr);
             //PLCGTJ229015
-            ScannedCode sc = (ScannedCode)packet.Payload;
+            
             sc.Declared = false;
             sc.complete = false;
             sc.isFullSet = false;
@@ -70,10 +78,7 @@ namespace EnterpriseZEM
 
             sr.missingEntries = new List<MissingBackwards>();
 
-            var watch = Stopwatch.StartNew();
             var techEntry = _db.Technical.IgnoreQueryFilters().FirstOrDefault(c => c.PrzewodCiety == sc.kodCiety);
-            watch.Stop();
-            _log.Debug($"Technical DB search time [{watch.ElapsedMilliseconds}]");
             if (techEntry == null)
             {
                 if (_db.MissingFromTech.Find(sc.kodCiety) == null)
@@ -108,41 +113,56 @@ namespace EnterpriseZEM
             sr.LiteraRodziny = techEntry.LiterRodziny;
             sr.IlePrzewodow = techEntry.IlePrzewodow;
 
-            watch.Restart();
+
             var dostawaEntry = _db.Dostawa.FirstOrDefault(c => c.Data.Date == sc.dataDostawy.Date && c.Kod == "PLC" + sc.kodCiety);
-            watch.Stop();
-            _log.Debug($"Delivery DB search time [{watch.ElapsedMilliseconds}]");
-            watch.Restart();
             if (dostawaEntry != null)
             {
                 sc.dataDostawy = dostawaEntry.Data;
                 sc.dataDostawyOld = dostawaEntry.Data;
-                sc.isFullSet = VTFuncs.CheckIfFullSetOfSupply(sc);
                 sc.sztukiDeklarowane = dostawaEntry.Ilosc;
                 sc.Declared = true;
-                // Dostawa nie zawiera dosłanych
-                if (sc.isFullSet)
+
+                if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
                 {
-                    // if codes to complete set are missing check back
-                    if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
+                    var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                    var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                    int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+
+                    if (sc.sztukiSkanowane != declared && !sc.isForcedOverDeclared)
+                    {
+                        response.Header = HeaderTypes.error;
+                        response.Flag = FlagType.quantityOverDeclated;
+                        response.Args.Add(sc.sztukiDeklarowane.ToString());
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
+                        return response;
+                    }
+                    else
                     {
                         if (!VTFuncs.CheckBackOrAdd(response, techEntry, sc, dostawaEntry))
-                            return response;
-                    }
-                    else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
-                    {
-                        if (!VTFuncs.CheckBackOrAddQuantityIncorrect(response, techEntry, sc, dostawaEntry))
                             return response;
                     }
                 }
-                else // Dostawa zawiera dosłane
+                else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
                 {
-                    if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
+                    if (!sc.isForcedQuantity)
                     {
-                        if (!VTFuncs.CheckBackOrAdd(response, techEntry, sc, dostawaEntry))
-                            return response;
+                        response.Header = HeaderTypes.error;
+                        response.Flag = FlagType.quantityIncorrect;
+                        response.Args.Add(sc.sztukiDeklarowane.ToString());
+                        var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+                        
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
+                        return response;
                     }
-                    else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
+                    else
                     {
                         if (!VTFuncs.CheckBackOrAddQuantityIncorrect(response, techEntry, sc, dostawaEntry))
                             return response;
@@ -165,11 +185,14 @@ namespace EnterpriseZEM
                         response.Header = HeaderTypes.error;
                         response.Flag = FlagType.quantityIncorrect;
                         response.Args.Add("0");
-                        var vt = VTFuncs.ExistsInVT(sc);
-                        if (vt != null)
-                            response.Args.Add(vt.SztukiZeskanowane.ToString());
-                        else
-                            response.Args.Add("0");
+                        var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+                        
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
                         return response;
                     }
                     else
@@ -179,13 +202,11 @@ namespace EnterpriseZEM
                     }
                 }
             }
-
+            _db.ScanCache.Remove(scan);
             _db.SaveChanges();
 
             bool isComplete = VTFuncs.checkComplete(sc, out int numToComplete, out int numScanned, out int numScannedToComplete);
             
-            watch.Stop();
-            _log.Debug($"Scan processing time [{watch.ElapsedMilliseconds}]");
 
             sr.DataDostawy = sc.dataDostawy;
             sr.DataDostawyOld = sc.dataDostawyOld;
@@ -208,8 +229,8 @@ namespace EnterpriseZEM
         protected CustomPacket getBin(CustomPacket packet)
         {
             CustomPacket response = new CustomPacket(FlagType.basic, HeaderTypes.basic, null, null, null);
-
-            var BIN = _db.Technical.AsNoTracking().FirstOrDefault(c => c.PrzewodCiety == (string)packet.Payload).BIN;
+            var bundle = _db.Technical.AsNoTracking().FirstOrDefault(c => c.PrzewodCiety == (string)packet.Payload).Wiazka;
+            var BIN = _db.Technical.AsNoTracking().Where(c => c.Wiazka == bundle).Select(c => c.BIN).Distinct().ToList();
             if(BIN == null)
             {
                 response.Header = HeaderTypes.error;
@@ -217,14 +238,14 @@ namespace EnterpriseZEM
             }
             else
             {
-                response.Payload = BIN;
+                response.Args = BIN;
             }
             return response;
         }
         protected CustomPacket showMissing(CustomPacket packet)
         {
             CustomPacket response = new CustomPacket(FlagType.basic, HeaderTypes.basic, null, new List<string>(), null);
-            VTInsertFunctions vTInsert = new VTInsertFunctions(_db, _log);
+            VTInsertFunctions vTInsert = new VTInsertFunctions(_db, _log, null);
             string cutcode = packet.Args[0];
             DateTime date = DateTime.Parse(packet.Args[1]);
 
@@ -245,12 +266,16 @@ namespace EnterpriseZEM
             var SetIDs = vTInsert.GetCompleteID(new ScannedCode { kodCiety = cutcode, dataDostawyOld = date });
             if (SetIDs.Count() == 0)
                 SetIDs.Add(0);
+
             List<string> missingCodes = new List<string>();
+            var deliveries = _db.Dostawa.AsNoTracking().Include(c => c.Technical).Where(c => c.Technical.Wiazka == wiazka &&
+                c.Data.Date == date.Date).ToList();
+            var scans = _db.VTMagazyn.AsNoTracking().Where(c => c.Wiazka == wiazka && c.DataDostawy.Date == date.Date).ToList();
 
             foreach (int setNumber in SetIDs)
             {
                 var codesForWiazka = _db.Technical.Where(c => c.Wiazka == wiazka && c.KanBan == false).Select(c => c.PrzewodCiety).ToList();
-                var scannedCodes = _db.VTMagazyn.Where(c => c.DataDostawy.Date == date.Date && codesForWiazka.Contains(c.KodCiety) && c.NumerKompletu == setNumber).Select(c => c.KodCiety).ToList();
+                var scannedCodes = scans.Where(c => c.NumerKompletu == setNumber).Select(c => c.KodCiety).ToList();
                 if (scannedCodes.Count() == 0)
                 {
                     response.Flag = FlagType.nonScanned;
@@ -259,7 +284,7 @@ namespace EnterpriseZEM
                 }
 
                 
-                missingCodes.Add($"Brakujące kody dla wiązki {wiazka} komplet nr. {setNumber} po {vTInsert.GetPossibleDeclaredValue(new ScannedCode { kodCiety = cutcode, Wiazka = wiazka, dataDostawyOld = date}, setNumber)}");
+                missingCodes.Add($"Brakujące kody dla wiązki {wiazka} komplet nr. {setNumber} po {vTInsert.GetPossibleDeclaredValue(new ScannedCode { kodCiety = cutcode, Wiazka = wiazka, dataDostawyOld = date}, scans, deliveries, setNumber)}");
                 missingCodes.AddRange(codesForWiazka.Except(scannedCodes).ToList());
             }
 
@@ -285,6 +310,14 @@ namespace EnterpriseZEM
                     break;
                 case "showMissing":
                     responsePacket = showMissing(packet);
+                    break;
+                case "disposeCache":
+                    _db = new ZEMDBContext();
+                    var stray = _db.ScanCache.Find((Guid)packet.Payload);
+                    if(stray != null)
+                        _db.Remove(stray);
+                    _db.SaveChanges();
+                    responsePacket = new CustomPacket(FlagType.basic, HeaderTypes.basic, "disposeCache", null, null);
                     break;
             }
 

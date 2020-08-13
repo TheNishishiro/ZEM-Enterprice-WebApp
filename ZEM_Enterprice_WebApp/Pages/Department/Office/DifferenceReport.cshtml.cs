@@ -104,7 +104,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
                 if (differences.ContainsKey(kod))
                 {
-                    differences[vtEntries[0].KodCiety].Zeskanowanych += sztukiSkanowane;
+                    differences[kod].Zeskanowanych += sztukiSkanowane;
                 }
                 else
                 {
@@ -121,8 +121,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             List<VTMagazyn> vtUndeclared = _db.VTMagazyn.AsNoTracking()
                 .Where(c => 
                     c.Deklarowany == false && 
-                    c.DataDostawy.Date == ForDate.Date ||
-                    (c.DataDopisu != null && ((DateTime)c.DataDopisu).Date == ForDate.Date))
+                    (c.DataDostawy.Date == ForDate.Date ||
+                    (c.DataDopisu != null && ((DateTime)c.DataDopisu).Date == ForDate.Date)))
                 .Include(c=>c.Technical).ToList();
 
             foreach (var vtEntry in vtUndeclared)

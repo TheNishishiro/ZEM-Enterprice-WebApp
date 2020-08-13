@@ -14,8 +14,11 @@ async function checkBIN() {
         return;
     }
 
-
-    document.getElementById("bin-label").textContent = d["bin"];
+    document.getElementById("bin-label").textContent = "";
+    d["bin"].forEach(function myFunc(item, index) {
+        document.getElementById("bin-label").innerHTML += item + "<br>";
+    });
+    
 }
 
 class SendObject {
@@ -30,19 +33,21 @@ class SendObject {
     isForcedBack = false;
     isForcedInsert = false;
     isForcedUndeclared = false;
+    isForcedOverDeclared = false;
     User = document.getElementById("username-field").value;
 }
 
-function BuildScannerURL(sendObject) {
-    return api_url + "scannerInfo/" + sendObject.kodWiazki + "," + sendObject.forcedQuantity + "," + 
+function BuildScannerURL(sendObject, guid) {
+    return api_url + "scannerInfo/" + guid + "," + sendObject.kodWiazki + "," + sendObject.forcedQuantity + "," + 
         sendObject.isLookingBack + "," + sendObject.dostDate + "," + sendObject.dokDostawy + "," +
         sendObject.isForcedQuantity + "," + sendObject.isForcedOverLimit + "," +
         sendObject.isForcedBackAck + "," + sendObject.isForcedBack + "," + sendObject.isForcedInsert + "," + sendObject.isForcedUndeclared + "," +
+        sendObject.isForcedOverDeclared + "," +
         sendObject.User;
 }
 
-async function SendReceive(myScan) {
-    var constructed_api_url = BuildScannerURL(myScan);
+async function SendReceive(myScan, guid) {
+    var constructed_api_url = BuildScannerURL(myScan, guid);
     console.log(constructed_api_url);
     const response = await fetch(constructed_api_url);
     return d = await response.json();
@@ -74,12 +79,19 @@ async function automaticEntry() {
     }
 }
 
+function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
 //PLCCEG0663316
 async function getCodeDetails() {
     var myScan = new SendObject();
-
+    var guid = uuidv4();
+    console.log(guid);
     var shouldExit = false;
-    var response = await SendReceive(myScan);
+    var response = await SendReceive(myScan, guid);
     console.log(response);
     while (response["header"] == 1) {
         // Not in tech
@@ -89,7 +101,7 @@ async function getCodeDetails() {
         }
         // quantity incorrect
         else if (response["flag"] == 110) {
-            var newQuantity = prompt("Deklarowana ilość (" + response["args"][0] + ") nie zgadza się ze zeskanowaną " + response["sztukiSkanowane"] + "(aktualnie zeskanowanych: " + response["args"][1] + "), zatwierdź, zmień lub anuluj skan.", response["sztukiSkanowane"]);
+            var newQuantity = prompt("Deklarowana ilość (" + response["args"][0] + ") nie zgadza się ze zeskanowaną " + response["sztukiSkanowane"] + " (aktualnie zeskanowanych: " + response["args"][1] + "), komplet na dziś: " + response["args"][2] + ", różnica: " + response["args"][3] + ", zatwierdź, zmień lub anuluj skan.", response["sztukiSkanowane"]);
 
             if (newQuantity == null || newQuantity == "") {
                 shouldExit = true;
@@ -97,14 +109,26 @@ async function getCodeDetails() {
             else {
                 myScan.forcedQuantity = newQuantity;
                 myScan.isForcedQuantity = true;
-                response = await SendReceive(myScan);
+                response = await SendReceive(myScan, guid);
+            }
+        }
+        else if (response["flag"] == 112) {
+            var newQuantity = prompt("Deklarowana ilość (" + response["args"][0] + ") zgadza się ze zeskanowaną " + response["sztukiSkanowane"] + " (aktualnie zeskanowanych: " + response["args"][1] + "), ale nie z kompletem na dziś (" + response["args"][2] + "), różnica: " + response["args"][3] + ", zatwierdź, zmień lub anuluj skan.", response["sztukiSkanowane"]);
+
+            if (newQuantity == null || newQuantity == "") {
+                shouldExit = true;
+            }
+            else {
+                myScan.forcedQuantity = newQuantity;
+                myScan.isForcedOverDeclared = true;
+                response = await SendReceive(myScan, guid);
             }
         }
         // quantity overlimit
         else if (response["flag"] == 111) {
             if (confirm("Po dodaniu rekordu ilość przewodów przekroczy deklarowaną ilość (" + response["args"][1] + ") do (" + response["args"][0] +"), kontynuować?")) {
                 myScan.isForcedOverLimit = true;
-                response = await SendReceive(myScan);
+                response = await SendReceive(myScan, guid);
             } else {
                 shouldExit = true;
             }
@@ -113,7 +137,7 @@ async function getCodeDetails() {
         else if (response["flag"] == 200) {
             if (confirm("Kod został dziś zeskanowany, upewnij się że zeskanowałeś poprawny kod, dodać do bazy?")) {
                 myScan.isForcedInsert = true;
-                response = await SendReceive(myScan);
+                response = await SendReceive(myScan, guid);
             } else {
                 shouldExit = true;
             }
@@ -122,7 +146,7 @@ async function getCodeDetails() {
         else if (response["flag"] == 201) {
             if (confirm("Kod został dziś zeskanowany i dodany wstecz, upewnij się że zeskanowałeś poprawny kod, dodać do bazy?")) {
                 myScan.isForcedInsert = true;
-                response = await SendReceive(myScan);
+                response = await SendReceive(myScan, guid);
             } else {
                 shouldExit = true;
             }
@@ -131,7 +155,7 @@ async function getCodeDetails() {
         else if (response["flag"] == 101) {
             if (confirm("Kod nie znaleziony w dokumencie dostawy, dodać mimo to?")) {
                 myScan.isForcedUndeclared = true;
-                response = await SendReceive(myScan);
+                response = await SendReceive(myScan, guid);
             } else {
                 shouldExit = true;
             }
@@ -153,14 +177,19 @@ async function getCodeDetails() {
             break;
     }
 
+    var d1 = new Date(response["dataDostawyOld"]);
+    d1.toLocaleDateString('en-GB'); // dd/mm/yyyy
+    var d2 = new Date(response["dataDostawy"]);
+    d2.toLocaleDateString('en-GB'); // dd/mm/yyyy
+
     document.getElementById("kod-kabla-field").value = "";
     document.getElementById("kod-kabla-field").focus();
 
     document.getElementById("kod-ciety-field").innerHTML = response["przewodCiety"];
     document.getElementById("bin-field").innerHTML = response["bin"];
     document.getElementById("kod-wiazki-field").innerHTML = response["kodWiazki"];
-    document.getElementById("data-dostawy-stara-field").innerHTML = response["dataDostawy"].split('T')[0];
-    document.getElementById("data-dostawy-nowa-field").innerHTML = response["dataDostawyOld"].split('T')[0];
+    document.getElementById("data-dostawy-stara-field").innerHTML = d2.toLocaleDateString('en-GB');
+    document.getElementById("data-dostawy-nowa-field").innerHTML = d1.toLocaleDateString('en-GB');
     document.getElementById("ilosc-field").innerHTML = response["sztukiSkanowane"] + "/" + response["sztukiDeklatowane"];
     document.getElementById("litera-field").innerHTML = response["literaRodziny"];
     document.getElementById("SetId-field").innerHTML = response["numerKompletu"];
@@ -172,7 +201,7 @@ async function getCodeDetails() {
     document.getElementById("kabli-wiazke-print").innerHTML = response["numToComplete"];
     document.getElementById("bin-print").innerHTML = response["bin"];
     document.getElementById("nr-kompletu-print").innerHTML = response["numerKompletu"];
-    document.getElementById("data-dostawy-print").innerHTML = response["dataDostawy"].split('T')[0];
+    document.getElementById("data-dostawy-print").innerHTML = d1.toLocaleDateString('en-GB');
     document.getElementById("ilosc-w-dostawie-print").innerHTML = response["sztukiDeklatowane"];
     document.getElementById("przykladowy-kod-kabla-print").innerHTML = response["przewodCiety"];
 
@@ -184,10 +213,7 @@ async function getCodeDetails() {
         document.getElementById("komplet-field").innerHTML = "KOMPLET: NIE";
         document.getElementById("window-div").style.backgroundColor = "#FF6459";
     }
-    var d1 = new Date(response["dataDostawyOld"]);
-    d1.toLocaleDateString('en-GB'); // dd/mm/yyyy
-    var d2 = new Date(response["dataDostawy"]);
-    d2.toLocaleDateString('en-GB'); // dd/mm/yyyy
+    
 
     if (d1 < d2) {
         document.getElementById("zalegle-field").innerHTML = "ZALEGŁE";
@@ -195,6 +221,12 @@ async function getCodeDetails() {
     else {
         document.getElementById("zalegle-field").innerHTML = "";
     }
+
+    const data = fetch(api_url + "scannerInfo/" + guid, {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' },
+    }).then(res => { return res.json(); });
+    console.log(data);
 
     if (response["numScanned"] == 1) {
         var divToPrint = document.getElementById('print-div');

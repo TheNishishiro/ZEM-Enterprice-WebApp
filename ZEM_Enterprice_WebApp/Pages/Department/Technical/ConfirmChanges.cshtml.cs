@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ZEM_Enterprice_WebApp.Data;
+using ZEM_Enterprice_WebApp.Data.Tables;
 
 namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 {
@@ -75,7 +76,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 
         public async Task<IActionResult> OnPostAcceptChangesAsync()
         {
-            foreach(var check in AreChecked)
+            foreach (var check in AreChecked)
             {
                 var pending = await _db.PendingChangesTechnical.FirstOrDefaultAsync(c => c.PendingChangesTechnicalId == Guid.Parse(check));
                 var rec = await _db.Technical.FirstOrDefaultAsync(c => c.CietyWiazka == pending.CietyWiazka);
@@ -92,6 +93,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                     rec.Rodzina = pending.Rodzina;
                     rec.Uwagi = pending.Uwagi;
                     rec.Wiazka = pending.Wiazka;
+                    rec.DeleteDate = null;
+                    rec.Deleted = false;
                 }
                 _db.Technical.Update(rec);
             }

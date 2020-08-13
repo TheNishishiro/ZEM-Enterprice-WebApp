@@ -122,7 +122,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
                             Data = csv.GetField<DateTime>("Data"),
                             Ilosc = csv.GetField<int>("Ilosc"),
                             Kod = csv.GetField<string>("Kod"),
-                            KodIloscData = csv.GetField<string>("KodIloscData"),
+                            DostawaId = csv.GetField<Guid>("DostawaId"),
                             Skany = new List<VtToDostawa>(),
                             Technical = await _db.Technical.FindAsync(csv.GetField<string>("CietyWiazka")),
                             Uwagi = csv.GetField<string>("Uwagi")
@@ -215,10 +215,10 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
                     {
                         var vttd = new VtToDostawa { 
                             VTMagazynId = csv.GetField<Guid>("VTMagazynId"),
-                            DostawaId = csv.GetField<string>("DostawaId")
+                            DostawaId = csv.GetField<Guid>("DostawaId")
                         };
                         var vt = _db.VTMagazyn.Include(c=>c.Dostawy).FirstOrDefault(c => c.VTMagazynId == vttd.VTMagazynId);
-                        var dost = _db.Dostawa.Include(c=>c.Skany).FirstOrDefault(c => c.KodIloscData == vttd.DostawaId);
+                        var dost = _db.Dostawa.Include(c=>c.Skany).FirstOrDefault(c => c.DostawaId == vttd.DostawaId);
                         vttd.Dostawa = dost;
                         vttd.VTMagazyn = vt;
                         vt.Dostawy.Add(vttd);

@@ -10,7 +10,7 @@ namespace EnterpriseZEM.db.tables
     public class Dostawa
     {
         [Key]
-        public string KodIloscData { get; set; }
+        public Guid DostawaId { get; set; }
         public string Kod { get; set; }
         public int Ilosc { get; set; }
         public DateTime Data { get; set; }

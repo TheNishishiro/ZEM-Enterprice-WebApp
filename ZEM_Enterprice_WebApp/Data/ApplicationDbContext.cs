@@ -18,7 +18,7 @@ namespace ZEM_Enterprice_WebApp.Data
         public DbSet<MissingFromTech> MissingFromTech { get; set; }
         public DbSet<VtToDostawa> VtToDostawa { get; set; }
         public DbSet<PendingDostawa> PendingDostawa { get; set; }
-        public DbSet<MovedNotifications> MovedNotifications { get; set; }
+        public DbSet<ScanCache> ScanCache { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

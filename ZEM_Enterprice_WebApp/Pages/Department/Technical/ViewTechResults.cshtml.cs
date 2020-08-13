@@ -81,6 +81,10 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             if (rec != null)
             {
                 rec.Deleted = !rec.Deleted;
+                if (rec.Deleted)
+                    rec.DeleteDate = DateTime.Now.Date;
+                else
+                    rec.DeleteDate = null;
                 _db.Update(rec);
                 await _db.SaveChangesAsync();
             }

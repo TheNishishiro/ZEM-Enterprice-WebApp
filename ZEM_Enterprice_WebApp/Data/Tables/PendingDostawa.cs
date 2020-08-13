@@ -9,7 +9,7 @@ namespace ZEM_Enterprice_WebApp.Data.Tables
     public class PendingDostawa
     {
         [Key]
-        public string KodIloscData { get; set; }
+        public Guid PendingDostawaId { get; set; }
         public string Kod { get; set; }
         public int Ilosc { get; set; }
         public DateTime Data { get; set; }

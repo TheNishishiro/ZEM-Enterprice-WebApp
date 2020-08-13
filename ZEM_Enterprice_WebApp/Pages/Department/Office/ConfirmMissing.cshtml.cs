@@ -18,7 +18,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public class Input
         {
-            public string KodIloscData { get; set; }
+            public Guid dostawaId { get; set; }
             public string Kod { get; set; }
             public int Ilosc { get; set; }
             public DateTime Data { get; set; }
@@ -49,7 +49,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             {
                 _input.Add(new Input
                 {
-                    KodIloscData = pendingDostawa.KodIloscData,
+                    dostawaId = pendingDostawa.PendingDostawaId,
                     Kod = pendingDostawa.Kod,
                     Uwagi = pendingDostawa.Uwagi,
                     Data = pendingDostawa.Data,
@@ -64,14 +64,13 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         {
             foreach (var check in AreChecked)
             {
-                var pending = await _db.PendingDostawa.FirstOrDefaultAsync(c => c.KodIloscData == check);
+                var pending = await _db.PendingDostawa.FirstOrDefaultAsync(c => c.PendingDostawaId == Guid.Parse(check));
                 var tech = await _db.Technical.FirstOrDefaultAsync(c => c.IndeksScala == pending.Kod);
 
                 if (tech != null)
                 {
                     await _db.Dostawa.AddAsync(new Data.Tables.Dostawa
                     {
-                        KodIloscData = check,
                         Kod = pending.Kod,
                         Ilosc = pending.Ilosc,
                         Data = pending.Data,
@@ -88,7 +87,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public async Task<IActionResult> OnPostDeleteRecordAsync(string id)
         {
-            var pending = await _db.PendingDostawa.FirstOrDefaultAsync(c => c.KodIloscData == id);
+            var pending = await _db.PendingDostawa.FirstOrDefaultAsync(c => c.PendingDostawaId == Guid.Parse(id));
             if (pending == null)
                 return Page();
 

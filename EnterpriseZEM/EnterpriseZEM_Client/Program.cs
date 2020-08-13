@@ -26,6 +26,7 @@ namespace EnterpriseZEM_Client
                     sw.WriteLine("AuthServerPort: 5000");
                     sw.WriteLine("AuthServerProtocol: http");
                     sw.WriteLine("UsePort: true");
+                    sw.WriteLine("UseAuth: true");
                 }
             }
             if (File.Exists("./Settings.ini"))

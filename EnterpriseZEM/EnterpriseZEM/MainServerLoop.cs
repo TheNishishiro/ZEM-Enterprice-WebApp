@@ -23,7 +23,7 @@ namespace EnterpriseZEM
                 {
                     sw.WriteLine("ServerAddress: 127.0.0.1");
                     sw.WriteLine("ServerPort: 7000");
-                    sw.WriteLine("AuthServerAddress: http://localhost:5000/");
+                    sw.WriteLine("ConnectionString: ");
                 }
                 log.Warning("Settings.ini created.");
             }

@@ -38,7 +38,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
 
         public async Task OnGetAsync()
         {
-            Date = DateTime.Now.AddMonths(-6);
+            Date = DateTime.Now.AddMonths(-3);
         }
 
         public async Task<IActionResult> OnPostAsync()

@@ -1,5 +1,6 @@
 ﻿@page
 @model ZEM_Enterprice_WebApp.Pages.Department.Technical.ConfirmChangesModel
+@using System.Globalization
 @{
     ViewData["Title"] = "Zatwierdź zmiany";
 }
@@ -39,23 +40,23 @@
                 <tbody>
                     @for (int i = 0; i < Model._input.Count; i++)
                     {
-                    <tr>
-                        <td>"@Model._input[i].DataModyfikacji"</td>
-                        <td>"@Model._input[i].Rodzina"</td>
-                        <td>"@Model._input[i].Wiazka"</td>
-                        <td>"@Model._input[i].IndeksScala"</td>
-                        <td>"@Model._input[i].LiterRodziny"</td>
-                        <td>"@Model._input[i].KodWiazki"</td>
-                        <td>"@Model._input[i].IlePrzewodow"</td>
-                        <td>"@Model._input[i].PrzewodCiety"</td>
-                        <td>"@Model._input[i].BIN"</td>
-                        <td>"@Model._input[i].Uwagi"</td>
-                        <td>"@Model._input[i].KanBan"</td>
-                        <td>
-                            <input type="hidden" asp-for="@Model._input[i].Id" />
-                            <input name="AreChecked" type="checkbox" value="@Model._input[i].Id" />
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>@Model._input[i].DataModyfikacji</td>
+                            <td>@Model._input[i].Rodzina</td>
+                            <td>@Model._input[i].Wiazka</td>
+                            <td>@Model._input[i].IndeksScala</td>
+                            <td>@Model._input[i].LiterRodziny</td>
+                            <td>@Model._input[i].KodWiazki</td>
+                            <td>@Model._input[i].IlePrzewodow</td>
+                            <td>@Model._input[i].PrzewodCiety</td>
+                            <td>@Model._input[i].BIN</td>
+                            <td>@Model._input[i].Uwagi</td>
+                            <td>@Model._input[i].KanBan</td>
+                            <td>
+                                <input type="hidden" asp-for="@Model._input[i].Id" />
+                                <input name="AreChecked" type="checkbox" value="@Model._input[i].Id" />
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

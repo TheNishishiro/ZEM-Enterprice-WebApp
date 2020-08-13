@@ -223,8 +223,9 @@ namespace ZEM_Enterprice_WebApp.Migrations
 
             modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.Dostawa", b =>
                 {
-                    b.Property<string>("KodIloscData")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("DostawaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
@@ -245,7 +246,7 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     b.Property<string>("Uwagi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("KodIloscData");
+                    b.HasKey("DostawaId");
 
                     b.HasIndex("TechnicalCietyWiazka");
 
@@ -266,18 +267,6 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     b.HasKey("Kod");
 
                     b.ToTable("MissingFromTech");
-                });
-
-            modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.MovedNotifications", b =>
-                {
-                    b.Property<long>("MovedNotificationsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("MovedNotificationsId");
-
-                    b.ToTable("MovedNotifications");
                 });
 
             modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.PendingChangesTechnical", b =>
@@ -332,8 +321,9 @@ namespace ZEM_Enterprice_WebApp.Migrations
 
             modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.PendingDostawa", b =>
                 {
-                    b.Property<string>("KodIloscData")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("PendingDostawaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Data")
                         .HasColumnType("datetime2");
@@ -347,9 +337,23 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     b.Property<string>("Uwagi")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("KodIloscData");
+                    b.HasKey("PendingDostawaId");
 
                     b.ToTable("PendingDostawa");
+                });
+
+            modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.ScanCache", b =>
+                {
+                    b.Property<Guid>("ScanCacheId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("LookedBack")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ScanCacheId");
+
+                    b.ToTable("ScanCache");
                 });
 
             modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.Technical", b =>
@@ -362,6 +366,9 @@ namespace ZEM_Enterprice_WebApp.Migrations
 
                     b.Property<string>("DataUtworzenia")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
@@ -416,14 +423,14 @@ namespace ZEM_Enterprice_WebApp.Migrations
                     b.Property<bool>("Deklarowany")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("DokDostawy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DopisanaIlosc")
                         .HasColumnType("int");
+
+                    b.Property<string>("DostawaDopis")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KodCiety")
                         .HasColumnType("nvarchar(max)");
@@ -474,8 +481,8 @@ namespace ZEM_Enterprice_WebApp.Migrations
 
             modelBuilder.Entity("ZEM_Enterprice_WebApp.Data.Tables.VtToDostawa", b =>
                 {
-                    b.Property<string>("DostawaId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("DostawaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("VTMagazynId")
                         .HasColumnType("uniqueidentifier");

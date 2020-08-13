@@ -1,6 +1,7 @@
 ﻿@page "{CurrentPage?}"
 @using Microsoft.AspNetCore.Authorization
 @using ZEM_Enterprice_WebApp.Utilities
+@using System.Globalization
 @inject IAuthorizationService _AuthService
 @model ZEM_Enterprice_WebApp.Pages.Department.Office.ViewVTMagazynModel
 @{
@@ -27,6 +28,8 @@
                         <input class="form-control" asp-for="@Model.Filter_DataDopisuFrom">
                         <label asp-for="@Model.Filter_DokDostawy"></label>
                         <input class="form-control" asp-for="@Model.Filter_DokDostawy">
+                        <label asp-for="@Model.Filter_DokDostawyDopis"></label>
+                        <input class="form-control" asp-for="@Model.Filter_DokDostawyDopis">
                         <label asp-for="@Model.Filter_Pracownik"></label>
                         <input class="form-control" asp-for="@Model.Filter_Pracownik">
                         <label asp-for="@Model.Filter_KodCiety"></label>
@@ -93,6 +96,7 @@
                     <th>Data dostawy</th>
                     <th>Data dopisu</th>
                     <th>Dopisana ilość</th>
+                    <th>Dostawa dopisu</th>
                     <th>Pracownik</th>
                     <th>Uwagi</th>
                     <th>Autokompletacja</th>
@@ -111,16 +115,17 @@
                     <td>@record.SztukiZeskanowane/@record.SztukiDeklarowane</td>
                     <td>@record.ZeskanowanychNaKomplet/@record.NaKomplet</td>
                     <td>@record.NumerKompletu</td>
-                    <td>@record.Komplet</td>
-                    <td>@record.Deklarowany</td>
-                    <td>@record.DataUtworzenia</td>
-                    <td>@record.DataDostawy.ToShortDateString()</td>
-                    <td>@record.DataDopisu</td>
+                    <td>@(record.Komplet == true ? "Kplt" : "")</td>
+                    <td>@(record.Deklarowany == true ? "Dek." : "Nie dek.")</td>
+                    <td>@record.DataUtworzenia.ToString("g", CultureInfo.CreateSpecificCulture("de-DE"))</td>
+                    <td>@record.DataDostawy.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</td>
+                    <td>@(record.DataDopisu == null ? "" : ((DateTime)record.DataDopisu).ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))</td>
                     <td>@record.DopisanaIlosc</td>
+                    <td>@record.DostawaDopis</td>
                     <td>@record.Pracownik</td>
                     <td>@record.Uwagi</td>
-                    <td>@record.autocompleteEnabled</td>
-                    <td>@record.wymuszonaIlosc</td>
+                    <td>@(record.autocompleteEnabled == true ? "Tak" : "Nie")</td>
+                    <td>@(record.wymuszonaIlosc == true ? "Tak" : "Nie")</td>
 
                     @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded)
                     {
@@ -136,6 +141,7 @@
                                     asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                                     asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                                     asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                                    asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                                     asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                                     asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                                     asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
@@ -162,7 +168,7 @@
     <div>
         <ul class="pagination">
             <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
-                <a asp-page="/Department/Technical/ViewTechResults"
+                <a asp-page="/Department/Office/ViewVTMagazyn"
                    asp-route-CurrentPage="1"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
@@ -170,6 +176,7 @@
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
@@ -185,7 +192,7 @@
             </li>
 
             <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
-                <a asp-page="/Department/Technical/ViewTechResults"
+                <a asp-page="/Department/Office/ViewVTMagazyn"
                    asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
@@ -193,6 +200,7 @@
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
@@ -207,7 +215,7 @@
                    class="page-link">Poprzednia</a>
             </li>
             <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
-                <a asp-page="/Department/Technical/ViewTechResults"
+                <a asp-page="/Department/Office/ViewVTMagazyn"
                    asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
@@ -215,6 +223,7 @@
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
@@ -230,7 +239,7 @@
             </li>
 
             <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
-                <a asp-page="/Department/Technical/ViewTechResults"
+                <a asp-page="/Department/Office/ViewVTMagazyn"
                    asp-route-CurrentPage="@Model.Data.TotalPages"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
@@ -238,6 +247,7 @@
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                   asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
@@ -262,6 +272,7 @@
                     asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                     asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
                     asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                    asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
                     asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
                     asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
                     asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"

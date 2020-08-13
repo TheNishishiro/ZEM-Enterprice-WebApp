@@ -60,6 +60,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Dokument dostawy")]
         public string Filter_DokDostawy { get; set; }
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Dokument dostawy dopis")]
+        public string Filter_DokDostawyDopis { get; set; }
 
         #region DATY
         [BindProperty(SupportsGet = true)]
@@ -148,7 +151,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 var options = Filter_DokDostawy.Split(separator).Select(c => c.Trim());
                 query = query.Where(c => options.Contains(c.DokDostawy));
             }
-            
+            if (Filter_DokDostawyDopis != null)
+            {
+                var options = Filter_DokDostawy.Split(separator).Select(c => c.Trim());
+                query = query.Where(c => options.Contains(c.DostawaDopis));
+            }
+
             if (Filter_DataUtworzeniaFrom != DateTime.MinValue && Filter_DataUtworzeniaTo != DateTime.MinValue)
                 query = query.Where(c => c.DataUtworzenia.Date >= Filter_DataUtworzeniaFrom.Date && c.DataUtworzenia.Date <= Filter_DataUtworzeniaTo.Date);
             else if (Filter_DataUtworzeniaFrom != DateTime.MinValue)
@@ -254,7 +262,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                         break;
                 }
             }
-
+            int count = query.Count();
             Data = await PaginatedList<Data.Tables.VTMagazyn>.CreateAsync(query, CurrentPage, PageSize);
             return;
         }

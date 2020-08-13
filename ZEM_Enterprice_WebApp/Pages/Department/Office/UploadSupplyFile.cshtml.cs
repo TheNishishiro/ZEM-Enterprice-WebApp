@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using ZEM_Enterprice_WebApp.Data;
 using ZEM_Enterprice_WebApp.Data.Tables;
 
@@ -44,15 +45,22 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 return Page();
             using (StreamReader sr = new StreamReader(dataFile.OpenReadStream()))
             {
+                var deliveriesForDay = await _db.Dostawa.Where(c => c.Data.Date == date.Date).ToListAsync();
                 while (sr.Peek() >= 0)
                 {
                     string[] fields = sr.ReadLine().Split(',');
                     var tech = _db.Technical.FirstOrDefault(c => c.IndeksScala == fields[0]);
-                    if (tech != null)
+                    var delivery = deliveriesForDay.FirstOrDefault(c => c.Kod == fields[0]);
+                    if (delivery != null)
+                    {
+                        delivery.Ilosc = int.Parse(fields[1]);
+                        delivery.DataUtworzenia = DateTime.Now;
+                        _db.Update(delivery);
+                    }
+                    else if (tech != null)
                     {
                         Dostawa dostawa = new Dostawa
                         {
-                            KodIloscData = fields[0] + fields[1] + date.ToShortDateString(),
                             Kod = fields[0],
                             Ilosc = int.Parse(fields[1]),
                             Data = date,
@@ -66,7 +74,6 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                     {
                         PendingDostawa pDostawa = new PendingDostawa
                         {
-                            KodIloscData = fields[0] + fields[1] + date.ToShortDateString(),
                             Kod = fields[0],
                             Ilosc = int.Parse(fields[1]),
                             Data = date,

@@ -22,6 +22,7 @@ namespace ZEM_Enterprice_WebApp.Data.Tables
         public bool KanBan { get; set; }
         public string Uwagi { get; set; }
         public string DataUtworzenia { get; set; }
+        public DateTime? DeleteDate { get; set; }
         public bool Deleted { get; set; }
         public ICollection<VTMagazyn> VTMagazyns { get; set;  }
         public ICollection<Dostawa> Dostawas { get; set; }

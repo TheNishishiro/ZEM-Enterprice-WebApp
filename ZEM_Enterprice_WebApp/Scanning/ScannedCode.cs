@@ -25,6 +25,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         public bool complete { get; set; }
         public DateTime? DataDopisu { get; set; }
         public int DopisanaIlosc { get; set; }
+        public string DostawaDopis { get; set; }
         public string Uwagi { get; set; }
         public string DokDostawy { get; set; }
         public int NumerKompletu { get; set; }
@@ -36,6 +37,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         public bool isForcedBack { get; set; }
         public bool isForcedInsert { get; set; }
         public bool isForcedUndeclared { get; set; }
+        public bool isForcedOverDeclared { get; set; }
         public bool addedBefore { get; set; }
         public bool isLookingBack { get; set; }
     }

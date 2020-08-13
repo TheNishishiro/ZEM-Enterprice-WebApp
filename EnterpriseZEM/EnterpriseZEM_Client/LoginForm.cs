@@ -33,19 +33,7 @@ namespace EnterpriseZEM_Client
                     $"{Settings.Properties[FieldTypes.AuthServerPort.ToString()]}");
             urlBuilder.Append($"/api/auth/{usernameTextbox.Text},{passwordTextbox.Text}");
 
-            string url = urlBuilder.ToString();
-            try
-            {
-                response = client.DownloadString(url);
-            }
-            catch(System.Net.WebException ex)
-            {
-                MessageBox.Show("Nie można połączyć z serwerem uwierzytelnienia.");
-                return;
-            }
-            bool.TryParse(response, out bool result);
-
-            if (result == true)
+            if (Settings.Properties[FieldTypes.UseAuth.ToString()] == "false")
             {
                 ScanForm SF = new ScanForm(usernameTextbox.Text, this);
                 SF.Show();
@@ -53,7 +41,29 @@ namespace EnterpriseZEM_Client
             }
             else
             {
-                MessageBox.Show("Logowanie nie powiodło się.");
+
+                string url = urlBuilder.ToString();
+                try
+                {
+                    response = client.DownloadString(url);
+                }
+                catch (System.Net.WebException ex)
+                {
+                    MessageBox.Show("Nie można połączyć z serwerem uwierzytelnienia.");
+                    return;
+                }
+                bool.TryParse(response, out bool result);
+
+                if (result == true)
+                {
+                    ScanForm SF = new ScanForm(usernameTextbox.Text, this);
+                    SF.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Logowanie nie powiodło się.");
+                }
             }
         }
 

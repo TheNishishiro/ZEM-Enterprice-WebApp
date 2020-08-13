@@ -44,9 +44,13 @@ namespace EnterpriseZEM_Client
                         }
                     }
 
-                    if (response.Payload != null)
+                    if (response.Args != null && response.Args.Count > 0)
                     {
-                        binLabel.Text = $"BIN: {(string)response.Payload}";
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine("BIN: ");
+                        foreach(var bin in response.Args)
+                            sb.AppendLine(bin);
+                        binLabel.Text = sb.ToString(); // $"BINy: {(string)response.Payload}";
                     }
                     else
                     {

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
 using ZEM_Enterprice_WebApp.Data;
 using ZEM_Enterprice_WebApp.Data.Tables;
+using ZEM_Enterprice_WebApp.Scanning;
 
 namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 {
@@ -260,6 +261,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             return Page();
         }
 
+        // optimized
         public async Task<IActionResult> OnPostMergeSetsCableAsync(string id)
         {
             if (!ModelState.IsValid)
@@ -267,21 +269,17 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
             // 1, 0, 3
             string[] SetsToMerge = Input.MergeSetsString.Replace(" ", "").Split(',');
-            var record = _db.VTMagazyn.FirstOrDefault(c =>
+            var records = await _db.VTMagazyn.Where(c =>
                     c.Wiazka == Input.Wiazka &&
                     c.KodCiety == Input.KodCiety &&
-                    c.DataDostawy.Date == Input.DeliveryDate.Date &&
-                    c.NumerKompletu == int.Parse(SetsToMerge[0]));
+                    c.DataDostawy.Date == Input.DeliveryDate.Date).ToListAsync();
+            var record = records.FirstOrDefault(c => c.NumerKompletu == int.Parse(SetsToMerge[0]));
 
             int recordOriginalScanned = record.SztukiZeskanowane;
 
             for (int i = 1; i < SetsToMerge.Length; i++)
             {
-                var rec = _db.VTMagazyn.FirstOrDefault(c =>
-                    c.Wiazka == Input.Wiazka &&
-                    c.KodCiety == Input.KodCiety &&
-                    c.DataDostawy.Date == Input.DeliveryDate.Date &&
-                    c.NumerKompletu == int.Parse(SetsToMerge[i]));
+                var rec = records.FirstOrDefault(c => c.NumerKompletu == int.Parse(SetsToMerge[i]));
 
 
                 record.SztukiZeskanowane += rec.SztukiZeskanowane;
@@ -291,7 +289,6 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 _db.Update(rec);
                 await _db.SaveChangesAsync();
                 UpdateWiazkaOnChange(rec, recScanned);
-
             }
             checkComplete(record.NumerKompletu, Input.Wiazka, Input.DeliveryDate);
             return Page();
@@ -327,19 +324,23 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                     
             }
 
+            var records = await _db.VTMagazyn.Where(c =>
+                    c.Wiazka == Input.Wiazka &&
+                    c.KodCiety == Input.KodCiety &&
+                    c.DataDostawy.Date == Input.DeliveryDate.Date).ToListAsync();
+
+            var deliveryRecords = await _db.Dostawa.AsNoTracking().Include(c =>c.Technical).Where(c =>
+                    c.Technical.Wiazka == Input.Wiazka &&
+                    c.Data.Date == Input.DeliveryDate.Date).ToListAsync();
 
             foreach (var SetValuePair in SetValuePairs)
             {
                 int Set = int.Parse(SetValuePair.Split(':')[0]);
                 int Value = int.Parse(SetValuePair.Split(':')[1]);
 
-                var record = _db.VTMagazyn.FirstOrDefault(c =>
-                    c.Wiazka == Input.Wiazka &&
-                    c.KodCiety == Input.KodCiety &&
-                    c.DataDostawy.Date == Input.DeliveryDate.Date &&
-                    c.NumerKompletu == Set);
+                var record = records.FirstOrDefault(c => c.NumerKompletu == Set);
 
-                if(record != null)
+                if (record != null)
                 {
                     int original = record.SztukiZeskanowane;
                     record.SztukiZeskanowane = Value;
@@ -350,7 +351,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 }
                 else if(Value != 0)
                 {
-                    int declaredValue = GetPossibleDeclaredValue(Input.Wiazka, Input.DeliveryDate, Set);
+                    int declaredValue = GetPossibleDeclaredValue(
+                        new ScannedCode { Wiazka = Input.Wiazka , dataDostawyOld = Input.DeliveryDate },
+                        records, deliveryRecords, Set);
                     if (declaredValue == 0)
                         declaredValue = Value;
                     
@@ -374,10 +377,14 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             int originalValue = record.SztukiZeskanowane;
             var pastScans = _db.VTMagazyn.Where(c => c.Wiazka == Input.Wiazka && c.DataDostawy.Date < Input.DateTo.Date && c.DataDostawy >= Input.DateFrom.Date && c.autocompleteEnabled == true)
                 .OrderBy(c => c.DataDostawy).ToList().GroupBy(c => c.DataDostawy).Select(c => c.ToList()).ToList();
-                
-            foreach(int value in values)
+            var pastDeliveries = await _db.Dostawa.AsNoTracking().Include(c => c.Technical)
+                .Where(c => c.Technical.Wiazka == Input.Wiazka &&
+                c.Data.Date < Input.DateTo.Date &&
+                c.Data.Date >= Input.DateFrom.Date).ToListAsync();
+
+            foreach (int value in values)
             {
-                if(SearchBack(pastScans, value, record))
+                if(SearchBack(pastScans, pastDeliveries, value, record))
                 {
                     record.SztukiZeskanowane -= value;
                 }
@@ -393,35 +400,41 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public void checkComplete(int NumerKompletu, string Wiazka, DateTime dataDostawyOld)
         {
             int completeID = NumerKompletu;
-            int possibleDeclared = GetPossibleDeclaredValue(Wiazka, dataDostawyOld, completeID);
+            List<VTMagazyn> Scanned = _db.VTMagazyn.Where(
+                c => c.Wiazka == Wiazka &&
+                c.NumerKompletu == completeID &&
+                c.DataDostawy.Date == dataDostawyOld.Date).ToList();
+
+            int possibleDeclared = GetPossibleDeclaredValue(new ScannedCode { Wiazka = Wiazka, dataDostawyOld = dataDostawyOld}
+                , Scanned,
+                _db.Dostawa.AsNoTracking().Include(c => c.Technical)
+                        .Where(c => c.Technical.Wiazka == Wiazka && c.Data.Date == dataDostawyOld.Date).ToList(),
+                completeID);
             int numToComplete = _db.Technical.AsNoTracking().Where(c => c.Wiazka == Wiazka && c.KanBan == false).Count();
-            List<VTMagazyn> Scanned = _db.VTMagazyn.Where(c => c.Wiazka == Wiazka && c.DataDostawy.Date == dataDostawyOld.Date && /*c.Komplet == false && c.autocompleteEnabled == true &&*/ c.NumerKompletu == completeID).ToList();
             int numScanned = Scanned.Count();
-            int numScannedToComplete = _db.VTMagazyn.AsNoTracking().Where(c =>
-                c.Wiazka == Wiazka &&
-                c.DataDostawy.Date == dataDostawyOld &&
-                possibleDeclared <= c.SztukiZeskanowane &&
-                /*c.Komplet == false &&*/ c.autocompleteEnabled == true &&
-                c.NumerKompletu == completeID).Count();
+            int numScannedToComplete = Scanned.Where(c => possibleDeclared <= c.SztukiZeskanowane &&
+                c.autocompleteEnabled == true).Count();
 
-
-
+            // Update values depending on scans
             foreach (var scan in Scanned)
             {
-                if (numToComplete == numScannedToComplete)
-                    scan.Komplet = true;
-                if (!scan.wymuszonaIlosc)
-                    scan.SztukiDeklarowane = possibleDeclared;
+                if (scan.autocompleteEnabled == true)
+                {
+                    if (numToComplete == numScannedToComplete)
+                        scan.Komplet = true;
+                    if (!scan.wymuszonaIlosc)
+                        scan.SztukiDeklarowane = possibleDeclared;
 
-                scan.ZeskanowanychNaKomplet = numScannedToComplete;
-                scan.NaKomplet = numToComplete;
+                    scan.ZeskanowanychNaKomplet = numScannedToComplete;
+                    scan.NaKomplet = numToComplete;
+                }
             }
 
             _db.UpdateRange(Scanned);
             _db.SaveChanges();
         }
 
-        private bool SearchBack(List<List<VTMagazyn>> pastScans, int value, VTMagazyn vtScan)
+        private bool SearchBack(List<List<VTMagazyn>> pastScans, List<Dostawa> pastDeliveries, int value, VTMagazyn vtScan)
         {
             foreach(var scanPerDate in pastScans)
             {
@@ -448,7 +461,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                     int[] setIDs = scanPerDate.Where(c => c.Komplet == false).Select(c => c.NumerKompletu).Distinct().ToArray();
                     foreach (int setID in setIDs)
                     {
-                        mostFrequentCount = GetPossibleDeclaredValue(Input.Wiazka, scanPerDate[0].DataDostawy, setID);
+                        mostFrequentCount = GetPossibleDeclaredValue(
+                            new ScannedCode { Wiazka = Input.Wiazka, dataDostawyOld = scanPerDate[0].DataDostawy },
+                            scanPerDate, pastDeliveries, setID);
                         // Only add on the previous date if "declared" value is the same as scanned
                         if (value == mostFrequentCount && duplicateScans.Where(c => c.NumerKompletu == setID).Select(c => c.KodCiety).FirstOrDefault() != vtScan.KodCiety)
                         {
@@ -475,30 +490,34 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             return false;
         }
 
-        public int GetPossibleDeclaredValue(string wiazka, DateTime dataDostawy, int setID = 0)
+        public int GetPossibleDeclaredValue(ScannedCode scanned, List<VTMagazyn> VTScans, List<Dostawa> Deliveries, int setID = 0)
         {
             List<VTMagazyn> pastScans = new List<VTMagazyn>();
             List<Dostawa> declaredScans = new List<Dostawa>();
 
+            // For first set try to guess based off of delivery file
             if (setID == 0)
             {
-                List<string> techCodes = _db.Technical.AsNoTracking().Where(c => c.Wiazka == wiazka && c.KanBan == false).Select(c => c.IndeksScala).ToList();
-                declaredScans = _db.Dostawa.AsNoTracking().Where(c => c.Data.Date == dataDostawy.Date && techCodes.Contains(c.Kod)).ToList();
-                pastScans = _db.VTMagazyn.AsNoTracking().Where(c =>
-                       c.Wiazka == wiazka &&
-                       c.DataDostawy.Date == dataDostawy.Date &&
+                pastScans = VTScans.Where(c =>
+                       c.DataDostawy.Date == scanned.dataDostawyOld.Date &&
                        c.autocompleteEnabled == true &&
                        c.NumerKompletu == setID).ToList();
+
+                if (pastScans.Count > 0 && pastScans[0].wymuszonaIlosc)
+                    return pastScans[0].SztukiDeklarowane;
+
+                declaredScans = Deliveries.Where(c => c.Data.Date == scanned.dataDostawyOld.Date && c.Technical.KanBan == false).ToList();
             }
+            // For any subsequent set guess based off of current scans
             else
             {
-                pastScans = _db.VTMagazyn.AsNoTracking().Where(c =>
-                       c.Wiazka == wiazka &&
-                       c.DataDostawy.Date == dataDostawy.Date &&
+                pastScans = VTScans.Where(c =>
+                       c.DataDostawy.Date == scanned.dataDostawyOld.Date &&
                        c.autocompleteEnabled == true &&
                        c.NumerKompletu == setID).ToList();
             }
 
+            // If declared value have been forced by manager use it
             if (pastScans.Count > 0 && pastScans[0].wymuszonaIlosc)
                 return pastScans[0].SztukiDeklarowane;
 

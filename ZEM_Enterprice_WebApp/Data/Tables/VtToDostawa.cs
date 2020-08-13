@@ -7,7 +7,7 @@ namespace ZEM_Enterprice_WebApp.Data.Tables
 {
     public class VtToDostawa
     {
-        public string DostawaId { get; set; }
+        public Guid DostawaId { get; set; }
         public Dostawa Dostawa { get; set; }
         public Guid VTMagazynId { get; set; }
         public VTMagazyn VTMagazyn { get; set; }

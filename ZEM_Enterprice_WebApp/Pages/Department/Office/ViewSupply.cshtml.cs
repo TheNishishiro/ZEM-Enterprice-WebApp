@@ -143,11 +143,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public async Task<IActionResult> OnPostDeleteRecordAsync(string id)
         {
-            var rec = await _db.Dostawa.FindAsync(id);
+            var rec = await _db.Dostawa.FirstOrDefaultAsync(c => c.DostawaId == Guid.Parse(id));
             if (rec != null)
             {
-                _db.VtToDostawa.RemoveRange(_db.VtToDostawa.Where(c => c.DostawaId == id));
+                _db.VtToDostawa.RemoveRange(_db.VtToDostawa.Where(c => c.DostawaId == Guid.Parse(id)));
                 _db.Dostawa.Remove(rec);
+                
                 await _db.SaveChangesAsync();
             }
 

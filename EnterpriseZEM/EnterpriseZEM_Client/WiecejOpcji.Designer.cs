@@ -59,13 +59,14 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.AutoScroll = true;
             this.tabPage1.Controls.Add(this.binLabel);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.binCutCodeTextBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(723, 406);
+            this.tabPage1.Size = new System.Drawing.Size(747, 430);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sprawdź BIN";
             this.tabPage1.UseVisualStyleBackColor = true;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ZEM_Enterprice_WebApp.Pages.Department.Scanner
 {
-    [Authorize(Policy = "AdminOrScanner")]
+    [Authorize(Policy = "CanViewVTScans")]
     public class CheckBINModel : PageModel
     {
         public void OnGet()

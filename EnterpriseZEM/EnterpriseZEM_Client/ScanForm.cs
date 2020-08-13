@@ -55,6 +55,7 @@ namespace EnterpriseZEM_Client
                 return;
             }
 
+            sc.SessionGUID = Guid.NewGuid();
             sc.isLookingBack = lookBackCheckbox.Checked;
             sc.kodCiety = cutcode;
             sc.sztukiSkanowane = quantity;
@@ -66,6 +67,7 @@ namespace EnterpriseZEM_Client
             sc.isForcedBack = false;
             sc.isForcedInsert = false;
             sc.isForcedUndeclared = false;
+            sc.isForcedOverDeclared = false;
             sc.User = userIdTextBox.Text;
             sc.missingEntries = new List<MissingBackwards>();
 
@@ -83,7 +85,7 @@ namespace EnterpriseZEM_Client
                 }
                 else if(response.Flag == FlagType.quantityIncorrect)
                 {
-                    Form form = MyMessageBox.CreateDialog($"Deklarowana ilość ({response.Args[0]}) nie zgadza się ze zeskanowaną {quantity} (aktualnie zeskanowanych: {response.Args[1]}), zatwierdzasz, zmień lub kliknij \"Nie\" by anulować.", MessageBoxButtons.YesNo);
+                    Form form = MyMessageBox.CreateDialog($"Deklarowana ilość ({response.Args[0]}) nie zgadza się ze zeskanowaną {quantity} (aktualnie zeskanowanych: {response.Args[1]}), komplet na dziś {response.Args[2]}, różnica: {response.Args[3]}, zatwierdź, zmień lub kliknij \"Nie\" by anulować.", MessageBoxButtons.YesNo);
                     TextBox txBox = new TextBox();
                     txBox.Location = new Point(10, 220);
                     txBox.Font = new Font(FontFamily.GenericSansSerif, 16);
@@ -96,6 +98,29 @@ namespace EnterpriseZEM_Client
                     {
                         sc.sztukiSkanowane = int.Parse((((TextBox)form.Controls.Find("quantitytextbox", false).First()).Text));
                         sc.isForcedQuantity = true;
+                        response = _client.SendReceiveMessage(cp);
+                    }
+                    else
+                    {
+                        shouldExit = true;
+                    }
+                }
+                else if (response.Flag == FlagType.quantityOverDeclated)
+                {
+
+                    Form form = MyMessageBox.CreateDialog($"Deklarowana ilość ({response.Args[0]}) zgadza się ze zeskanowaną {quantity} (aktualnie zeskanowanych: {response.Args[1]}), ale nie z kompletem na dziś ({response.Args[2]}), różnica: {response.Args[3]}, zatwierdź, zmień lub kliknij \"Nie\" by anulować.", MessageBoxButtons.YesNo);
+                    TextBox txBox = new TextBox();
+                    txBox.Location = new Point(10, 220);
+                    txBox.Font = new Font(FontFamily.GenericSansSerif, 16);
+                    txBox.Size = new Size(form.Size.Width, 50);
+                    txBox.Text = quantity.ToString();
+                    txBox.Name = "quantitytextbox";
+                    form.Controls.Add(txBox);
+
+                    if (form.ShowDialog() == DialogResult.Yes)
+                    {
+                        sc.sztukiSkanowane = int.Parse((((TextBox)form.Controls.Find("quantitytextbox", false).First()).Text));
+                        sc.isForcedOverDeclared = true;
                         response = _client.SendReceiveMessage(cp);
                     }
                     else
@@ -216,7 +241,9 @@ namespace EnterpriseZEM_Client
                 zalegle_label.Visible = false;
             }
 
-            if(sr.numScanned == 1)
+            _ = _client.SendReceiveMessage(new CustomPacket(FlagType.basic, HeaderTypes.basic, "disposeCache", null, sc.SessionGUID));
+
+            if (sr.numScanned == 1)
             {
                 Etykieta etykieta = new Etykieta(
                     sr.Rodzina, 

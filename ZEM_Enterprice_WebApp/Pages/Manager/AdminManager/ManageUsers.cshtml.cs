@@ -36,12 +36,14 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
             var user = await _userManager.FindByIdAsync(Id);
             user.EmailConfirmed = !user.EmailConfirmed;
             await _userManager.UpdateAsync(user);
+            await OnGet();
             return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteUserAsync(string Id)
         {
             await _userManager.DeleteAsync(await _userManager.FindByIdAsync(Id));
+            await OnGet();
             return Page();
         }
     }

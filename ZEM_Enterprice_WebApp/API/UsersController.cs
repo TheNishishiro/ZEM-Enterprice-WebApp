@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace ZEM_Enterprice_WebApp.API
 {
     [Route("api/users")]
     [ApiController]
+    [AllowAnonymous]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationDbContext _db;

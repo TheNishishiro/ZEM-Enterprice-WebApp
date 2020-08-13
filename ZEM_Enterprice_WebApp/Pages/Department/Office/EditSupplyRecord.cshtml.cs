@@ -28,7 +28,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public void OnGet(string id)
         {
-            var record = _db.Dostawa.Find(id);
+            var record = _db.Dostawa.Find(Guid.Parse(id));
             if (record == null)
                 return;
             Input = new InputModel();
@@ -36,7 +36,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             Input.Ilosc = record.Ilosc;
             Input.Data = record.Data;
             Input.Uwagi = record.Uwagi;
-            Input.Id = record.KodIloscData;
+            Input.Id = record.DostawaId;
             Input.UploadDate = record.DataUtworzenia;
             Input.DeliveryDate = Input.Data;
         }
@@ -48,7 +48,6 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
             var record = await _db.Dostawa.FindAsync(Input.Id);
 
-            record.KodIloscData = Input.Kod+Input.Ilosc.ToString()+Input.Data.ToShortDateString().Replace('/', '-');
             record.Kod = Input.Kod;
             record.Ilosc = Input.Ilosc;
             record.Data = Input.Data;
@@ -75,7 +74,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
     public class InputModel
     {
         [Required]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         [Display(Name = "Kod")]
         public string Kod { get; set; }

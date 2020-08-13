@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -90,7 +91,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                     KanBan = c[0].KanBan,
                     Uwagi = "",
                     DataUtworzenia = c[0].DataUtworzenia,
-                    DataModyfikacji = DateTime.Now.ToString()
+                    DataModyfikacji = DateTime.Now.ToString("g", CultureInfo.CreateSpecificCulture("de-DE"))
                 }).ToList());
             foreach(var dup in dups)
                 TechEntries.Remove(dup);

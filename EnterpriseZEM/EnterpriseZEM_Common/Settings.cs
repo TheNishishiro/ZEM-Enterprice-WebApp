@@ -14,7 +14,9 @@ namespace EnterpriseZEM_Common
             AuthServerAddress,
             AuthServerPort,
             AuthServerProtocol,
-            UsePort
+            UsePort,
+            UseAuth,
+            ConnectionString
         }
 
         public static Dictionary<string, string> Properties = new Dictionary<string, string>();

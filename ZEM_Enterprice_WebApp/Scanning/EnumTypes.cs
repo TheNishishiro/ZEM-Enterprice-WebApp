@@ -28,6 +28,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         isDeleted = 103,
         quantityIncorrect = 110,
         quantityOverLimit = 111,
+        quantityOverDeclated = 112,
         codeExists = 200,
         codeExistsBack = 201,
         codeFitsBack = 300,

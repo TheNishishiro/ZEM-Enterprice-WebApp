@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ZEM_Enterprice_WebApp.Data;
@@ -16,6 +17,7 @@ namespace ZEM_Enterprice_WebApp.API
 {
     [Route("api/scannerInfo")]
     [ApiController]
+    [AllowAnonymous]
     public class TechnicalController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
@@ -43,7 +45,8 @@ namespace ZEM_Enterprice_WebApp.API
         [HttpGet("{przewod}")]
         public async Task<ActionResult<PacketToSend>> GetTech(string przewod)
         {
-            var result = await _db.Technical.FirstOrDefaultAsync(c => c.PrzewodCiety == przewod);
+            var wiazka = (await _db.Technical.FirstOrDefaultAsync(c => c.PrzewodCiety == przewod)).Wiazka;
+            var result = await _db.Technical.Where(c => c.Wiazka == wiazka).Select(c => c.BIN).Distinct().ToListAsync();
 
             PacketToSend pts = new PacketToSend
             {
@@ -56,7 +59,7 @@ namespace ZEM_Enterprice_WebApp.API
                 return pts;
             }
 
-            pts.BIN = result.BIN;
+            pts.BIN = result;
 
             return pts;
         }
@@ -78,13 +81,15 @@ namespace ZEM_Enterprice_WebApp.API
         /// <param name="isForcedBack"></param>
         /// <param name="isForcedInsert"></param>
         /// <param name="isForcedUndeclared"></param>
+        /// <param name="isForcedOverDeclared"></param>
         /// <param name="User"></param>
         /// <returns></returns>
-        [HttpGet("{kodWiazkiTextbox},{forcedQuantity},{isLookingBack},{dostYear}-{dostMonth}-{dostDay},{dokDostawy}," +
+        [HttpGet("{sessionGUID},{kodWiazkiTextbox},{forcedQuantity},{isLookingBack},{dostYear}-{dostMonth}-{dostDay},{dokDostawy}," +
             "{isForcedQuantity},{isForcedOverLimit}," +
-            "{isForcedBackAck},{isForcedBack},{isForcedInsert},{isForcedUndeclared}," +
+            "{isForcedBackAck},{isForcedBack},{isForcedInsert},{isForcedUndeclared},{isForcedOverDeclared}," +
             "{User}")]
         public async Task<ActionResult<ScannedResponse>> GetTech(
+            string sessionGUID,
             string kodWiazkiTextbox,
             int forcedQuantity,
             bool isLookingBack,
@@ -96,10 +101,20 @@ namespace ZEM_Enterprice_WebApp.API
             bool isForcedBack,
             bool isForcedInsert,
             bool isForcedUndeclared,
+            bool isForcedOverDeclared,
             string User
             )
         {
-            VTInsertFunctions VTFuncs = new VTInsertFunctions(_db);
+            // STO72301  210793
+            var scan = _db.ScanCache.Find(Guid.Parse(sessionGUID));
+            if(scan == null)
+            {
+                await _db.ScanCache.AddAsync(new ScanCache { ScanCacheId = Guid.Parse(sessionGUID) });
+                await _db.SaveChangesAsync();
+                scan = _db.ScanCache.Find(Guid.Parse(sessionGUID));
+            }
+
+            VTInsertFunctions VTFuncs = new VTInsertFunctions(_db, scan);
             ScannedResponse response = new ScannedResponse();
             ScannedCode sc = new ScannedCode();
             sc.kodCiety = kodWiazkiTextbox.Replace("PLC", "").ToUpper().Trim().Substring(0,8);
@@ -116,6 +131,7 @@ namespace ZEM_Enterprice_WebApp.API
             sc.isForcedBack = isForcedBack;
             sc.isForcedInsert = isForcedInsert;
             sc.isForcedUndeclared = isForcedUndeclared;
+            sc.isForcedOverDeclared = isForcedOverDeclared;
             sc.User = User;
             sc.Declared = false;
             sc.complete = false;
@@ -167,32 +183,52 @@ namespace ZEM_Enterprice_WebApp.API
             {
                 sc.dataDostawy = dostawaEntry.Data;
                 sc.dataDostawyOld = dostawaEntry.Data;
-                sc.isFullSet = VTFuncs.CheckIfFullSetOfSupply(sc);
+                //sc.isFullSet = VTFuncs.CheckIfFullSetOfSupply(sc);
                 sc.sztukiDeklarowane = dostawaEntry.Ilosc;
                 sc.Declared = true;
-                // Delivery doesn't contain any extras
-                if (sc.isFullSet)
+
+                // if codes to complete set are missing check back
+                if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
                 {
-                    // if codes to complete set are missing check back
-                    if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
+                    var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                    var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                    int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+
+                    if (sc.sztukiSkanowane != declared && !sc.isForcedOverDeclared)
+                    {
+                        response.Header = HeaderTypes.error;
+                        response.Flag = FlagType.quantityOverDeclated;
+                        response.Args.Add(sc.sztukiDeklarowane.ToString());
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
+                        return response;
+                    }
+                    else
                     {
                         if (!VTFuncs.CheckBackOrAdd(response, techEntry, sc, dostawaEntry))
-                            return response;
-                    }
-                    else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
-                    {
-                        if (!VTFuncs.CheckBackOrAddQuantityIncorrect(response, techEntry, sc, dostawaEntry))
                             return response;
                     }
                 }
-                else // Delivery does contain extras
+                else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
                 {
-                    if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
+                    if (!sc.isForcedQuantity)
                     {
-                        if (!VTFuncs.CheckBackOrAdd(response, techEntry, sc, dostawaEntry))
-                            return response;
+                        response.Header = HeaderTypes.error;
+                        response.Flag = FlagType.quantityIncorrect;
+                        response.Args.Add(sc.sztukiDeklarowane.ToString());
+                        var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
+                        return response;
                     }
-                    else if (sc.sztukiSkanowane != sc.sztukiDeklarowane)
+                    else
                     {
                         if (!VTFuncs.CheckBackOrAddQuantityIncorrect(response, techEntry, sc, dostawaEntry))
                             return response;
@@ -202,6 +238,7 @@ namespace ZEM_Enterprice_WebApp.API
             else
             {
                 sc.dataDostawyOld = sc.dataDostawy;
+
                 if (!sc.isForcedUndeclared)
                 {
                     response.Header = HeaderTypes.error;
@@ -215,11 +252,14 @@ namespace ZEM_Enterprice_WebApp.API
                         response.Header = HeaderTypes.error;
                         response.Flag = FlagType.quantityIncorrect;
                         response.Args.Add("0");
-                        var vt = VTFuncs.ExistsInVT(sc);
-                        if (vt != null)
-                            response.Args.Add(vt.SztukiZeskanowane.ToString());
-                        else
-                            response.Args.Add("0");
+                        var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
+                        response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
+
+                        response.Args.Add(declared.ToString());
+                        response.Args.Add($"{declared - sc.sztukiSkanowane}");
+
                         return response;
                     }
                     else
@@ -229,7 +269,6 @@ namespace ZEM_Enterprice_WebApp.API
                     }
                 }
             }
-
             _db.SaveChanges();
 
             bool isComplete = VTFuncs.checkComplete(sc, out int numToComplete, out int numScanned, out int numScannedToComplete);
@@ -246,18 +285,26 @@ namespace ZEM_Enterprice_WebApp.API
             response.Rodzina = sc.Rodzina;
             response.sztukiSkanowane = sc.sztukiSkanowane;
 
-
             return response;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ScanCache>> DeleteScanCache(string id)
+        {
+            var cache = await _db.ScanCache.FindAsync(Guid.Parse(id));
+            if (cache == null)
+                return NotFound();
+
+            _db.ScanCache.Remove(cache);
+            await _db.SaveChangesAsync();
+
+            return cache;
         }
 
         public class PacketToSend
         {
             public int StatusCode { get; set; }
-            public string PrzewodCiety { get; set; }
-            public string BIN { get; set; }
-            public string KodWiazki { get; set; }
-            public string LiterRodziny { get; set; }
-            public string IlePrzewodow { get; set; }
+            public List<string> BIN { get; set; }
         }
     }
 }

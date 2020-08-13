@@ -28,8 +28,8 @@ namespace ZEM_Enterprice_WebApp.Data.Tables
         public bool wymuszonaIlosc { get; set; }
         public DateTime? DataDopisu { get; set; }
         public int DopisanaIlosc { get; set; }
+        public string DostawaDopis { get; set; }
         public string Uwagi { get; set; }
-        public bool Deleted { get; set; }
         public Technical Technical { get; set; }
         public ICollection<VtToDostawa> Dostawy { get; set; }
     }

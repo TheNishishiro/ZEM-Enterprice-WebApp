@@ -1,6 +1,7 @@
 ﻿@page "{CurrentPage?}"
 @using Microsoft.AspNetCore.Authorization
 @using ZEM_Enterprice_WebApp.Utilities
+@using System.Globalization 
 @inject IAuthorizationService _AuthService
 @model ZEM_Enterprice_WebApp.Pages.Department.Office.ViewSupplyModel
 @{
@@ -76,17 +77,17 @@
                     <td>@record.Technical.Wiazka</td>
                     <td>@record.Kod</td>
                     <td>@record.Ilosc</td>
-                    <td>@record.Data.ToShortDateString()</td>
-                    <td>@record.DataUtworzenia.ToShortDateString()</td>
+                    <td>@record.Data.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</td>
+                    <td>@record.DataUtworzenia.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</td>
                     <td>@record.Uwagi</td>
                     @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded)
                     {
                         <td>
 
-                            <a asp-page="/Department/Office/EditSupplyRecord" asp-route-id="@record.KodIloscData">Edit</a>
+                            <a asp-page="/Department/Office/EditSupplyRecord" asp-route-id="@record.DostawaId">Edit</a>
                         </td>
                         <td>
-                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.KodIloscData" class="btn btn-sm btn-danger"
+                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.DostawaId" class="btn btn-sm btn-danger"
                                     asp-route-Filter_Kod="@Model.Filter_Kod"
                                     asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
                                     asp-route-Filter_DataFrom="@Model.Filter_DataFrom"

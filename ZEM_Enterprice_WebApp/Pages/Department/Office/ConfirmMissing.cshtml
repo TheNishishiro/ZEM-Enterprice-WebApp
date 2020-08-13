@@ -37,11 +37,11 @@
                         <td>"@Model._input[i].Data.ToShortDateString()"</td>
                         <td>"@Model._input[i].Uwagi"</td>
                         <td>
-                            <input type="hidden" asp-for="@Model._input[i].KodIloscData" />
-                            <input name="AreChecked" type="checkbox" value="@Model._input[i].KodIloscData" />
+                            <input type="hidden" asp-for="@Model._input[i].dostawaId" />
+                            <input name="AreChecked" type="checkbox" value="@Model._input[i].dostawaId" />
                         </td>
                         <td>
-                            <button asp-page-handler="DeleteRecord" asp-route-id="@Model._input[i].KodIloscData" type="submit" class="btn btn-sm btn-danger">
+                            <button asp-page-handler="DeleteRecord" asp-route-id="@Model._input[i].dostawaId" type="submit" class="btn btn-sm btn-danger">
                                 Usuń
                             </button>
                         </td>

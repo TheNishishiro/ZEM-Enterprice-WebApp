@@ -109,7 +109,7 @@
                     <td>@record.PrzewodCiety</td>
                     <td>@record.BIN</td>
                     <td>@record.Uwagi</td>
-                    <td>@record.KanBan</td>
+                    <td>@(record.KanBan == true ? "Tak" : "Nie")</td>
                     @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrTech.ToString())).Succeeded)
                     {
                         <td>

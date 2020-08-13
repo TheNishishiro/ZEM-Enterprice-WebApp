@@ -28,7 +28,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         {
             if (!ModelState.IsValid)
                 return Page();
-
+            
             return RedirectToPage($"/Department/Office/DifferenceReport", new { day = date.Day, month = date.Month, year = date.Year });
         }
     }

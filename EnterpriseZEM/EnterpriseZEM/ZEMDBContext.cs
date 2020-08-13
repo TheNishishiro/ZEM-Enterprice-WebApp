@@ -1,11 +1,12 @@
 ﻿using EnterpriseZEM.db.tables;
+using EnterpriseZEM_Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static EnterpriseZEM_Common.Settings;
 
 namespace EnterpriseZEM
 {
@@ -16,9 +17,10 @@ namespace EnterpriseZEM
         public DbSet<VTMagazyn> VTMagazyn { get; set; }
         public DbSet<PendingChangesTechnical> PendingChangesTechnical { get; set; }
         public DbSet<MissingFromTech> MissingFromTech { get; set; }
+        public DbSet<ScanCache> ScanCache { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=DESKTOP-SE1DD8B;Database=ZEM_Enterprice_WebApp;Trusted_Connection=True;MultipleActiveResultSets=true").EnableSensitiveDataLogging();
+            optionsBuilder.UseSqlServer(Settings.Properties[FieldTypes.ConnectionString.ToString()]).EnableSensitiveDataLogging();
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -46,7 +46,7 @@ namespace ZEM_Enterprice_WebApp.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(Input.Username);
                 if (user != null && !user.EmailConfirmed)

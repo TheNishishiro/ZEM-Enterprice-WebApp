@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ZEM_Enterprice_WebApp.Data.Tables
 {
-    public class MovedNotifications
+    public class ScanCache
     {
         [Key]
-        public long MovedNotificationsId { get; set; }
-
+        public Guid ScanCacheId { get; set; }
+        public bool LookedBack { get; set; }
     }
 }

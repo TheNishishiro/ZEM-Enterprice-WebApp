@@ -34,3 +34,12 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.csproj.CopyComplete
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.dll
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.pdb
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\bin\Debug\EnterpriseZEM_Common.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\bin\Debug\EnterpriseZEM_Common.pdb
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\bin\Debug\Newtonsoft.Json.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\bin\Debug\Newtonsoft.Json.xml
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.csprojAssemblyReference.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.csproj.CoreCompileInputs.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.csproj.CopyComplete
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.dll
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\EnterpriseZEM\EnterpriseZEM_Common\obj\Debug\EnterpriseZEM_Common.pdb
