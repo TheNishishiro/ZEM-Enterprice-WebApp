@@ -20,9 +20,6 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public ViewSupplyModel(ApplicationDbContext db)
         {
             _db = db;
-
-            var x = _db.Technical.GroupBy(c => c.PrzewodCiety).Select(c => new { Value = c.Key, Count = c.Count() }).OrderByDescending(c => c.Count);
-
         }
 
         public SelectList availableSortings { get; set; }
@@ -71,7 +68,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             if (Request.Cookies["pagesize"] != null)
                 PageSize = int.Parse(Request.Cookies["pagesize"]);
 
-            var query = _db.Dostawa.Include(c => c.Technical).AsNoTracking().AsQueryable();
+            var query = _db.Dostawa.IgnoreQueryFilters().Include(c => c.Technical).AsNoTracking().AsQueryable();
             char separator = ',';
 
             if (Filter_Kod != null)

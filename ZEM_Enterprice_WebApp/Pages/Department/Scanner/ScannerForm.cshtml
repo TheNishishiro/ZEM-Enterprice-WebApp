@@ -6,20 +6,20 @@
 }
 
 <link rel="stylesheet" href="/assets/customcss/StyleSheet.css">
-<script src="~/assets/customjs/ScanCommunicate.js"></script>
+
 <div class="row text-center">
     <div class="col-4">
         <div>
             <div class="col">
                 <div class="text-left"><label>Numer dostawy:</label><input type="text" id="nr-dostawy-field"></div>
             </div>
-            <div class="col text-left" style="padding-top: 20px;padding-bottom: 0px;"><label>Data:</label><input id="data-scanned-field" type="date"></div>
+            <div class="col text-left" style="padding-top: 20px;padding-bottom: 0px;"><label>Data dostawy:</label><input id="data-scanned-field" type="date"></div>
         </div>
     </div>
     <div class="col">
         <label>Kod kabla</label>
         <input type="hidden" id="username-field" value="@UserManager.GetUserName(User)" />
-        <input oninput="automaticEntry()" onkeyup="manualEntry(event)" type="text" id="kod-kabla-field" style="padding: 0px;width: 50%;" autofocus="">
+        <input onkeyup="manualEntry(event)" type="text" id="kod-kabla-field" style="padding: 0px;width: 50%;" autofocus="">
         <br>
         <div class="row">
             <div class="col">
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div class="text-left">
-            <h3>Data dostawy, stara:</h3>
+            <h3>Data dostawy, deklarowana:</h3>
             <div class="text-center">
                 <h1 id="data-dostawy-stara-field">DATA DOSTAWY</h1>
             </div>
@@ -87,7 +87,7 @@
             </div>
         </div>
         <div class="text-left">
-            <h3>Data dostawy, nowa:</h3>
+            <h3>Data dostawy, dopis:</h3>
             <div class="text-center">
                 <h1 id="data-dostawy-nowa-field">Data dostawy nowa</h1>
             </div>
@@ -160,3 +160,6 @@
         <h1 id="zalegle-field" style="color: rgb(255,46,33);">Zaległe</h1>
     </div>
 </div>
+
+
+<script src="~/assets/customjs/ScanCommunicate.js"></script>

@@ -45,7 +45,7 @@ namespace EnterpriseZEM
                 .HasForeignKey(c => c.VTMagazynId);
 
             builder.Entity<Technical>().HasQueryFilter(c => c.Deleted == false);
-            builder.Entity<VTMagazyn>().HasQueryFilter(c => c.Deleted == false);
+            //builder.Entity<VTMagazyn>().HasQueryFilter(c => c.Deleted == false);
 
             base.OnModelCreating(builder);
         }

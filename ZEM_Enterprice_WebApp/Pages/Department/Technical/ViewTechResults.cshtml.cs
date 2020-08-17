@@ -77,7 +77,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
         }
         public async Task<IActionResult> OnPostDeleteRecordAsync(string id)
         {
-            var rec = await _db.Technical.FindAsync(id);
+            var rec = await _db.Technical.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CietyWiazka == id);
             if (rec != null)
             {
                 rec.Deleted = !rec.Deleted;
@@ -101,9 +101,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             IQueryable<Data.Tables.Technical> query;
 
             if(!ShowDeleted)
-                query = _db.Technical.AsNoTracking().Where(c => c.Deleted == false).AsQueryable();
-            else
                 query = _db.Technical.AsNoTracking().AsQueryable();
+            else
+                query = _db.Technical.AsNoTracking().IgnoreQueryFilters().AsQueryable();
 
             char separator = ',';
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace EnterpriseZEM_Client
         Client _client;
         
         LoginForm _LF;
+        Stopwatch _sw = new Stopwatch();
 
         public ScanForm(string username, LoginForm LF)
         {
@@ -31,8 +33,6 @@ namespace EnterpriseZEM_Client
             {
                 printersComboBox.Items.Add(s);
             }
-
-            
             _LF = LF;
         }
 
@@ -98,6 +98,7 @@ namespace EnterpriseZEM_Client
                     {
                         sc.sztukiSkanowane = int.Parse((((TextBox)form.Controls.Find("quantitytextbox", false).First()).Text));
                         sc.isForcedQuantity = true;
+                        sc.isForcedOverDeclared = true;
                         response = _client.SendReceiveMessage(cp);
                     }
                     else
@@ -121,6 +122,7 @@ namespace EnterpriseZEM_Client
                     {
                         sc.sztukiSkanowane = int.Parse((((TextBox)form.Controls.Find("quantitytextbox", false).First()).Text));
                         sc.isForcedOverDeclared = true;
+                        sc.isForcedQuantity = true;
                         response = _client.SendReceiveMessage(cp);
                     }
                     else
@@ -262,12 +264,31 @@ namespace EnterpriseZEM_Client
         
         private void kodWiazkiTextbox_TextChanged(object sender, EventArgs e)
         {
-            if(!recznieCheckbox.Checked && kodWiazkiTextbox.Text != "")
+            if (kodWiazkiTextbox.Text == "")
             {
-                UpdateForm();
+                timer2.Stop();
+                _sw.Reset();
+                prevInputTime = 0;
+                meanInputTime = 0;
+                inputs = 0;
+            }
+
+            if (!recznieCheckbox.Checked && kodWiazkiTextbox.Text != "")
+            {
+                if (!_sw.IsRunning)
+                {
+                    _sw.Start();
+                    timer2.Start();
+                }
+                prevInputTime += _sw.ElapsedMilliseconds+1;
+                inputs++;
+                meanInputTime = prevInputTime / inputs;
             }
         }
 
+        double inputs = 0;
+        double prevInputTime = 0;
+        double meanInputTime = 0;
         private void kodWiazkiTextbox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -324,6 +345,20 @@ namespace EnterpriseZEM_Client
         {
             WiecejOpcji wo = new WiecejOpcji(_client);
             wo.Show();
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            if (!recznieCheckbox.Checked && kodWiazkiTextbox.Text.Length > 8 &&
+                meanInputTime < 100 && meanInputTime != 0)
+            {
+                prevInputTime = 0;
+                meanInputTime = 0;
+                inputs = 0;
+                _sw.Reset();
+                UpdateForm();
+
+            }
         }
     }
 }

@@ -66,8 +66,10 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             StringBuilder sb = new StringBuilder();
             MemoryStream ms = new MemoryStream();
             var writer = new StreamWriter(ms);
+            writer.AutoFlush = true;
             var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             csv.WriteRecords(await _db.PendingChangesTechnical.ToListAsync());
+            await ms.FlushAsync();
             await csv.FlushAsync();
             ms.Position = 0;
 
@@ -79,7 +81,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             foreach (var check in AreChecked)
             {
                 var pending = await _db.PendingChangesTechnical.FirstOrDefaultAsync(c => c.PendingChangesTechnicalId == Guid.Parse(check));
-                var rec = await _db.Technical.FirstOrDefaultAsync(c => c.CietyWiazka == pending.CietyWiazka);
+                var rec = await _db.Technical.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CietyWiazka == pending.CietyWiazka);
 
                 if(rec != null)
                 {
@@ -99,6 +101,24 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                 _db.Technical.Update(rec);
             }
             _db.PendingChangesTechnical.RemoveRange(_db.PendingChangesTechnical);
+            await _db.SaveChangesAsync();
+            return RedirectToPage("/MainPage");
+        }
+
+        public async Task<IActionResult> OnPostDeleteChangesAsync()
+        {
+            foreach (var check in AreChecked)
+            {
+                var pending = await _db.PendingChangesTechnical.FirstOrDefaultAsync(c => c.PendingChangesTechnicalId == Guid.Parse(check));
+                var rec = await _db.Technical.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CietyWiazka == pending.CietyWiazka);
+                _db.Remove(pending);
+                if (rec != null)
+                {
+                    rec.Deleted = true;
+                    rec.DeleteDate = DateTime.Now;
+                }
+                _db.Technical.Update(rec);
+            }
             await _db.SaveChangesAsync();
             return RedirectToPage("/MainPage");
         }

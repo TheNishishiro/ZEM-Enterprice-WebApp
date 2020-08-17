@@ -58,6 +58,8 @@ function parseISOString(s) {
     return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
 }
 
+var timeout = null;
+
 async function manualEntry(e) {
     if (document.getElementById("nr-dostawy-field").value == "" || document.getElementById("data-scanned-field").value == "")
         return;
@@ -67,6 +69,14 @@ async function manualEntry(e) {
         if (document.getElementById("Manual-Input").checked == true) {
             await getCodeDetails();
         }
+    }
+    else if (document.getElementById("Manual-Input").checked == false) {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(function () {
+            getCodeDetails(); //this is your existing function
+        }, 500);
     }
 }
 
@@ -109,6 +119,7 @@ async function getCodeDetails() {
             else {
                 myScan.forcedQuantity = newQuantity;
                 myScan.isForcedQuantity = true;
+                myScan.isForcedOverDeclared = true;
                 response = await SendReceive(myScan, guid);
             }
         }
@@ -121,6 +132,7 @@ async function getCodeDetails() {
             else {
                 myScan.forcedQuantity = newQuantity;
                 myScan.isForcedOverDeclared = true;
+                myScan.isForcedQuantity = true;
                 response = await SendReceive(myScan, guid);
             }
         }

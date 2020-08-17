@@ -208,6 +208,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             return Page();
         }
 
+        // Relation to delivery is not removed with dopis
         public async Task<IActionResult> OnPostDeleteDopisAsync(string id)
         {
             if (!ModelState.IsValid)
@@ -329,7 +330,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                     c.KodCiety == Input.KodCiety &&
                     c.DataDostawy.Date == Input.DeliveryDate.Date).ToListAsync();
 
-            var deliveryRecords = await _db.Dostawa.AsNoTracking().Include(c =>c.Technical).Where(c =>
+            var deliveryRecords = await _db.Dostawa.IgnoreQueryFilters().AsNoTracking().Include(c =>c.Technical).Where(c =>
                     c.Technical.Wiazka == Input.Wiazka &&
                     c.Data.Date == Input.DeliveryDate.Date).ToListAsync();
 
@@ -377,7 +378,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             int originalValue = record.SztukiZeskanowane;
             var pastScans = _db.VTMagazyn.Where(c => c.Wiazka == Input.Wiazka && c.DataDostawy.Date < Input.DateTo.Date && c.DataDostawy >= Input.DateFrom.Date && c.autocompleteEnabled == true)
                 .OrderBy(c => c.DataDostawy).ToList().GroupBy(c => c.DataDostawy).Select(c => c.ToList()).ToList();
-            var pastDeliveries = await _db.Dostawa.AsNoTracking().Include(c => c.Technical)
+            var pastDeliveries = await _db.Dostawa.IgnoreQueryFilters().AsNoTracking().Include(c => c.Technical)
                 .Where(c => c.Technical.Wiazka == Input.Wiazka &&
                 c.Data.Date < Input.DateTo.Date &&
                 c.Data.Date >= Input.DateFrom.Date).ToListAsync();
@@ -407,7 +408,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
             int possibleDeclared = GetPossibleDeclaredValue(new ScannedCode { Wiazka = Wiazka, dataDostawyOld = dataDostawyOld}
                 , Scanned,
-                _db.Dostawa.AsNoTracking().Include(c => c.Technical)
+                _db.Dostawa.IgnoreQueryFilters().AsNoTracking().Include(c => c.Technical)
                         .Where(c => c.Technical.Wiazka == Wiazka && c.Data.Date == dataDostawyOld.Date).ToList(),
                 completeID);
             int numToComplete = _db.Technical.AsNoTracking().Where(c => c.Wiazka == Wiazka && c.KanBan == false).Count();
@@ -451,7 +452,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                            && scan.SztukiZeskanowane != mostFrequentCount)
                         {
                             scan.SztukiZeskanowane += value;
-                            scan.DataDopisu = DateTime.Now;
+                            scan.DataDopisu = Input.DeliveryDate;
                             scan.DopisanaIlosc = value;
                             _db.Update(scan);
                             checkComplete(scan.NumerKompletu, Input.Wiazka, scan.DataDostawy);
@@ -543,12 +544,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 DataDostawy = dataDostawy,
                 Komplet = false,
                 Deklarowany = Input.isDeclared,
-                DataDopisu = DateTime.Now,
+                DataDopisu = Input.DeliveryDate,
                 DopisanaIlosc = value,
                 Uwagi = Input.Uwagi,
                 autocompleteEnabled = Input.isAutocompleteEnabled,
                 wymuszonaIlosc = Input.isForcedDeclared,
-                Technical = _db.Technical.FirstOrDefault(c => c.PrzewodCiety == Input.KodCiety && c.Wiazka == Input.Wiazka)
+                Technical = _db.Technical.IgnoreQueryFilters().FirstOrDefault(c => c.PrzewodCiety == Input.KodCiety && c.Wiazka == Input.Wiazka),
             };
             vt.Dostawy = new List<VtToDostawa>();
 

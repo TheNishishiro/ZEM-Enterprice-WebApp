@@ -33,7 +33,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
             vttd.VTMagazynId = vt.VTMagazynId;
             vttd.VTMagazyn = vt;
             vttd.Dostawa = dostawaEntry;
-            if (vt.Dostawy.Where(c => c.VTMagazynId == vttd.VTMagazynId && c.DostawaId == vttd.DostawaId) == null)
+            if (vt.Dostawy.FirstOrDefault(c => c.VTMagazynId == vttd.VTMagazynId && c.DostawaId == vttd.DostawaId) == null)
                 vt.Dostawy.Add(vttd);
         }
 
@@ -158,9 +158,10 @@ namespace ZEM_Enterprice_WebApp.Scanning
             if (setID == 0)
             {
                 pastScans = VTScans.Where(c =>
-                       c.DataDostawy.Date == scanned.dataDostawyOld.Date &&
-                       c.autocompleteEnabled == true &&
-                       c.NumerKompletu == setID).ToList();
+                        c.Wiazka == scanned.Wiazka &&
+                        c.DataDostawy.Date == scanned.dataDostawyOld.Date &&
+                        c.autocompleteEnabled == true &&
+                        c.NumerKompletu == setID).ToList();
 
                 if (pastScans.Count > 0 && pastScans[0].wymuszonaIlosc)
                     return pastScans[0].SztukiDeklarowane;
@@ -355,9 +356,9 @@ namespace ZEM_Enterprice_WebApp.Scanning
         /// <param name="sc"></param>
         /// <param name="setID"></param>
         /// <returns></returns>
-        public VTMagazyn GetPerfectMatchVT(ScannedCode sc, int setID, List<VTMagazyn> listOfVT, List<Dostawa> listOfDeliveries)
+        public VTMagazyn GetPerfectMatchVT(ScannedCode sc, int setID, List<VTMagazyn> listOfVT, List<VTMagazyn> scansForDay, List<Dostawa> listOfDeliveries)
         {
-            int declared = GetPossibleDeclaredValue(sc, listOfVT, listOfDeliveries, setID);
+            int declared = GetPossibleDeclaredValue(sc, scansForDay, listOfDeliveries, setID);
             return listOfVT.FirstOrDefault(c => c.SztukiZeskanowane + sc.sztukiSkanowane == declared &&
                 c.autocompleteEnabled == true && c.NumerKompletu == setID);
         }
@@ -368,7 +369,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         /// <param name="sc"></param>
         /// <param name="setID"></param>
         /// <returns></returns>
-        public List<VTMagazyn> GetBelowDeclaredMatches(ScannedCode sc, int setID, List<VTMagazyn> listOfVT, List<Dostawa> listOfDeliveries)
+        public List<VTMagazyn> GetBelowDeclaredMatches(ScannedCode sc, int setID, List<VTMagazyn> listOfVT, List<VTMagazyn> scansForDay, List<Dostawa> listOfDeliveries)
         {
             int declared = GetPossibleDeclaredValue(sc, listOfVT, listOfDeliveries, setID);
             return listOfVT.Where(c => c.SztukiZeskanowane + sc.sztukiSkanowane < declared &&
@@ -413,7 +414,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                             .Where(c => c.Technical.Wiazka == sc.Wiazka && c.Data.Date == sc.dataDostawyOld.Date).ToList();
                     var VTList = new List<VTMagazyn>();
                     VTList.Add(VT);
-
+                    // ?
                     // If instance of this scan have been added for todays delivery
                     if (VT.SztukiZeskanowane < GetPossibleDeclaredValue(sc, VTList, deliveriesForToday))
                         return AddQuantityIncorrect(deliveriesForToday, response, techEntry, sc, dostawaEntry);
@@ -492,6 +493,8 @@ namespace ZEM_Enterprice_WebApp.Scanning
             else
             {
                 var VTList = ExistInVTList(sc);
+                var scansForDay = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
+
                 if (VTList.Count <= 0 && !sc.addedBefore)
                 {
                     // if record doesn't exist add it
@@ -517,7 +520,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                     foreach (var vt in VTList)
                     {
                         // Check if we can add current scan to complete one today
-                        var perfectVT = GetPerfectMatchVT(sc, vt.NumerKompletu, VTList, deliveriesForToday);
+                        var perfectVT = GetPerfectMatchVT(sc, vt.NumerKompletu, VTList, scansForDay, deliveriesForToday);
                         if (perfectVT != null)
                         {
                             perfectVT.SztukiZeskanowane += sc.sztukiSkanowane;
@@ -532,12 +535,12 @@ namespace ZEM_Enterprice_WebApp.Scanning
                     foreach (var vt in VTList)
                     {
                         // check if there are any scans we can add current scan to
-                        var belowMatches = GetBelowDeclaredMatches(sc, vt.NumerKompletu, VTList, deliveriesForToday);
+                        var belowMatches = GetBelowDeclaredMatches(sc, vt.NumerKompletu, VTList, scansForDay, deliveriesForToday);
                         if (belowMatches.Count() == 0)
                         {
                             if (vt.autocompleteEnabled)
                             {
-                                int possibleDeclaredValue = GetPossibleDeclaredValue(sc, VTList, deliveriesForToday, vt.NumerKompletu);
+                                int possibleDeclaredValue = GetPossibleDeclaredValue(sc, scansForDay, deliveriesForToday, vt.NumerKompletu);
 
                                 // if adding would exceed declared value
                                 if (vt.SztukiZeskanowane < possibleDeclaredValue && vt.SztukiZeskanowane + sc.sztukiSkanowane > possibleDeclaredValue)
@@ -565,7 +568,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
                             response.Header = HeaderTypes.error;
                             response.Flag = FlagType.quantityOverLimit;
                             response.Args.Add((forceOverLimit[0].SztukiZeskanowane + sc.sztukiSkanowane).ToString());
-                            response.Args.Add(GetPossibleDeclaredValue(sc, VTList, deliveriesForToday, forceOverLimit[0].NumerKompletu).ToString());
+                            response.Args.Add(GetPossibleDeclaredValue(sc, scansForDay, deliveriesForToday, forceOverLimit[0].NumerKompletu).ToString());
                             return false;
                         }
                         else

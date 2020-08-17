@@ -67,6 +67,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.userIdTextBox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -123,9 +124,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(14, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 17);
+            this.label2.Size = new System.Drawing.Size(93, 17);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Data skanowania";
+            this.label2.Text = "Data dostawy";
             // 
             // label3
             // 
@@ -174,7 +175,7 @@
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(1095, 243);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(210, 39);
+            this.label15.Size = new System.Drawing.Size(168, 31);
             this.label15.TabIndex = 37;
             this.label15.Text = "Nr. kompletu";
             // 
@@ -184,7 +185,7 @@
             this.nrKompletuLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nrKompletuLabel.Location = new System.Drawing.Point(1201, 281);
             this.nrKompletuLabel.Name = "nrKompletuLabel";
-            this.nrKompletuLabel.Size = new System.Drawing.Size(360, 68);
+            this.nrKompletuLabel.Size = new System.Drawing.Size(288, 54);
             this.nrKompletuLabel.TabIndex = 36;
             this.nrKompletuLabel.Text = "Nr. kompletu";
             // 
@@ -196,7 +197,7 @@
             this.zalegle_label.ForeColor = System.Drawing.Color.Red;
             this.zalegle_label.Location = new System.Drawing.Point(963, 638);
             this.zalegle_label.Name = "zalegle_label";
-            this.zalegle_label.Size = new System.Drawing.Size(364, 116);
+            this.zalegle_label.Size = new System.Drawing.Size(291, 93);
             this.zalegle_label.TabIndex = 35;
             this.zalegle_label.Text = "zalegle";
             // 
@@ -206,7 +207,7 @@
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(679, 243);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(99, 39);
+            this.label8.Size = new System.Drawing.Size(79, 31);
             this.label8.TabIndex = 34;
             this.label8.Text = "Ilość:";
             // 
@@ -216,7 +217,7 @@
             this.ilosc_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ilosc_label.Location = new System.Drawing.Point(785, 281);
             this.ilosc_label.Name = "ilosc_label";
-            this.ilosc_label.Size = new System.Drawing.Size(146, 68);
+            this.ilosc_label.Size = new System.Drawing.Size(117, 54);
             this.ilosc_label.TabIndex = 33;
             this.ilosc_label.Text = "ilosc";
             // 
@@ -226,7 +227,7 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(10, 636);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(394, 39);
+            this.label7.Size = new System.Drawing.Size(315, 31);
             this.label7.TabIndex = 32;
             this.label7.Text = "Zeskanowanych/komplet";
             // 
@@ -236,9 +237,9 @@
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(679, 480);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(335, 39);
+            this.label6.Size = new System.Drawing.Size(268, 31);
             this.label6.TabIndex = 31;
-            this.label6.Text = "Data dostawy, nowa:";
+            this.label6.Text = "Data dostawy, dopis:";
             // 
             // datadostawynowa_label
             // 
@@ -246,7 +247,7 @@
             this.datadostawynowa_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.datadostawynowa_label.Location = new System.Drawing.Point(785, 519);
             this.datadostawynowa_label.Name = "datadostawynowa_label";
-            this.datadostawynowa_label.Size = new System.Drawing.Size(529, 68);
+            this.datadostawynowa_label.Size = new System.Drawing.Size(423, 54);
             this.datadostawynowa_label.TabIndex = 30;
             this.datadostawynowa_label.Text = "data dostawy nowa";
             // 
@@ -256,9 +257,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(13, 480);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(330, 39);
+            this.label5.Size = new System.Drawing.Size(327, 31);
             this.label5.TabIndex = 29;
-            this.label5.Text = "Data dostawy, stara:";
+            this.label5.Text = "Data dostawy, deklaracja:";
             // 
             // label4
             // 
@@ -266,7 +267,7 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(13, 358);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(190, 39);
+            this.label4.Size = new System.Drawing.Size(152, 31);
             this.label4.TabIndex = 28;
             this.label4.Text = "Kod wiązki:";
             // 
@@ -276,7 +277,7 @@
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(679, 141);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(231, 39);
+            this.label9.Size = new System.Drawing.Size(185, 31);
             this.label9.TabIndex = 27;
             this.label9.Text = "Litera rodziny:";
             // 
@@ -286,7 +287,7 @@
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(13, 246);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(85, 39);
+            this.label10.Size = new System.Drawing.Size(68, 31);
             this.label10.TabIndex = 26;
             this.label10.Text = "BIN:";
             // 
@@ -296,7 +297,7 @@
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(13, 141);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(168, 39);
+            this.label11.Size = new System.Drawing.Size(134, 31);
             this.label11.TabIndex = 25;
             this.label11.Text = "Kod cięty:";
             // 
@@ -306,7 +307,7 @@
             this.datadostawystara_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.datadostawystara_label.Location = new System.Drawing.Point(119, 519);
             this.datadostawystara_label.Name = "datadostawystara_label";
-            this.datadostawystara_label.Size = new System.Drawing.Size(520, 68);
+            this.datadostawystara_label.Size = new System.Drawing.Size(416, 54);
             this.datadostawystara_label.TabIndex = 24;
             this.datadostawystara_label.Text = "data dostawy stara";
             // 
@@ -316,7 +317,7 @@
             this.komplet_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.komplet_label.Location = new System.Drawing.Point(119, 881);
             this.komplet_label.Name = "komplet_label";
-            this.komplet_label.Size = new System.Drawing.Size(243, 68);
+            this.komplet_label.Size = new System.Drawing.Size(194, 54);
             this.komplet_label.TabIndex = 23;
             this.komplet_label.Text = "Komplet";
             // 
@@ -326,7 +327,7 @@
             this.zeskanowane_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.zeskanowane_label.Location = new System.Drawing.Point(116, 675);
             this.zeskanowane_label.Name = "zeskanowane_label";
-            this.zeskanowane_label.Size = new System.Drawing.Size(523, 68);
+            this.zeskanowane_label.Size = new System.Drawing.Size(418, 54);
             this.zeskanowane_label.TabIndex = 22;
             this.zeskanowane_label.Text = "zeskanowanych/ile";
             // 
@@ -336,7 +337,7 @@
             this.kodwiazki_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.kodwiazki_label.Location = new System.Drawing.Point(119, 396);
             this.kodwiazki_label.Name = "kodwiazki_label";
-            this.kodwiazki_label.Size = new System.Drawing.Size(299, 68);
+            this.kodwiazki_label.Size = new System.Drawing.Size(239, 54);
             this.kodwiazki_label.TabIndex = 21;
             this.kodwiazki_label.Text = "kod wiazki";
             // 
@@ -346,7 +347,7 @@
             this.litera_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.litera_label.Location = new System.Drawing.Point(785, 180);
             this.litera_label.Name = "litera_label";
-            this.litera_label.Size = new System.Drawing.Size(155, 68);
+            this.litera_label.Size = new System.Drawing.Size(124, 54);
             this.litera_label.TabIndex = 20;
             this.litera_label.Text = "litera";
             // 
@@ -356,7 +357,7 @@
             this.bin_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bin_label.Location = new System.Drawing.Point(119, 281);
             this.bin_label.Name = "bin_label";
-            this.bin_label.Size = new System.Drawing.Size(106, 68);
+            this.bin_label.Size = new System.Drawing.Size(85, 54);
             this.bin_label.TabIndex = 19;
             this.bin_label.Text = "bin";
             // 
@@ -366,7 +367,7 @@
             this.ciety_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ciety_label.Location = new System.Drawing.Point(119, 180);
             this.ciety_label.Name = "ciety_label";
-            this.ciety_label.Size = new System.Drawing.Size(260, 68);
+            this.ciety_label.Size = new System.Drawing.Size(208, 54);
             this.ciety_label.TabIndex = 18;
             this.ciety_label.Text = "kod ciety";
             // 
@@ -474,6 +475,12 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // timer2
+            // 
+            this.timer2.Enabled = true;
+            this.timer2.Interval = 1000;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+            // 
             // ScanForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -533,6 +540,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label nrKompletuLabel;
         private System.Windows.Forms.CheckBox lookBackCheckbox;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

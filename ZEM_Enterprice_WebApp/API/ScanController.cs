@@ -24,14 +24,6 @@ namespace ZEM_Enterprice_WebApp.API
             _db = db;
         }
 
-        [HttpGet("id")]
-        public async Task<ActionResult<string>> GetDeliveryforScan(string id)
-        {
-            var scans = _db.VTMagazyn.Where(c => c.VTMagazynId == Guid.Parse(id)).Include(c => c.Dostawy).ThenInclude(c => c.Select(c => c.Dostawa)).Select(c => c.Dostawy.Select(c => c.Dostawa));
-
-            return "HI";//await scans.ToListAsync();
-        }
-
         [HttpGet("{przewod},{year}-{month}-{day}")]
         public async Task<ActionResult<List<string>>> GetMissing(string przewod, int year, int month, int day)
         {
@@ -55,7 +47,7 @@ namespace ZEM_Enterprice_WebApp.API
             if (SetIDs.Count() == 0)
                 SetIDs.Add(0);
 
-            var deliveries = await _db.Dostawa.AsNoTracking().Include(c => c.Technical).Where(c => c.Technical.Wiazka == wiazka &&
+            var deliveries = await _db.Dostawa.IgnoreQueryFilters().AsNoTracking().Include(c => c.Technical).Where(c => c.Technical.Wiazka == wiazka &&
             c.Data.Date == deliveryDate.Date).ToListAsync();
             var scans = await _db.VTMagazyn.AsNoTracking().Where(c => c.Wiazka == wiazka && c.DataDostawy.Date == deliveryDate.Date).ToListAsync();
 

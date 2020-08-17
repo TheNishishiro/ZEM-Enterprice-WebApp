@@ -47,7 +47,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
             _db.RemoveRange(_db.VtToDostawa);
             _db.RemoveRange(_db.Dostawa);
             _db.RemoveRange(_db.VTMagazyn);
-            _db.RemoveRange(_db.Technical);
+            _db.RemoveRange(_db.Technical.IgnoreQueryFilters());
 
             await _db.SaveChangesAsync();
 
@@ -69,7 +69,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
                 using (var reader = new StreamReader(backupDir + "/Technical.csv"))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {
-                    _db.RemoveRange(_db.Technical);
+                    _db.RemoveRange(_db.Technical.IgnoreQueryFilters());
                     await _db.SaveChangesAsync();
                     int i = 0;
                     await csv.ReadAsync();

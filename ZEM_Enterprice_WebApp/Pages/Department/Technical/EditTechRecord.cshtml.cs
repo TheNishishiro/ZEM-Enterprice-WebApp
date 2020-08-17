@@ -27,7 +27,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 
         public async Task OnGetAsync(string id)
         {
-            var record = await _db.Technical.FindAsync(id);
+            var record = await _db.Technical.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CietyWiazka == id);
             if (record == null)
                 return;
             Input = new InputModel();
@@ -52,7 +52,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             if (!ModelState.IsValid)
                 return Page();
 
-            var record = await _db.Technical.FindAsync(Input.CietyWiazka);
+            var record = await _db.Technical.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.CietyWiazka == Input.CietyWiazka);
 
             record.CietyWiazka = Input.Wiazka + "_" + Input.PrzewodCiety;
             record.BIN = Input.BIN;

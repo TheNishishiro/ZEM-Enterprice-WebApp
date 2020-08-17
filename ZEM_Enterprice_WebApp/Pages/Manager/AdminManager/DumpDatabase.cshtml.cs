@@ -34,11 +34,11 @@ namespace ZEM_Enterprice_WebApp.Pages.Manager.AdminManager
             {
                 Directory.CreateDirectory(backupDir);
 
-                int recordsInTable = _db.Technical.Count();
+                int recordsInTable = _db.Technical.IgnoreQueryFilters().Count();
                 int chunkSize = 20000;
                 for(int i = 0; i < recordsInTable; i += chunkSize)
                 {
-                    var records = await _db.Technical.OrderBy(c => c.CietyWiazka).Skip(i).Take(chunkSize).ToListAsync();
+                    var records = await _db.Technical.IgnoreQueryFilters().OrderBy(c => c.CietyWiazka).Skip(i).Take(chunkSize).ToListAsync();
 
                     using (var writer = new StreamWriter(backupDir + "/Technical.csv", true))
                     {

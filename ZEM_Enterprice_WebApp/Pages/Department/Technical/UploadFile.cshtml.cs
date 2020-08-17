@@ -97,7 +97,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                 TechEntries.Remove(dup);
             TechEntries = TechEntries.GroupBy(c => c.CietyWiazka).Distinct().Select(c => c.ToList()[0]).ToList();
 
-            duplicates.AddRange(TechEntries.Where(d => _db.Technical.Select(c => c.CietyWiazka).Contains(d.CietyWiazka))
+            duplicates.AddRange(TechEntries.Where(d => _db.Technical.IgnoreQueryFilters().Select(c => c.CietyWiazka).Contains(d.CietyWiazka))
                 .Select(c => new PendingChangesTechnical
                 {
                     CietyWiazka = c.CietyWiazka,
@@ -112,11 +112,11 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                     KanBan = c.KanBan,
                     Uwagi = "",
                     DataUtworzenia = c.DataUtworzenia,
-                    DataModyfikacji = DateTime.Now.ToString()
+                    DataModyfikacji = DateTime.Now.ToString("g", CultureInfo.CreateSpecificCulture("de-DE"))
                 }).ToList());
 
             await _db.PendingChangesTechnical.AddRangeAsync(duplicates);
-            await _db.Technical.AddRangeAsync(TechEntries.Where(c => !_db.Technical.Select(d => d.CietyWiazka).Contains(c.CietyWiazka)));
+            await _db.Technical.AddRangeAsync(TechEntries.Where(c => !_db.Technical.IgnoreQueryFilters().Select(d => d.CietyWiazka).Contains(c.CietyWiazka)));
 
             await _db.SaveChangesAsync();
 
@@ -125,91 +125,5 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             else
                 return RedirectToPage("/MainPage");
         }
-
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //        return Page();
-
-        //    List<Data.Tables.PendingChangesTechnical> duplicates = new List<Data.Tables.PendingChangesTechnical>();
-        //    bool found = false;
-        //    List<string> inDB = await _db.Technical.Select(c => c.CietyWiazka).ToListAsync();
-
-        //    using (StreamReader sr = new StreamReader(dataFile.OpenReadStream()))
-        //    {
-        //        while (sr.Peek() >= 0)
-        //        {
-        //            try
-        //            {
-        //                string[] fields = ((await sr.ReadLineAsync())).Split(',');
-        //                bool kanban = false;
-        //                if (fields[8] != "")
-        //                    kanban = true;
-
-        //                var record = new Data.Tables.Technical
-        //                {
-        //                    CietyWiazka = fields[1] + "_" + fields[5],
-        //                    Rodzina = fields[0],
-        //                    Wiazka = fields[1],
-        //                    LiterRodziny = fields[2],
-        //                    KodWiazki = fields[3],
-        //                    IlePrzewodow = fields[4],
-        //                    PrzewodCiety = fields[5],
-        //                    BIN = fields[6],
-        //                    IndeksScala = fields[7],
-        //                    KanBan = kanban,
-        //                    Uwagi = "",
-        //                    DataUtworzenia = fields[10]
-        //                };
-
-        //                if (inDB.Exists(c => c == record.CietyWiazka))
-        //                {
-        //                    _db.PendingChangesTechnical.Add(new Data.Tables.PendingChangesTechnical
-        //                    {
-        //                        CietyWiazka = record.CietyWiazka,
-        //                        Rodzina = record.Rodzina,
-        //                        Wiazka = record.Wiazka,
-        //                        LiterRodziny = record.LiterRodziny,
-        //                        KodWiazki = record.KodWiazki,
-        //                        IlePrzewodow = record.IlePrzewodow,
-        //                        PrzewodCiety = record.PrzewodCiety,
-        //                        BIN = record.BIN,
-        //                        IndeksScala = record.IndeksScala,
-        //                        KanBan = kanban,
-        //                        Uwagi = "",
-        //                        DataUtworzenia = record.DataUtworzenia,
-        //                        DataModyfikacji = DateTime.Now.ToString()
-        //                    });
-        //                    found = true;
-        //                }
-        //                else
-        //                {
-        //                    try
-        //                    {
-        //                        await _db.AddAsync(record);
-        //                        inDB.Add(record.CietyWiazka);
-        //                    }
-        //                    catch (Exception ex)
-        //                    {
-
-        //                    }
-        //                }
-        //            }
-        //            catch (Exception ex)
-        //            {
-
-        //            }
-        //        }
-        //    }
-
-        //    //await _db.PendingChangesTechnical.AddRangeAsync(duplicates);
-
-        //    await _db.SaveChangesAsync();
-
-        //    if (found)
-        //        return RedirectToPage("/Department/Technical/ConfirmChanges");
-        //    else
-        //        return RedirectToPage("/MainPage");
-        //}
     }
 }

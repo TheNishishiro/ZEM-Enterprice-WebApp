@@ -47,11 +47,11 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public void CreateReportImproved()
         {
-            List<VTMagazyn> VTEntries = _db.VTMagazyn.AsNoTracking().Where(c =>
+            List<VTMagazyn> VTEntries = _db.VTMagazyn.IgnoreQueryFilters().AsNoTracking().Where(c =>
                    c.DataDostawy.Date == ForDateStart.Date).Include(c => c.Technical).ToList();
 
             List<Dostawa> DostawaEntries = _db.Dostawa.AsNoTracking().Where(c =>
-                   c.Data.Date == ForDateStart.Date).Include(c => c.Technical).Where(c => c.Technical.KanBan == false).ToList();
+                   c.Data.Date == ForDateStart.Date).IgnoreQueryFilters().Include(c => c.Technical).Where(c => c.Technical.KanBan == false).ToList();
 
             analizeEntries = new List<AnalizeEntry>();
             foreach(VTMagazyn vt in VTEntries)
@@ -95,9 +95,11 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             List<Data.Tables.Technical> TechnicalEntries = _db.Technical.Where(
                 c =>
                 VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
-                DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka) &&
-                !DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala) &&
                 !VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety) &&
+                //VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
+                //DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka) &&
+                //!DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala) &&
+                //!VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety) &&
                 c.KanBan == false
                 ).ToList();
 

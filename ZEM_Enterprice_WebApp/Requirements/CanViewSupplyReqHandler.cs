@@ -13,7 +13,8 @@ namespace ZEM_Enterprice_WebApp.Requirements
         {
             if (context.User.IsInRole(DefaultRoles.Admin.ToString()) || 
                 context.User.IsInRole(DefaultRoles.Magazyn.ToString()) || 
-                context.User.IsInRole(DefaultRoles.Office.ToString()))
+                context.User.IsInRole(DefaultRoles.Office.ToString()) || 
+                context.User.IsInRole(DefaultRoles.Tech.ToString()))
                 context.Succeed(requirement);
 
             return Task.CompletedTask;

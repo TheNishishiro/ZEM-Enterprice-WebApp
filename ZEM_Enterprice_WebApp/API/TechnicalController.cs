@@ -191,7 +191,7 @@ namespace ZEM_Enterprice_WebApp.API
                 if (sc.sztukiSkanowane == sc.sztukiDeklarowane)
                 {
                     var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
-                    var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                    var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Technical.Wiazka == sc.Wiazka && c.Data.Date == sc.dataDostawyOld.Date).ToList();
                     int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
 
                     if (sc.sztukiSkanowane != declared && !sc.isForcedOverDeclared)
@@ -219,7 +219,7 @@ namespace ZEM_Enterprice_WebApp.API
                         response.Flag = FlagType.quantityIncorrect;
                         response.Args.Add(sc.sztukiDeklarowane.ToString());
                         var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
-                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Technical.Wiazka == sc.Wiazka && c.Data.Date == sc.dataDostawyOld.Date).ToList();
                         int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
                         response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
 
@@ -253,7 +253,7 @@ namespace ZEM_Enterprice_WebApp.API
                         response.Flag = FlagType.quantityIncorrect;
                         response.Args.Add("0");
                         var sets = _db.VTMagazyn.Where(c => c.Wiazka == sc.Wiazka && c.DataDostawy.Date == sc.dataDostawyOld.Date).ToList();
-                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Data.Date == sc.dataDostawyOld.Date).ToList();
+                        var deliveries = _db.Dostawa.Include(c => c.Technical).Where(c => c.Technical.Wiazka == sc.Wiazka && c.Data.Date == sc.dataDostawyOld.Date).ToList();
                         int declared = VTFuncs.GetPossibleDeclaredValue(sc, sets, deliveries, sc.NumerKompletu);
                         response.Args.Add(VTFuncs.GetScannedForDay(sc, sets).ToString());
 

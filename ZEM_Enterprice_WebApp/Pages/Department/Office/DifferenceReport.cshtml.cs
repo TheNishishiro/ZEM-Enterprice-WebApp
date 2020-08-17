@@ -47,11 +47,10 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             //return File(Encoding.UTF8.GetBytes(CreateFile().ToString()), "text/plain", "raport.csv");
         }
 
-
         public void CreateDifferences()
         {
             differences = new Dictionary<string, Differences>();
-            List<TempDostawa> dostawaForDay = _db.Dostawa.AsNoTracking().Where(c => c.Data.Date == ForDate.Date)
+            List<TempDostawa> dostawaForDay = _db.Dostawa.IgnoreQueryFilters().AsNoTracking().Where(c => c.Data.Date == ForDate.Date)
                 .Include(c => c.Technical)
                 .Include(c => c.Skany)
                 .Where(c => !c.Technical.KanBan)
@@ -85,10 +84,19 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 {
                     foreach (var vtEntry in vtEntries)
                     {
-                        if (vtEntry.DataDopisu != null)
+                        if (vtEntry.DataDopisu != null && ((DateTime)vtEntry.DataDopisu).Date == ForDate.Date)
                             sztukiSkanowane += vtEntry.DopisanaIlosc;
-                        else
+                        else if (vtEntry.DataDopisu != null && vtEntry.DataDostawy.Date == ForDate.Date)
+                            sztukiSkanowane += vtEntry.SztukiZeskanowane - vtEntry.DopisanaIlosc;
+                        else if (vtEntry.DataDostawy.Date == ForDate.Date)
                             sztukiSkanowane += vtEntry.SztukiZeskanowane;
+                        else
+                            sztukiSkanowane += 0;
+
+                        //if (vtEntry.DataDopisu != null)
+                        //    sztukiSkanowane += vtEntry.DopisanaIlosc;
+                        //else
+                        //    sztukiSkanowane += vtEntry.SztukiZeskanowane;
                     }
 
                     wiazka = vtEntries[0].Wiazka;
@@ -118,9 +126,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 }
             }
 
-            List<VTMagazyn> vtUndeclared = _db.VTMagazyn.AsNoTracking()
+            List<VTMagazyn> vtUndeclared = _db.VTMagazyn.IgnoreQueryFilters().AsNoTracking().Include(c=>c.Dostawy)
                 .Where(c => 
-                    c.Deklarowany == false && 
+                    (c.Deklarowany == false || c.Dostawy.Count() == 0) && 
                     (c.DataDostawy.Date == ForDate.Date ||
                     (c.DataDopisu != null && ((DateTime)c.DataDopisu).Date == ForDate.Date)))
                 .Include(c=>c.Technical).ToList();
@@ -131,7 +139,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 //    break;
 
                 int sztukiSkanowane;
-                if (vtEntry.DataDopisu != null && ((DateTime)vtEntry.DataDopisu).Date == ForDate.Date)
+
+                if (vtEntry.Deklarowany == true && vtEntry.DataDostawy.Date == ForDate.Date)
+                    continue;
+                else if (vtEntry.Deklarowany == false && vtEntry.Dostawy.Count() > 0 && vtEntry.DataDopisu != null && ((DateTime)vtEntry.DataDopisu).Date == ForDate.Date)
+                    continue;
+                else if (vtEntry.DataDopisu != null && ((DateTime)vtEntry.DataDopisu).Date == ForDate.Date)
                     sztukiSkanowane = vtEntry.DopisanaIlosc;
                 else if (vtEntry.DataDopisu != null && vtEntry.DataDostawy.Date == ForDate.Date)
                     sztukiSkanowane = vtEntry.SztukiZeskanowane - vtEntry.DopisanaIlosc;
@@ -156,6 +169,30 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 }
             }
 
+            var notDeclaredAddedToDeclared = _db.VTMagazyn.IgnoreQueryFilters().AsNoTracking().Include(c => c.Dostawy)
+                .Where(c => 
+                    c.DataDopisu != null && ((DateTime)c.DataDopisu).Date == ForDate.Date &&
+                    !dostawaForDay.Select(c => c.Kod.Replace("PLC", "")).Contains(c.KodCiety)
+                )
+                .Include(c => c.Technical).ToList();
+
+            foreach(var vtEntry in notDeclaredAddedToDeclared)
+            {
+                if (differences.ContainsKey(vtEntry.KodCiety))
+                {
+                    differences[vtEntry.KodCiety].Zeskanowanych += vtEntry.SztukiZeskanowane;
+                }
+                else
+                {
+                    differences.Add(vtEntry.KodCiety, new Differences
+                    {
+                        Wiazka = vtEntry.Wiazka,
+                        BIN = vtEntry.Technical.BIN,
+                        Zeskanowanych = vtEntry.DopisanaIlosc,
+                        Deklarowanych = 0
+                    });
+                }
+            }
 
             if (Filter_Braki)
                 differencesFiltered = differences.Where(c => c.Value.Zeskanowanych == 0).ToDictionary(c => c.Key, c => c.Value);

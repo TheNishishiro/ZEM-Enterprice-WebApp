@@ -62,8 +62,13 @@
             </table>
         </div>
         <button asp-page-handler="AcceptChanges" type="submit" class="btn btn-sm btn-warning">
-            Akceptuj
+            Akceptuj - nadpisz zaznaczone i wyczyść listę
         </button>
+        <div class="pull-right">
+            <button asp-page-handler="DeleteChanges" type="submit" class="btn btn-sm btn-danger">
+                Usuń - zaznaczone rekordy z głównej bazy danych 
+            </button>
+        </div>
     </form>
 }
 
