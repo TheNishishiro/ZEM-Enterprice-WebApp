@@ -240,7 +240,7 @@ async function getCodeDetails() {
     }).then(res => { return res.json(); });
     console.log(data);
 
-    if (response["numScanned"] == 1) {
+    if (response["print"] == true) {
         var divToPrint = document.getElementById('print-div');
 
         var newWin = window.open('', 'Print-Window');

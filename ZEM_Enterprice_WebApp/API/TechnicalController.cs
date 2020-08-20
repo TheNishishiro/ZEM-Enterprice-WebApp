@@ -117,9 +117,9 @@ namespace ZEM_Enterprice_WebApp.API
             VTInsertFunctions VTFuncs = new VTInsertFunctions(_db, scan);
             ScannedResponse response = new ScannedResponse();
             ScannedCode sc = new ScannedCode();
-            sc.kodCiety = kodWiazkiTextbox.Replace("PLC", "").ToUpper().Trim().Substring(0,8);
+            sc.kodCiety = kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(0,8);
             if(forcedQuantity == 0)
-                sc.sztukiSkanowane = int.Parse(kodWiazkiTextbox.Replace("PLC", "").ToUpper().Trim().Substring(8));
+                sc.sztukiSkanowane = int.Parse(kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(8).TrimStart('0'));
             else
                 sc.sztukiSkanowane = forcedQuantity;
             sc.isLookingBack = isLookingBack;
@@ -284,6 +284,14 @@ namespace ZEM_Enterprice_WebApp.API
             response.Wiazka = sc.Wiazka;
             response.Rodzina = sc.Rodzina;
             response.sztukiSkanowane = sc.sztukiSkanowane;
+
+            if (numScanned == 1)
+                response.print = true;
+            if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
+            {
+                response.isComplete = true;
+                response.print = true;
+            }
 
             return response;
         }

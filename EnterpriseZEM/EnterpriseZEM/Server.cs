@@ -207,7 +207,6 @@ namespace EnterpriseZEM
 
                 bool isComplete = VTFuncs.checkComplete(sc, out int numToComplete, out int numScanned, out int numScannedToComplete);
 
-
                 sr.DataDostawy = sc.dataDostawy;
                 sr.DataDostawyOld = sc.dataDostawyOld;
                 sr.numToComplete = numToComplete;
@@ -219,6 +218,14 @@ namespace EnterpriseZEM
                 sr.Wiazka = sc.Wiazka;
                 sr.Rodzina = sc.Rodzina;
                 sr.sztukiSkanowane = sc.sztukiSkanowane;
+
+                if (numScanned == 1)
+                    sr.Print = true;
+                if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
+                {
+                    sr.isComplete = true;
+                    sr.Print = true;
+                }
 
                 _log.Information("Scan details: {@sc}", sc);
                 _log.Information("Response details: {@sr}", sr);

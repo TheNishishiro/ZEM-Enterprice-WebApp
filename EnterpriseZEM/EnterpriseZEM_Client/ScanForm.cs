@@ -247,7 +247,7 @@ namespace EnterpriseZEM_Client
 
             _ = _client.SendReceiveMessage(new CustomPacket(FlagType.basic, HeaderTypes.basic, "disposeCache", null, sc.SessionGUID));
 
-            if (sr.numScanned == 1)
+            if (sr.Print)
             {
                 Etykieta etykieta = new Etykieta(
                     sr.Rodzina, 

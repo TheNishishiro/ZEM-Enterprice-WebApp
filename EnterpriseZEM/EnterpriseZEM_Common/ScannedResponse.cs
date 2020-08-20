@@ -21,6 +21,7 @@ namespace EnterpriseZEM_Common
         public int numScanned { get; set; }
         public int numScannedToComplete { get; set; }
         public bool isComplete { get; set; }
+        public bool Print { get; set; }
         public int sztukiDeklatowane { get; set; }
         public int sztukiSkanowane { get; set; }
         public int numerKompletu { get; set; }
