@@ -40,7 +40,7 @@ namespace EnterpriseZEM_Client
         {
             ScannedCode sc = new ScannedCode();
 
-            string code = kodWiazkiTextbox.Text.Replace("PLC", "").ToUpper().Trim();
+            string code = kodWiazkiTextbox.Text.ToUpper().Replace("PLC", "").Trim();
             if (code.Length <= 8)
             {
                 MessageBox.Show($"Podany kod jest za krótki ({code.Length} znaków), powinien składać się z przynajmniej 9 znaków wykluczjąc przedrostek PLC", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -54,6 +54,8 @@ namespace EnterpriseZEM_Client
                 MessageBox.Show("Podana ilość kabli nie jest wartością liczbową.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
+            cutcode = cutcode.TrimStart('0');
 
             sc.SessionGUID = Guid.NewGuid();
             sc.isLookingBack = lookBackCheckbox.Checked;
