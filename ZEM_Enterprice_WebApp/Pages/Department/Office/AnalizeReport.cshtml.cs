@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,6 +159,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public StringBuilder CreateFile()
         {
             StringBuilder writer = new StringBuilder();
+            writer.AppendLine($"Data utworzenia raportu: {ForDateStart.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}");
             writer.AppendLine("Rodzina,Wiazka,Kpl,Kod ciety,Ilosc,Status");
             foreach (var entry in analizeEntriesFiltered)
             {

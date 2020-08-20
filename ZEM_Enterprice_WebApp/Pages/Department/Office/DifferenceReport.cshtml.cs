@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -206,6 +207,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public StringBuilder CreateFile()
         {
             StringBuilder writer = new StringBuilder();
+            writer.AppendLine($"Data utworzenia raportu: {ForDate.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}");
             writer.AppendLine("Wiazka,Kod Ciety,BIN,Zeskanowane,Deklarowane,Roznica,Uwagi");
             foreach (KeyValuePair<string, Differences> entry in differencesFiltered)
             {

@@ -1,4 +1,5 @@
 ﻿@page  "{day:int},{month:int},{year:int}"
+@using System.Globalization
 @model ZEM_Enterprice_WebApp.Pages.Department.Office.AnalizeReportModel
 @{
     ViewData["Title"] = "Analiza - raport";
@@ -23,6 +24,18 @@
     </div>
     <hr>
     <div class="tableFixHead">
+        <table>
+            <thead>
+            <th>Data raportu</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Model.ForDateStart.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <table>
             <thead>
                 <tr>
@@ -60,7 +73,7 @@
                         <td>@record.KodCiety</td>
                         @if (record.Suma == 0)
                         {
-                            <td style="background-color: brown">@record.Suma</td>
+                            <td style="background-color: red">@record.Suma</td>
                         }
                         else
                         {
