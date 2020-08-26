@@ -29,4 +29,10 @@
     <Folder Include="Pages\Department\Common\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Changelog.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

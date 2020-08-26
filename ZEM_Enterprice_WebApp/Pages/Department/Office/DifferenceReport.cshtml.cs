@@ -58,7 +58,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 .Select(c => new TempDostawa
                 {
                     Data = c.Data,
-                    Kod = c.Kod.Replace("PLC", ""),
+                    Kod = c.Kod.Replace("PLC", "").TrimStart('0'),
                     Ilosc = c.Ilosc,
                     Uwagi = c.Uwagi,
                     Technical = c.Technical,

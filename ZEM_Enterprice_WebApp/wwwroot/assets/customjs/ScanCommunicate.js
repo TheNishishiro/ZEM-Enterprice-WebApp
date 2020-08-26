@@ -1,7 +1,4 @@
-﻿const api_url = "https://localhost:44381/api/";
-
-
-async function checkBIN() {
+﻿async function checkBIN() {
     var constructed_api_url = api_url + "scannerInfo/" + document.getElementById("code-field").value.replace("PLC", "");
 
     const response = await fetch(constructed_api_url);

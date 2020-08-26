@@ -55,11 +55,10 @@ namespace EnterpriseZEM_Client
                 return;
             }
 
-            cutcode = cutcode.TrimStart('0');
-
             sc.SessionGUID = Guid.NewGuid();
             sc.isLookingBack = lookBackCheckbox.Checked;
-            sc.kodCiety = cutcode;
+            sc.kodCiety = cutcode.TrimStart('0');
+            sc.kodCietyFull = cutcode;
             sc.sztukiSkanowane = quantity;
             sc.dataDostawy = dataSkanowaniaDateTime.Value;
             sc.DokDostawy = dokumentDostawyTextbox.Text;

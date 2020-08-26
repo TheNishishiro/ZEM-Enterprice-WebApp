@@ -1384,3 +1384,5 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\D
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.csproj.CoreCompileInputs.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cs
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.MvcApplicationPartsAssemblyInfo.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\Debug\netcoreapp3.1\Changelog.txt
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Debug\netcoreapp3.1\Razor\Pages\Manager\AdminManager\SupplyArchive.cshtml.g.cs

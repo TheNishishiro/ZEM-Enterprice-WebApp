@@ -1,0 +1,5 @@
+﻿24.08.2020
+	* Kod skanowania jest wysyłany w dwóch formach aby obsługiwać kody 6-znakowe i 8-znakowe przy dostawie
+	* Naprawiono: Do daty dostawy dopisywana była również godzina skanu przy skanie niedeklarowanym
+		- Rozwiązanie: użyj CONVERT na DataUtworzenia oraz DataDopisu w bazie SQL 
+	* Naprawiono: Podczas skanowania kodu 6-znakowego nie można było znaleźć go w dostawie

@@ -115,7 +115,7 @@ namespace EnterpriseZEM
                 sr.IlePrzewodow = techEntry.IlePrzewodow;
 
 
-                var dostawaEntry = _db.Dostawa.FirstOrDefault(c => c.Data.Date == sc.dataDostawy.Date && c.Kod == "PLC" + sc.kodCiety);
+                var dostawaEntry = _db.Dostawa.FirstOrDefault(c => c.Data.Date == sc.dataDostawy.Date && c.Kod == "PLC" + sc.kodCietyFull);
                 if (dostawaEntry != null)
                 {
                     sc.dataDostawy = dostawaEntry.Data;
@@ -172,7 +172,9 @@ namespace EnterpriseZEM
                 }
                 else
                 {
-                    sc.dataDostawyOld = sc.dataDostawy;
+                    sc.dataDostawy = sc.dataDostawy.Date;
+                    sc.dataDostawyOld = sc.dataDostawy.Date;
+
                     if (!sc.isForcedUndeclared)
                     {
                         response.Header = HeaderTypes.error;

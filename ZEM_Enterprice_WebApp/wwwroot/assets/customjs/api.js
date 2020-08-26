@@ -1,0 +1,1 @@
+﻿const api_url = "https://localhost:44381/api/";

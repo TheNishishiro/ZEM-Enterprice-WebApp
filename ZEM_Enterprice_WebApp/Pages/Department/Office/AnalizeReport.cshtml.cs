@@ -95,11 +95,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
             List<Data.Tables.Technical> TechnicalEntries = _db.Technical.Where(
                 c =>
-                VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
-                !VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety) &&
+                ((VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
+                !VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety))
+                ||
                 //VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
-                //DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka) &&
-                //!DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala) &&
+                (DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka) &&
+                !DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala))) &&
                 //!VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety) &&
                 c.KanBan == false
                 ).ToList();

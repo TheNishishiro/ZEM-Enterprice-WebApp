@@ -14,6 +14,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         public string User { get; set; }
         public string kodDostawy { get; set; }
         public string kodCiety { get; set; }
+        public string kodCietyFull { get; set; }
         public string Wiazka { get; set; }
         public string Rodzina { get; set; }
         public int sztukiSkanowane { get; set; }

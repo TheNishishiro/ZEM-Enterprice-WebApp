@@ -1,0 +1,4 @@
+﻿24.08.2020
+	* Przeniesiono link konfiguracyjny API do odzielnego pliku "api.js"
+	* Naprawiono: Analiza nie wyświetlała rekordów jeśli żaden przewód z wiązki nie był wcześniej zeskanowany
+	* Naprawiono: Wykaz różnic nie znajdował kodów 6-znakowych w dostawie

@@ -117,11 +117,13 @@ namespace ZEM_Enterprice_WebApp.API
             VTInsertFunctions VTFuncs = new VTInsertFunctions(_db, scan);
             ScannedResponse response = new ScannedResponse();
             ScannedCode sc = new ScannedCode();
-            sc.kodCiety = kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(0,8);
+            sc.kodCietyFull = kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(0,8);
             if(forcedQuantity == 0)
-                sc.sztukiSkanowane = int.Parse(kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(8).TrimStart('0'));
+                sc.sztukiSkanowane = int.Parse(kodWiazkiTextbox.ToUpper().Replace("PLC", "").Trim().Substring(8));
             else
                 sc.sztukiSkanowane = forcedQuantity;
+            sc.kodCiety = sc.kodCietyFull.TrimStart('0');
+
             sc.isLookingBack = isLookingBack;
             sc.dataDostawy = new DateTime(dostYear, dostMonth, dostDay);
             sc.DokDostawy = dokDostawy;
@@ -178,7 +180,7 @@ namespace ZEM_Enterprice_WebApp.API
             response.LiteraRodziny = techEntry.LiterRodziny;
             response.IlePrzewodow = techEntry.IlePrzewodow;
 
-            var dostawaEntry = _db.Dostawa.FirstOrDefault(c => c.Data.Date == sc.dataDostawy.Date && c.Kod == "PLC" + sc.kodCiety);
+            var dostawaEntry = _db.Dostawa.FirstOrDefault(c => c.Data.Date == sc.dataDostawy.Date && c.Kod == "PLC" + sc.kodCietyFull);
             if (dostawaEntry != null)
             {
                 sc.dataDostawy = dostawaEntry.Data;
@@ -237,7 +239,8 @@ namespace ZEM_Enterprice_WebApp.API
             }
             else
             {
-                sc.dataDostawyOld = sc.dataDostawy;
+                sc.dataDostawy = sc.dataDostawy.Date;
+                sc.dataDostawyOld = sc.dataDostawy.Date;
 
                 if (!sc.isForcedUndeclared)
                 {
