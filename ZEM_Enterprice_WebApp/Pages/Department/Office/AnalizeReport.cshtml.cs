@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using ZEM_Enterprice_WebApp.Data;
 using ZEM_Enterprice_WebApp.Data.Tables;
@@ -57,7 +58,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             analizeEntries = new List<AnalizeEntry>();
             foreach(VTMagazyn vt in VTEntries)
             {
-                var entry = analizeEntries.FirstOrDefault(c => c.KodCiety == vt.KodCiety && c.Wiazka == vt.Wiazka);
+                var entry = analizeEntries.FirstOrDefault(c => c.KodCiety == vt.KodCiety && c.Wiazka == vt.Wiazka && c.NrKompletu == vt.NumerKompletu);
                 if (entry == null)
                 {
                     analizeEntries.Add(new AnalizeEntry
@@ -67,7 +68,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                         Komplet = int.Parse(vt.Technical.IlePrzewodow),
                         Rodzina = vt.Technical.Rodzina,
                         Status = false,
-                        Suma = vt.SztukiZeskanowane
+                        Suma = vt.SztukiZeskanowane,
+                        isCompleted = vt.Komplet,
+                        NrKompletu = vt.NumerKompletu
                     });
                 }
                 else
@@ -78,7 +81,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
             foreach (Dostawa dostawa in DostawaEntries)
             {
-                var entry = analizeEntries.FirstOrDefault(c => c.KodCiety == dostawa.Technical.PrzewodCiety && c.Wiazka == dostawa.Technical.Wiazka);
+                var entry = analizeEntries.FirstOrDefault(
+                    c => c.KodCiety == dostawa.Technical.PrzewodCiety && c.Wiazka == dostawa.Technical.Wiazka && c.NrKompletu == 0);
                 if (entry == null)
                 {
                     analizeEntries.Add(new AnalizeEntry
@@ -88,46 +92,56 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                         Komplet = int.Parse(dostawa.Technical.IlePrzewodow),
                         Rodzina = dostawa.Technical.Rodzina,
                         Status = false,
-                        Suma = 0
+                        Suma = 0,
+                        isCompleted = false,
+                        NrKompletu = 0
                     });
                 }
             }
 
             List<Data.Tables.Technical> TechnicalEntries = _db.Technical.Where(
                 c =>
-                ((VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
-                !VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety))
+                (VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) //&&
+                //!VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety))
                 ||
                 //VTEntries.Select(c => c.Wiazka).Contains(c.Wiazka) &&
-                (DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka) &&
-                !DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala))) &&
+                DostawaEntries.Select(c => c.Technical.Wiazka).Contains(c.Wiazka)) &&
+                //!DostawaEntries.Select(c => c.Kod).Contains(c.IndeksScala))) &&
                 //!VTEntries.Select(c => c.KodCiety).Contains(c.PrzewodCiety) &&
                 c.KanBan == false
                 ).ToList();
 
             foreach (var technical in TechnicalEntries)
             {
-                var entry = analizeEntries.FirstOrDefault(c => c.KodCiety == technical.PrzewodCiety && c.Wiazka == technical.Wiazka);
-                if (entry == null)
+                int sets = analizeEntries.Where(c => c.Wiazka == technical.Wiazka).Select(c => c.NrKompletu).Max();
+
+                for (int i = 0; i <= sets; i++)
                 {
-                    analizeEntries.Add(new AnalizeEntry
+                    var entry = analizeEntries.FirstOrDefault(c => c.KodCiety == technical.PrzewodCiety && c.Wiazka == technical.Wiazka && c.NrKompletu == i);
+
+                    if (entry == null)
                     {
-                        KodCiety = technical.PrzewodCiety,
-                        Wiazka = technical.Wiazka,
-                        Komplet = int.Parse(technical.IlePrzewodow),
-                        Rodzina = technical.Rodzina,
-                        Status = false,
-                        Suma = 0
-                    });
+                        analizeEntries.Add(new AnalizeEntry
+                        {
+                            KodCiety = technical.PrzewodCiety,
+                            Wiazka = technical.Wiazka,
+                            Komplet = int.Parse(technical.IlePrzewodow),
+                            Rodzina = technical.Rodzina,
+                            Status = false,
+                            Suma = 0,
+                            isCompleted = false,
+                            NrKompletu = i
+                        });
+                    }
                 }
             }
 
-            analizeEntries = analizeEntries.OrderBy(c => c.Rodzina).ThenBy(c => c.Wiazka).ThenBy(c => c.KodCiety).ToList();
-            var grouped = analizeEntries.GroupBy(c => c.Wiazka).Select(g => g.ToList()).ToList();
+            analizeEntries = analizeEntries.OrderBy(c => c.Rodzina).ThenBy(c => c.Wiazka).ThenBy(c => c.NrKompletu).ThenBy(c => c.KodCiety).ToList();
+            var grouped = analizeEntries.GroupBy(c => new { c.Wiazka, c.NrKompletu }).Select(g => g.ToList()).ToList();
             foreach (var entryPerWiazka in grouped)
             {
                 var distincValues = entryPerWiazka.Select(c => c.Suma).Distinct().ToList();
-                if (distincValues.Count() == 1 && distincValues[0] != 0)
+                if ((distincValues.Count() == 1 && distincValues[0] != 0) || (entryPerWiazka.Select(c => c.isCompleted).Contains(true)))
                 {
                     foreach (var entry in entryPerWiazka)
                         entry.Status = true;
@@ -141,13 +155,22 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             else
                 analizeEntriesFiltered = analizeEntries;
 
-            string prevWiazka = "", prevRodzina = "";
+            string prevWiazka = "", prevRodzina = "", cutCode = "";
+            int setID = 0;
             foreach (var entry in analizeEntriesFiltered)
             {
                 if (prevWiazka != entry.Wiazka)
                 {
                     prevWiazka = entry.Wiazka;
                     entry.NextWiazka = true;
+
+                    entry.NewSet = true;
+                    setID = entry.NrKompletu;
+                }
+                if(setID != entry.NrKompletu)
+                {
+                    entry.NewSet = true;
+                    setID = entry.NrKompletu;
                 }
                 if (prevRodzina != entry.Rodzina)
                 {
@@ -191,10 +214,13 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public string Rodzina { get; set; }
         public string Wiazka { get; set; }
         public int Komplet { get; set; }
+        public int NrKompletu { get; set; }
+        public bool isCompleted { get; set; }
         public string KodCiety { get; set; }
         public int Suma { get; set; }
         public bool Status { get; set; }
         public bool NextWiazka { get; set; }
         public bool NextRodzina { get; set; }
+        public bool NewSet { get; set; }
     }
 }

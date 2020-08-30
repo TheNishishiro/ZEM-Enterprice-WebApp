@@ -42,6 +42,7 @@
                     <th>Rodzina</th>
                     <th>Wiązka</th>
                     <th>Przewodów na Wiązke</th>
+                    <th>Komplet</th>
                     <th>Kod cięty</th>
                     <th>Suma</th>
                     <th>Status</th>
@@ -50,45 +51,53 @@
             <tbody>
                 @foreach (var record in Model.analizeEntriesFiltered)
                 {
-                    <tr>
-                        @if (record.NextRodzina)
-                        {
-                            <td>@record.Rodzina</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
-                        @if (record.NextWiazka)
-                        {
-                            <td>@record.Wiazka</td>
-                            <td>@record.Komplet</td>
-                        }
-                        else
-                        {
-                            <td></td>
-                            <td></td>
-                        }
+                <tr>
+                    @if (record.NextRodzina)
+                    {
+                        <td>@record.Rodzina</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    @if (record.NextWiazka)
+                    {
+                        <td>@record.Wiazka</td>
+                        <td>@record.Komplet</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                    @if (record.NewSet)
+                    {
+                        <td>@record.NrKompletu</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
 
-                        <td>@record.KodCiety</td>
-                        @if (record.Suma == 0)
-                        {
-                            <td style="background-color: red">@record.Suma</td>
-                        }
-                        else
-                        {
-                            <td>@record.Suma</td>
-                        }
-                        @if (record.Status)
-                        {
-                            <td style="color:rgb(0, 255, 0)">Komplet</td>
-                        }
-                        else
-                        {
-                            <td style="color:rgb(255, 0, 0)">Brak kompletu</td>
-                        }
+                    <td>@record.KodCiety</td>
+                    @if (record.Suma == 0)
+                    {
+                        <td style="background-color: red">@record.Suma</td>
+                    }
+                    else
+                    {
+                        <td>@record.Suma</td>
+                    }
+                    @if (record.Status)
+                    {
+                        <td style="color:rgb(0, 255, 0)">Komplet</td>
+                    }
+                    else
+                    {
+                        <td style="color:rgb(255, 0, 0)">Brak kompletu</td>
+                    }
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

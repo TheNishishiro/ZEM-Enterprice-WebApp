@@ -20,6 +20,7 @@ namespace EnterpriseZEM
 
         public VTInsertFunctions(ZEMDBContext db, Serilog.Core.Logger log,  ScanCache scanCache)
         {
+            
             _db = db;
             _log = log;
             _scanCache = scanCache;

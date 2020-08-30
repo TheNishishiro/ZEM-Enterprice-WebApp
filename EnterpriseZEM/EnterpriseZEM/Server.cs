@@ -225,7 +225,6 @@ namespace EnterpriseZEM
                     sr.Print = true;
                 if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
                 {
-                    sr.isComplete = true;
                     sr.Print = true;
                 }
 

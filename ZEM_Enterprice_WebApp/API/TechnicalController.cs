@@ -292,7 +292,6 @@ namespace ZEM_Enterprice_WebApp.API
                 response.print = true;
             if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
             {
-                response.isComplete = true;
                 response.print = true;
             }
 
