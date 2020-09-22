@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScanForm));
             this.kodWiazkiTextbox = new System.Windows.Forms.TextBox();
             this.recznieCheckbox = new System.Windows.Forms.CheckBox();
             this.dataSkanowaniaDateTime = new System.Windows.Forms.DateTimePicker();
@@ -488,6 +489,7 @@
             this.ClientSize = new System.Drawing.Size(1182, 769);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "ScanForm";
             this.Text = "Form1";

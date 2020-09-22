@@ -64,6 +64,7 @@ namespace ZEM_Enterprice_WebApp.API
 
     [Route("api/userstime")]
     [ApiController]
+    [AllowAnonymous]
     public class UsersTimeController : ControllerBase
     {
         private readonly ApplicationDbContext _db;

@@ -274,6 +274,20 @@ namespace ZEM_Enterprice_WebApp.Scanning
             }
         }
 
+        public bool shouldPrintSpecial(ScannedCode sc)
+        {
+            var scan = _db.VTMagazyn.Include(c => c.Technical).Where(
+                c => c.DataDostawy == sc.dataDostawyOld &&
+                c.Wiazka == sc.Wiazka &&
+                c.Technical.BIN == sc.BIN &&
+                c.NumerKompletu == sc.NumerKompletu &&
+                c.KodCiety != sc.kodCiety).FirstOrDefault();
+            if (scan != null)
+                return false;
+
+            return true;
+        }
+
         /// <summary>
         /// Automates the process of completing bundle sets and setting proper values for amount of cables scanned per bundle
         /// </summary>

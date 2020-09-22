@@ -27,6 +27,10 @@
                         <input class="form-control" asp-for="@Model.Filter_PrzewodCiety">
                         <label asp-for="@Model.Filter_IlePrzedowow"></label>
                         <input class="form-control" asp-for="@Model.Filter_IlePrzedowow">
+                        <label asp-for="@Model.Filter_Kanban"></label>
+                        <select asp-for="@Model.Filter_Kanban" asp-items="@Model.kanbanFilter" class="form-control">
+                            <option value="">Wszystko</option>
+                        </select>
                     </div>
                     <div class="col">
                         <label asp-for="@Model.Filter_KodWiazki"></label>
@@ -109,7 +113,7 @@
                     <td>@record.PrzewodCiety</td>
                     <td>@record.BIN</td>
                     <td>@record.Uwagi</td>
-                    <td>@(record.KanBan == true ? "Tak" : "Nie")</td>
+                    <td>@(record.KanBan == true ? "Tak" : "")</td>
                     @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrTech.ToString())).Succeeded)
                     {
                         <td>
@@ -130,6 +134,7 @@
                                     asp-route-SortColumn="@Model.SortColumn"
                                     asp-route-OrderDescent="@Model.OrderDescent"
                                     asp-route-ShowDeleted="@Model.ShowDeleted"
+                                    asp-route-Filter_Kanban="@Model.Filter_Kanban"
                                     class="@(record.Deleted ? "tn btn-sm btn-warning" : "tn btn-sm btn-danger")">
                                 @(record.Deleted ? "Przywróć" : "Usuń")
                             </button>
@@ -159,6 +164,7 @@
                    asp-route-SortColumn="@Model.SortColumn"
                    asp-route-OrderDescent="@Model.OrderDescent"
                    asp-route-ShowDeleted="@Model.ShowDeleted"
+                   asp-route-Filter_Kanban="@Model.Filter_Kanban"
                    class="page-link">Pierwsza</a>
             </li>
 
@@ -176,6 +182,7 @@
                    asp-route-SortColumn="@Model.SortColumn"
                    asp-route-OrderDescent="@Model.OrderDescent"
                    asp-route-ShowDeleted="@Model.ShowDeleted"
+                   asp-route-Filter_Kanban="@Model.Filter_Kanban"
                    class="page-link">Poprzednia</a>
             </li>
             <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
@@ -192,6 +199,7 @@
                    asp-route-SortColumn="@Model.SortColumn"
                    asp-route-OrderDescent="@Model.OrderDescent"
                    asp-route-ShowDeleted="@Model.ShowDeleted"
+                   asp-route-Filter_Kanban="@Model.Filter_Kanban"
                    class="page-link">Następna</a>
             </li>
 
@@ -209,6 +217,7 @@
                    asp-route-SortColumn="@Model.SortColumn"
                    asp-route-OrderDescent="@Model.OrderDescent"
                    asp-route-ShowDeleted="@Model.ShowDeleted"
+                   asp-route-Filter_Kanban="@Model.Filter_Kanban"
                    class="page-link">Ostatnia</a>
             </li>
         </ul>
@@ -227,6 +236,7 @@
                 asp-route-Filter_IlePrzedowow="@Model.Filter_IlePrzedowow"
                 asp-route-SortColumn="@Model.SortColumn"
                 asp-route-OrderDescent="@Model.OrderDescent"
+                asp-route-Filter_Kanban="@Model.Filter_Kanban"
                 asp-route-ShowDeleted="@Model.ShowDeleted">
             Pobierz stronę jako CSV
         </button>

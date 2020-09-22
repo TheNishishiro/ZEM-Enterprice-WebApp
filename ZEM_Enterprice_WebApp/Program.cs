@@ -37,7 +37,9 @@ namespace ZEM_Enterprice_WebApp
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+
                     webBuilder.UseStartup<Startup>();
+                    
                 }).ConfigureHostConfiguration(app =>
                 {
                     app.SetBasePath(Directory.GetCurrentDirectory());

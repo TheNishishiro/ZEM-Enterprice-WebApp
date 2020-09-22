@@ -11,6 +11,7 @@ namespace EnterpriseZEM_Common
         public Guid SessionGUID { get; set; }
         public bool Declared { get; set; }
         public string User { get; set; }
+        public string BIN { get; set; }
         public string kodDostawy { get; set; }
         public string kodCiety { get; set; }
         public string kodCietyFull { get; set; }

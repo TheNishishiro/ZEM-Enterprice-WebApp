@@ -70,7 +70,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                         Status = false,
                         Suma = vt.SztukiZeskanowane,
                         isCompleted = vt.Komplet,
-                        NrKompletu = vt.NumerKompletu
+                        NrKompletu = vt.NumerKompletu,
+                        DeclaredValue = vt.SztukiDeklarowane
                     });
                 }
                 else
@@ -94,7 +95,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                         Status = false,
                         Suma = 0,
                         isCompleted = false,
-                        NrKompletu = 0
+                        NrKompletu = 0,
+                        DeclaredValue = dostawa.Ilosc
                     });
                 }
             }
@@ -130,7 +132,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                             Status = false,
                             Suma = 0,
                             isCompleted = false,
-                            NrKompletu = i
+                            NrKompletu = i,
+                            DeclaredValue = 0
                         });
                     }
                 }
@@ -140,12 +143,17 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             var grouped = analizeEntries.GroupBy(c => new { c.Wiazka, c.NrKompletu }).Select(g => g.ToList()).ToList();
             foreach (var entryPerWiazka in grouped)
             {
-                var distincValues = entryPerWiazka.Select(c => c.Suma).Distinct().ToList();
-                if ((distincValues.Count() == 1 && distincValues[0] != 0) || (entryPerWiazka.Select(c => c.isCompleted).Contains(true)))
-                {
+                //var distincValues = entryPerWiazka.Select(c => c.Suma).Distinct().ToList();
+                //if ((distincValues.Count() == 1 && distincValues[0] != 0) || (entryPerWiazka.Select(c => c.isCompleted).Contains(true)))
+                //{
+                //    foreach (var entry in entryPerWiazka)
+                //        entry.Status = true;
+                //}
+
+                var markedToComplete = entryPerWiazka.Select(c => c.Suma != c.DeclaredValue).Count();
+                if(markedToComplete == 0 || entryPerWiazka.Select(c => c.isCompleted).Contains(true))
                     foreach (var entry in entryPerWiazka)
                         entry.Status = true;
-                }
             }
 
             if (Filter_Complete)
@@ -218,6 +226,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         public bool isCompleted { get; set; }
         public string KodCiety { get; set; }
         public int Suma { get; set; }
+        public int DeclaredValue { get; set; }
         public bool Status { get; set; }
         public bool NextWiazka { get; set; }
         public bool NextRodzina { get; set; }

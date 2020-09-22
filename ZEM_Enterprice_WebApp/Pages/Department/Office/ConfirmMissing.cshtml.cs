@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ZEM_Enterprice_WebApp.Data;
+using ZEM_Enterprice_WebApp.Utilities;
 
 namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 {
@@ -83,6 +84,10 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             }
             await _db.SaveChangesAsync();
             return RedirectToPage("/MainPage");
+        }
+        public async Task<IActionResult> OnPostDownloadCsvAsync()
+        {
+            return File(await CSVDownloader.OnPostDownloadCsvAsync(_db, _db.PendingDostawa.AsQueryable()), "text/csv", $"braki-z-dostawy.csv");
         }
 
         public async Task<IActionResult> OnPostDeleteRecordAsync(string id)

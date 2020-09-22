@@ -107,6 +107,7 @@ namespace EnterpriseZEM
 
                 sc.Wiazka = techEntry.Wiazka;
                 sc.Rodzina = techEntry.Rodzina;
+                sc.BIN = techEntry.BIN;
 
                 sr.PrzewodCiety = techEntry.PrzewodCiety;
                 sr.BIN = techEntry.BIN;
@@ -222,10 +223,14 @@ namespace EnterpriseZEM
                 sr.sztukiSkanowane = sc.sztukiSkanowane;
 
                 if (numScanned == 1)
-                    sr.Print = true;
-                if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
                 {
                     sr.Print = true;
+                    sr.isSpecialColor = false;
+                }
+                if (VTFuncs.shouldPrintSpecial(sc))
+                {
+                    sr.Print = true;
+                    sr.isSpecialColor = true;
                 }
 
                 _log.Information("Scan details: {@sc}", sc);

@@ -27,6 +27,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
         }
 
         public SelectList availableSortings { get; set; }
+        public SelectList kanbanFilter { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
@@ -67,6 +68,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Pokaż usunięte")]
         public bool ShowDeleted { get; set; }
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Filtr kanban")]
+        public string Filter_Kanban { get; set; }
 
         public PaginatedList<Data.Tables.Technical> Data { get; set; }
 
@@ -106,16 +110,24 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                 query = _db.Technical.AsNoTracking().IgnoreQueryFilters().AsQueryable();
 
             char separator = ',';
+            string[] filterOptions =
+            {
+                "Prawda",
+                "Fałsz",
+            };
+            kanbanFilter = new SelectList(filterOptions);
 
             if (Filter_Rodzina != null)
             {
                 var options = Filter_Rodzina.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Rodzina));
+                foreach (var option in options)
+                    query = query.Where(c => c.Rodzina.Contains(option));
             }
             if (Filter_Wiazka != null)
             {
                 var options = Filter_Wiazka.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Wiazka));
+                foreach (var option in options)
+                    query = query.Where(c => c.Wiazka.Contains(option));
             }
             if (Filter_KodWiazki != null)
             {
@@ -125,7 +137,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             if (Filter_PrzewodCiety != null)
             {
                 var options = Filter_PrzewodCiety.Split(separator).Select(c => c.Replace("PLC", "").Trim());
-                query = query.Where(c => options.Contains(c.PrzewodCiety));
+                foreach(var option in options)
+                    query = query.Where(c => c.PrzewodCiety.Contains(option));
             }
             if (Filter_BIN != null)
             {
@@ -140,12 +153,20 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             if (Filter_Uwagi != null)
             {
                 var options = Filter_Uwagi.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Uwagi));
+                foreach (var option in options)
+                    query = query.Where(c => c.Uwagi.Contains(option));
             }
             if (Filter_IlePrzedowow != null)
             {
                 var options = Filter_IlePrzedowow.Split(separator).Select(c => c.Trim());
                 query = query.Where(c => options.Contains(c.IlePrzewodow));
+            }
+            if(Filter_Kanban != null)
+            {
+                if (Filter_Kanban == "Prawda")
+                    query = query.Where(c => c.KanBan == true);
+                else if (Filter_Kanban == "Fałsz")
+                    query = query.Where(c => c.KanBan == false);
             }
 
             string[] sortings = {

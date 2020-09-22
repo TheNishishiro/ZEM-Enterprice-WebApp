@@ -127,35 +127,35 @@
                     <td>@(record.autocompleteEnabled == true ? "Tak" : "Nie")</td>
                     <td>@(record.wymuszonaIlosc == true ? "Tak" : "Nie")</td>
 
-                    @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded)
+                    @if ((await _AuthService.AuthorizeAsync(User, DefaultRequirements.AdminOrOffice.ToString())).Succeeded||User.IsInRole(DefaultRoles.Zarzadzanie_Skanami.ToString()))
                     {
-                        <td>
+                    <td>
 
-                            <a asp-page="/Department/Office/EditVTRecord" asp-route-id="@record.VTMagazynId">Edit</a>
-                        </td>
-                        <td>
-                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.VTMagazynId" class="btn btn-sm btn-danger"
-                                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
-                                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
-                                    asp-route-Filter_Wiazka="@Model.Filter_NumerKompletu"
-                                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
-                                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
-                                    asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
-                                    asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
-                                    asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
-                                    asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
-                                    asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
-                                    asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
-                                    asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
-                                    asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
-                                    asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
-                                    asp-route-Filter_Komplet="@Model.Filter_Komplet"
-                                    asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
-                                    asp-route-SortColumn="@Model.SortColumn"
-                                    asp-route-OrderDescent="@Model.OrderDescent">
-                                Usuń
-                            </button>
-                        </td>
+                        <a asp-page="/Department/Office/EditVTRecord" asp-route-id="@record.VTMagazynId">Edit</a>
+                    </td>
+                    <td>
+                        <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.VTMagazynId" class="btn btn-sm btn-danger"
+                                asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
+                                asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                                asp-route-Filter_Wiazka="@Model.Filter_NumerKompletu"
+                                asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
+                                asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
+                                asp-route-Filter_DokDostawy="@Model.Filter_DokDostawy"
+                                asp-route-Filter_DokDostawyDopis="@Model.Filter_DokDostawyDopis"
+                                asp-route-Filter_DataUtworzeniaFrom="@Model.Filter_DataUtworzeniaFrom"
+                                asp-route-Filter_DataDostawyFrom="@Model.Filter_DataDostawyFrom"
+                                asp-route-Filter_DataDopisuFrom="@Model.Filter_DataDopisuFrom"
+                                asp-route-Filter_DataUtworzeniaTo="@Model.Filter_DataUtworzeniaTo"
+                                asp-route-Filter_DataDostawyTo="@Model.Filter_DataDostawyTo"
+                                asp-route-Filter_DataDopisuTo="@Model.Filter_DataDopisuTo"
+                                asp-route-Filter_Uwagi="@Model.Filter_Uwagi"
+                                asp-route-Filter_Komplet="@Model.Filter_Komplet"
+                                asp-route-Filter_Deklaracja="@Model.Filter_Deklaracja"
+                                asp-route-SortColumn="@Model.SortColumn"
+                                asp-route-OrderDescent="@Model.OrderDescent">
+                            Usuń
+                        </button>
+                    </td>
                     }
                 </tr>
                 }

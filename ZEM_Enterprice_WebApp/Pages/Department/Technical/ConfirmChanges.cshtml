@@ -51,7 +51,7 @@
                             <td>@Model._input[i].PrzewodCiety</td>
                             <td>@Model._input[i].BIN</td>
                             <td>@Model._input[i].Uwagi</td>
-                            <td>@Model._input[i].KanBan</td>
+                            <td>@(Model._input[i].KanBan == true ? "Tak" : "")</td>
                             <td>
                                 <input type="hidden" asp-for="@Model._input[i].Id" />
                                 <input name="AreChecked" type="checkbox" value="@Model._input[i].Id" />

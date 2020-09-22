@@ -222,7 +222,9 @@ async function getCodeDetails() {
         document.getElementById("komplet-field").innerHTML = "KOMPLET: NIE";
         document.getElementById("window-div").style.backgroundColor = "#FF6459";
     }
-    
+    if (response["isSpecialColor"] == true) {
+        document.getElementById("window-div").style.backgroundColor = "#75DCFF";
+    }
 
     if (d1 < d2) {
         document.getElementById("zalegle-field").innerHTML = "ZALEGŁE";

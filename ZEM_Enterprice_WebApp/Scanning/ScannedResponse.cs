@@ -24,6 +24,7 @@ namespace ZEM_Enterprice_WebApp.Scanning
         public int numScannedToComplete { get; set; }
         public bool print { get; set; }
         public bool isComplete { get; set; }
+        public bool isSpecialColor { get; set; }
         public int sztukiDeklatowane { get; set; }
         public int sztukiSkanowane { get; set; }
         public int numerKompletu { get; set; }

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,6 +47,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 
         public async Task OnGetAsync()
         {
+            if (Request.Cookies["pagesize"] != null)
+                PageSize = int.Parse(Request.Cookies["pagesize"]);
+
             var query = _db.MissingFromTech.AsNoTracking().AsQueryable();
             if(Filter_Date != null && Filter_Date != DateTime.MinValue)
             {
@@ -68,6 +75,11 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 
             Data = await PaginatedList<Data.Tables.MissingFromTech>.CreateAsync(query, CurrentPage, PageSize);
             return;
+        }
+
+        public async Task<IActionResult> OnPostDownloadCsvAsync()
+        {
+            return File(await CSVDownloader.OnPostDownloadCsvAsync(_db, _db.MissingFromTech.AsQueryable()), "text/csv", $"braki-{DateTime.Now.Date}-{DateTime.Now.Month}-{DateTime.Now.Year}.csv");
         }
 
         public async Task<IActionResult> OnPostDeleteRecordAsync(string id)

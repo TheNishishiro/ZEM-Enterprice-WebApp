@@ -476,3 +476,4 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Release\netcoreapp3.1\ZEM_Enterprice_WebApp.dll
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Release\netcoreapp3.1\ZEM_Enterprice_WebApp.pdb
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Release\netcoreapp3.1\ZEM_Enterprice_WebApp.genruntimeconfig.cache
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\x64\Release\netcoreapp3.1\Changelog.txt

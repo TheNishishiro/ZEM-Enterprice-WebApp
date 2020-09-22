@@ -8,6 +8,10 @@
     top: 0;
 }
 
+.tableFixHead tr:hover {
+    background-color: #A5EAFF;
+}
+
 /* Just common table stuff. Really. */
 .tableFixHead table {
     border-collapse: collapse;

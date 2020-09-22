@@ -52,9 +52,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
             {
                 while (sr.Peek() >= 0)
                 {
-                    string[] fields = ((await sr.ReadLineAsync())).Split(',');
+                    string[] fields = ((await sr.ReadLineAsync())).Split(new[] { ';' , ',' });
                     bool kanban = false;
-                    if (fields[8] != "")
+                    if (fields[8] != "" && fields[8].ToLower() != "false")
                         kanban = true;
                     string primaryKey = fields[1] + "_" + fields[5];
 

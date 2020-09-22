@@ -89,7 +89,7 @@
         var constructed_api_url = api_url + "users/" +
             "@Model.DateFrom.Day," + "@Model.DateFrom.Month," + "@Model.DateFrom.Year," +
             "@Model.DateTo.Day," + "@Model.DateTo.Month," + "@Model.DateTo.Year";
-
+        console.log(constructed_api_url);
         pieChartConfig = {
             type: 'pie',
             data: {
@@ -120,7 +120,7 @@
         var constructed_api_url = api_url + "userstime/" +
             "@Model.DateFrom.Day," + "@Model.DateFrom.Month," + "@Model.DateFrom.Year," +
             "@Model.DateTo.Day," + "@Model.DateTo.Month," + "@Model.DateTo.Year";
-
+        console.log(constructed_api_url);
         lineChartConfig = config = {
             type: 'line',
             data: {
@@ -157,6 +157,6 @@
 
         myLineChart = new Chart(document.getElementById('myLineChart'), lineChartConfig);
         myLineChart.update();
-        };
+    }
 
 </script>

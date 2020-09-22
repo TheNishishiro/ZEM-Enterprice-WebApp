@@ -37,7 +37,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
 
         public void OnGet()
         {
-
+            date = DateTime.Now;
         }
         public async Task<IActionResult> OnPostAsync()
         {

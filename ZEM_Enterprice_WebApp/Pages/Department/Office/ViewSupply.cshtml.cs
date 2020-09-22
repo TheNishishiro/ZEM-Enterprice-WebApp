@@ -143,7 +143,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             var rec = await _db.Dostawa.FirstOrDefaultAsync(c => c.DostawaId == Guid.Parse(id));
             if (rec != null)
             {
-                _db.VtToDostawa.RemoveRange(_db.VtToDostawa.Where(c => c.DostawaId == Guid.Parse(id)));
+                _db.VtToDostawa.RemoveRange(_db.VtToDostawa.Where(c => c.DostawaId == Guid.Parse(id))); ;
                 _db.Dostawa.Remove(rec);
                 
                 await _db.SaveChangesAsync();

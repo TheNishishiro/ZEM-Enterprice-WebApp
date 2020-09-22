@@ -1,4 +1,27 @@
-﻿24.08.2020
+﻿22.09.2020
+	* Dodano: Nowa rola do zarządzania skanami (usuwania i edytowania)
+	* Poprawiono: Okna panelu użytkownika były za małe, powiększono
+	* Poprawiono: Lista użytkowników używała starego typu tabel
+	* Poprawiono: Pole daty przy wgrywaniu dostawy ustawiane było na 01-01-0001
+	* Naprawiono: Etykiety były drukowane do każdego skanu nawet jeśli wiązka rozbita była na jedynie 2 BINy
+
+18.09.2020
+	* Naprawiono: Pojedyncze przewody wyświetlane były w analizie jako komplet mimo bycia niekompletnym skanem
+
+16.09.2020
+	* Dodano: "Pobierz jako CSV" do stron z brakami
+	* Dodano: Upload pliku bazy technicznych akceptuje też format ze średnikiem jako separator
+	* Poprawiono: Program nie będzie przypisywał flagi kanban dla przewodów z kolumną kanban ustawioną na "false" zamiast pustego pola
+	* Dodano: Tabele podświetlają wiersz z kursorem
+	* Usunięto: Tabele wyświetlają wartości "Nie" jeśli przewód nie jest kanbanem
+	* Poprawiono: Przegląd zmian technicznych wyświetlał kanban w formacie True/False
+	* Dodano: Filtry akceptują niepełne zapytania
+
+11.09.2020
+	* Dodano: Wersję do tytułu aplikacji
+	* Dodano: Dla wiązki posiadającej wiele adresów bin, podczas skanowania strona zmienia kolor na niebieski
+
+24.08.2020
 	* Przeniesiono link konfiguracyjny API do odzielnego pliku "api.js"
 	* Naprawiono: Analiza nie wyświetlała rekordów jeśli żaden przewód z wiązki nie był wcześniej zeskanowany
 	* Naprawiono: Wykaz różnic nie znajdował kodów 6-znakowych w dostawie

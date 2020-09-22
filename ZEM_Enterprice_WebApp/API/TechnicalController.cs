@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ZEM_Enterprice_WebApp.Data;
 using ZEM_Enterprice_WebApp.Data.Tables;
 using ZEM_Enterprice_WebApp.Pages.Department.Scanner;
@@ -173,6 +174,7 @@ namespace ZEM_Enterprice_WebApp.API
 
             sc.Wiazka = techEntry.Wiazka;
             sc.Rodzina = techEntry.Rodzina;
+            sc.BIN = techEntry.BIN;
 
             response.PrzewodCiety = techEntry.PrzewodCiety;
             response.BIN = techEntry.BIN;
@@ -289,10 +291,14 @@ namespace ZEM_Enterprice_WebApp.API
             response.sztukiSkanowane = sc.sztukiSkanowane;
 
             if (numScanned == 1)
-                response.print = true;
-            if (_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
             {
                 response.print = true;
+                response.isSpecialColor = false;
+            }
+            if (VTFuncs.shouldPrintSpecial(sc))//_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
+            {
+                response.print = true;
+                response.isSpecialColor = true;
             }
 
             return response;

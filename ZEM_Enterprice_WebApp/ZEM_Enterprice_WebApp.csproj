@@ -8,6 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200903125626_indexchange.cs" />
+    <Compile Remove="Migrations\20200903125626_indexchange.Designer.cs" />
+    <Compile Remove="Migrations\20200903143453_changedindexes.cs" />
+    <Compile Remove="Migrations\20200903143453_changedindexes.Designer.cs" />
+    <Compile Remove="Migrations\20200903143836_changedindexes.cs" />
+    <Compile Remove="Migrations\20200903143836_changedindexes.Designer.cs" />
+    <Compile Remove="Migrations\20200903144500_changedindexes.cs" />
+    <Compile Remove="Migrations\20200903144500_changedindexes.Designer.cs" />
+    <Compile Remove="Migrations\20200903145106_changedindexes.cs" />
+    <Compile Remove="Migrations\20200903145106_changedindexes.Designer.cs" />
+    <Compile Remove="Migrations\20200903204422_changedindexes.cs" />
+    <Compile Remove="Migrations\20200903204422_changedindexes.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />

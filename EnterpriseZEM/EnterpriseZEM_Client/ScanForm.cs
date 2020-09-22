@@ -230,6 +230,11 @@ namespace EnterpriseZEM_Client
                 komplet_label.ForeColor = Color.Red;
             }
 
+            if(sr.isSpecialColor)
+            {
+                panel1.BackColor = Color.FromArgb(117, 220, 255);
+            }
+
 
             datadostawystara_label.Text = sr.DataDostawy.ToShortDateString();
             datadostawynowa_label.Text = sr.DataDostawyOld.ToShortDateString();

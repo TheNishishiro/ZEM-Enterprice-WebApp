@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
             this.binLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.binCutCodeTextBox = new System.Windows.Forms.TextBox();
@@ -60,6 +61,7 @@
             // tabPage1
             // 
             this.tabPage1.AutoScroll = true;
+            this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.binLabel);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Controls.Add(this.binCutCodeTextBox);
@@ -70,6 +72,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sprawdź BIN";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(699, 3);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(40, 17);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "1.1.3";
             // 
             // binLabel
             // 
@@ -203,5 +214,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DateTimePicker missingDateTimePicker;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }

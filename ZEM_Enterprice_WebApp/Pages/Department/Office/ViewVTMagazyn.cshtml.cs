@@ -134,17 +134,20 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             if (Filter_Wiazka != null)
             {
                 var options = Filter_Wiazka.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Wiazka));
+                foreach (var option in options)
+                    query = query.Where(c => c.Wiazka.Contains(option));
             }
             if (Filter_KodCiety != null)
             {
                 var options = Filter_KodCiety.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.KodCiety));
+                foreach (var option in options)
+                    query = query.Where(c => c.KodCiety.Contains(option));
             }
             if (Filter_Pracownik != null)
             {
                 var options = Filter_Pracownik.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Pracownik));
+                foreach (var option in options)
+                    query = query.Where(c => c.Pracownik.Contains(option));
             }
             if (Filter_DokDostawy != null)
             {
@@ -175,7 +178,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             if (Filter_Uwagi != null)
             {
                 var options = Filter_Uwagi.Split(separator).Select(c => c.Trim());
-                query = query.Where(c => options.Contains(c.Uwagi));
+                foreach (var option in options)
+                    query = query.Where(c => c.Uwagi.Contains(option));
             }
             if (Filter_Komplet != null)
             {

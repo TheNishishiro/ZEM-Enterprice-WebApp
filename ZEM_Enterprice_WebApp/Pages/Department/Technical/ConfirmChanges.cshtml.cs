@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ZEM_Enterprice_WebApp.Data;
 using ZEM_Enterprice_WebApp.Data.Tables;
+using ZEM_Enterprice_WebApp.Utilities;
 
 namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
 {
@@ -60,20 +61,9 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Technical
                 });
             }
         }
-
         public async Task<IActionResult> OnPostDownloadCsvAsync()
         {
-            StringBuilder sb = new StringBuilder();
-            MemoryStream ms = new MemoryStream();
-            var writer = new StreamWriter(ms);
-            writer.AutoFlush = true;
-            var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-            csv.WriteRecords(await _db.PendingChangesTechnical.ToListAsync());
-            await ms.FlushAsync();
-            await csv.FlushAsync();
-            ms.Position = 0;
-
-            return File(ms, "text/csv", "powtorzenia.csv");
+            return File(await CSVDownloader.OnPostDownloadCsvAsync(_db, _db.PendingChangesTechnical.AsQueryable()), "text/csv", "powtorzenia.csv");
         }
 
         public async Task<IActionResult> OnPostAcceptChangesAsync()

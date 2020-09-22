@@ -16,6 +16,7 @@ namespace ZEM_Enterprice_WebApp.Utilities
         Office,
         Magazyn,
         Produkcja,
+        Zarzadzanie_Skanami
     }
 
     public enum DefaultRequirements

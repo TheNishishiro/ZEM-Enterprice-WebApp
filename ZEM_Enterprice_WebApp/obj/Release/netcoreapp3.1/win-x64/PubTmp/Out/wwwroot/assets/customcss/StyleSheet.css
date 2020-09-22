@@ -1,0 +1,7 @@
+﻿@page {
+    size: landscape;
+}
+
+#orientation {
+    writing-mode: tb-rl;
+}
