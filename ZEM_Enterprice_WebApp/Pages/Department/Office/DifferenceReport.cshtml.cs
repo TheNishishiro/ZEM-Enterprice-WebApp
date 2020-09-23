@@ -72,7 +72,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 //List<VTMagazyn> vtEntries2 = _db.VTMagazyn.AsNoTracking().Where(c => c.KodCiety == dostawaEntry.Kod && c.DataDostawy.Date == ForDate.Date || (c.DataDopisu != null && ((DateTime)c.DataDopisu).Date == ForDate.Date)).Include(c => c.Dostawy).ToList();
                 if(dostawaEntry.Skany != null)
                     foreach (var skan in dostawaEntry.Skany)
-                        vtEntries.Add(skan);
+                        if(skan.Deklarowany)
+                            vtEntries.Add(skan);
 
                 string BIN = dostawaEntry.Technical.BIN;
 
@@ -203,6 +204,8 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 differencesFiltered = differences.Where(c => c.Value.Zeskanowanych - c.Value.Deklarowanych > 0).ToDictionary(c => c.Key, c => c.Value);
             else
                 differencesFiltered = differences;
+
+            differencesFiltered = differencesFiltered.OrderBy(c => c.Key).ToDictionary(c => c.Key, c => c.Value);
         }
         public StringBuilder CreateFile()
         {

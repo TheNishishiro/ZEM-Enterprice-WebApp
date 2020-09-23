@@ -4,6 +4,8 @@
 	* Poprawiono: Lista użytkowników używała starego typu tabel
 	* Poprawiono: Pole daty przy wgrywaniu dostawy ustawiane było na 01-01-0001
 	* Naprawiono: Etykiety były drukowane do każdego skanu nawet jeśli wiązka rozbita była na jedynie 2 BINy
+	* Naprawiono: Przewód oddeklarowany liczony był podwójnie w wykazie różnic
+	* Dodano: Różnice sortują wyniki po kodzie ciętym przewodu
 
 18.09.2020
 	* Naprawiono: Pojedyncze przewody wyświetlane były w analizie jako komplet mimo bycia niekompletnym skanem

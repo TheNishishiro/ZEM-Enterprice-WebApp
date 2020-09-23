@@ -295,7 +295,7 @@ namespace ZEM_Enterprice_WebApp.API
                 response.print = true;
                 response.isSpecialColor = false;
             }
-            if (VTFuncs.shouldPrintSpecial(sc))//_db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct().Count() > 1)
+            if (VTFuncs.shouldPrintSpecial(sc))
             {
                 response.print = true;
                 response.isSpecialColor = true;

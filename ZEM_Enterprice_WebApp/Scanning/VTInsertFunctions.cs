@@ -282,7 +282,10 @@ namespace ZEM_Enterprice_WebApp.Scanning
                 c.Technical.BIN == sc.BIN &&
                 c.NumerKompletu == sc.NumerKompletu &&
                 c.KodCiety != sc.kodCiety).FirstOrDefault();
-            if (scan != null)
+
+            var technical = _db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct();
+
+            if (scan != null || technical.Count() == 1)
                 return false;
 
             return true;
