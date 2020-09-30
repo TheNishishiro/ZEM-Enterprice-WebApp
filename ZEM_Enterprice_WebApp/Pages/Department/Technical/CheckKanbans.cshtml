@@ -1,9 +1,9 @@
 ﻿@page "{CurrentPage?}"
 @using System.Globalization
-@model ZEM_Enterprice_WebApp.Pages.Department.Technical.CheckMissingModel
+@model ZEM_Enterprice_WebApp.Pages.Department.Technical.CheckKanbansModel
 @{
-    ViewData["Title"] = "Brakujące kody";
-    ViewData["ResetLink"] = "/Department/Technical/CheckMissing";
+    ViewData["Title"] = "Skanowane Kanban";
+    ViewData["ResetLink"] = "/Department/Technical/CheckKanbans";
 }
 
 <div class="login-clean">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit">
+                    <button class="btn btn-primary btn-block" id="filter-confirm-button" type="submit" asp-route-CurrentPage="1">
                         Akceptuj
                     </button>
                 </div>
@@ -50,6 +50,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>Wiązka</th>
                     <th>Kod</th>
                     <th>Data Dodania</th>
                     <th>Użytkownik</th>
@@ -59,11 +60,12 @@
                 @foreach (var record in Model.Data)
                 {
                     <tr>
-                        <td>@record.Kod</td>
+                        <td>@record.Wiazka</td>
+                        <td>@record.Kod (KANBAN)</td>
                         <td>@record.DataDodania.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</td>
                         <td>@record.User</td>
                         <td>
-                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.Kod" class="btn btn-sm btn-danger">
+                            <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.ScannedKanbanId" class="btn btn-sm btn-danger">
                                 Usuń
                             </button>
                         </td>
@@ -76,7 +78,7 @@
     <div>
         <ul class="pagination">
             <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
-                <a asp-page="/Department/Technical/CheckMissing"
+                <a asp-page="/Department/Technical/CheckKanbans"
                    asp-route-CurrentPage="1"
                    asp-route-Filter_Wiazka="@Model.Filter_Date"
                    asp-route-SortColumn="@Model.SortColumn"
@@ -85,7 +87,7 @@
             </li>
 
             <li class="page-item @(!Model.Data.HasPreviousPage? "disabled":"")">
-                <a asp-page="/Department/Technical/CheckMissing"
+                <a asp-page="/Department/Technical/CheckKanbans"
                    asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
                    asp-route-Filter_Wiazka="@Model.Filter_Date"
                    asp-route-SortColumn="@Model.SortColumn"
@@ -93,7 +95,7 @@
                    class="page-link">Poprzednia</a>
             </li>
             <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
-                <a asp-page="/Department/Technical/CheckMissing"
+                <a asp-page="/Department/Technical/CheckKanbans"
                    asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
                    asp-route-Filter_Wiazka="@Model.Filter_Date"
                    asp-route-SortColumn="@Model.SortColumn"
@@ -102,7 +104,7 @@
             </li>
 
             <li class="page-item  @(!Model.Data.HasNextPage? "disabled":"")">
-                <a asp-page="/Department/Technical/CheckMissing"
+                <a asp-page="/Department/Technical/CheckKanbans"
                    asp-route-CurrentPage="@Model.Data.TotalPages"
                    asp-route-Filter_Wiazka="@Model.Filter_Date"
                    asp-route-SortColumn="@Model.SortColumn"

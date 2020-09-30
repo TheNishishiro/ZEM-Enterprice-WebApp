@@ -20,6 +20,8 @@
     <Compile Remove="Migrations\20200903145106_changedindexes.Designer.cs" />
     <Compile Remove="Migrations\20200903204422_changedindexes.cs" />
     <Compile Remove="Migrations\20200903204422_changedindexes.Designer.cs" />
+    <Compile Remove="Migrations\20200924104254_scannedkanbans.cs" />
+    <Compile Remove="Migrations\20200924104254_scannedkanbans.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

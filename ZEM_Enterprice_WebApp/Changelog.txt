@@ -1,4 +1,13 @@
-﻿22.09.2020
+﻿29.09.2020
+	* Dodano: Nieklastrowane indeksty w tabeli VTMagazyn, Dostawa i Technical
+	* Poprawiono: Zakładanie filtra nie przenosiło uzytkownika na pierwszą stronę tabeli
+
+24.09.2020
+	* Dodano: Stronę do przeglądania zeskanowanych przewodów kanban
+	* Naprawiono: Zmiana numeru strony w przeglądzie brakujących skanów zmieniała stronę na przegląd wykazu VT
+	* Dodano: Opcję resetuj widok dla brakujących skanów
+
+22.09.2020
 	* Dodano: Nowa rola do zarządzania skanami (usuwania i edytowania)
 	* Poprawiono: Okna panelu użytkownika były za małe, powiększono
 	* Poprawiono: Lista użytkowników używała starego typu tabel

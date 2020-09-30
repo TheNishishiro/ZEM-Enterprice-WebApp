@@ -19,7 +19,7 @@ namespace ZEM_Enterprice_WebApp.Data
         public DbSet<VtToDostawa> VtToDostawa { get; set; }
         public DbSet<PendingDostawa> PendingDostawa { get; set; }
         public DbSet<ScanCache> ScanCache { get; set; }
-
+        public DbSet<ScannedKanban> ScannedKanbans { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -31,6 +31,10 @@ namespace ZEM_Enterprice_WebApp.Data
                 .HasOne(d => d.Technical)
                 .WithMany(c => c.VTMagazyns)
                 .IsRequired();
+
+            builder.Entity<VTMagazyn>().HasIndex(c=>c.VTMagazynId).IncludeProperties(c => new { c.KodCiety, c.Wiazka, c.DataDostawy });
+            builder.Entity<Technical>().HasIndex(c=>c.CietyWiazka).IncludeProperties(c => new { c.PrzewodCiety, c.Wiazka, c.BIN });
+            builder.Entity<Dostawa>().HasIndex(c => c.DostawaId).IncludeProperties(c => new { c.Data, c.Kod });
 
             builder.Entity<Dostawa>()
                 .HasOne(d => d.Technical)

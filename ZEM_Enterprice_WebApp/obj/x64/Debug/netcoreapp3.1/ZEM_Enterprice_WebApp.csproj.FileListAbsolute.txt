@@ -477,3 +477,4 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Debug\netcoreapp3.1\ZEM_Enterprice_WebApp.csprojAssemblyReference.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Debug\netcoreapp3.1\Razor\Pages\Manager\AdminManager\SupplyArchive.cshtml.g.cs
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\x64\Debug\netcoreapp3.1\Changelog.txt
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\x64\Debug\netcoreapp3.1\Razor\Pages\Department\Technical\CheckKanbans.cshtml.g.cs

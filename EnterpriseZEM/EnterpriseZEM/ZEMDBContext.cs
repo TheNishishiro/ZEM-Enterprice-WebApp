@@ -18,6 +18,7 @@ namespace EnterpriseZEM
         public DbSet<PendingChangesTechnical> PendingChangesTechnical { get; set; }
         public DbSet<MissingFromTech> MissingFromTech { get; set; }
         public DbSet<ScanCache> ScanCache { get; set; }
+        public DbSet<ScannedKanban> ScannedKanbans { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(Settings.Properties[FieldTypes.ConnectionString.ToString()]).EnableSensitiveDataLogging();

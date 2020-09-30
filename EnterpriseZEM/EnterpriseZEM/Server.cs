@@ -100,6 +100,11 @@ namespace EnterpriseZEM
                 }
                 else if (techEntry.KanBan == true)
                 {
+                    if (_db.ScannedKanbans.FirstOrDefault(c => c.Kod == sc.kodCiety && c.Wiazka == techEntry.Wiazka) == null)
+                    {
+                        _db.ScannedKanbans.Add(new ScannedKanban { DataDodania = sc.dataDoskanowania, Kod = sc.kodCiety, Wiazka = techEntry.Wiazka, User = sc.User });
+                        _db.SaveChanges();
+                    }
                     response.Header = HeaderTypes.error;
                     response.Flag = FlagType.isKanban;
                     return response;

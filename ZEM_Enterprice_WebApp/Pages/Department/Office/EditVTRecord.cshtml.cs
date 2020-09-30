@@ -182,7 +182,6 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 _db.Update(rec);
                 await _db.SaveChangesAsync();
             }
-
             await OnGetAsync(id);
 
             return Page();

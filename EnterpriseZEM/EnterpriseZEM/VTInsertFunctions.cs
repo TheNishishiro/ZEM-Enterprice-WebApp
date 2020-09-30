@@ -286,7 +286,7 @@ namespace EnterpriseZEM
 
             var technical = _db.Technical.AsNoTracking().Where(c => c.Wiazka == sc.Wiazka).Select(c => c.BIN).Distinct();
 
-            if (scan != null && technical.Count() > 1)
+            if (scan != null || technical.Count() == 1)
                 return false;
 
             return true;

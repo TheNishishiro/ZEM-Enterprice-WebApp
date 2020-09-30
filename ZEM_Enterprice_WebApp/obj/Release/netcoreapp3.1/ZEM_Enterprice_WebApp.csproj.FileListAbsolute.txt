@@ -949,3 +949,4 @@ D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\R
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Release\netcoreapp3.1\ZEM_Enterprice_WebApp.genruntimeconfig.cache
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Release\netcoreapp3.1\Razor\Pages\Manager\AdminManager\SupplyArchive.cshtml.g.cs
 D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\bin\Release\netcoreapp3.1\Changelog.txt
+D:\Programming\C_sharp\ZEM_Enterprice_WebApp_Release\ZEM_Enterprice_WebApp\obj\Release\netcoreapp3.1\Razor\Pages\Department\Technical\CheckKanbans.cshtml.g.cs
