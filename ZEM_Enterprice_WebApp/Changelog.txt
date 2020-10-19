@@ -1,4 +1,10 @@
-﻿29.09.2020
+﻿5.10.2020
+	* Dodano: Opcja filtrowania kodem wiązki i literą rodziny w magazynie i dostawach
+
+1.10.2020
+	* Naprawiono: Różnice liczyły uzupełnienie niedeklarowanym skanem deklarowanego podwójnie
+
+29.09.2020
 	* Dodano: Nieklastrowane indeksty w tabeli VTMagazyn, Dostawa i Technical
 	* Poprawiono: Zakładanie filtra nie przenosiło uzytkownika na pierwszą stronę tabeli
 

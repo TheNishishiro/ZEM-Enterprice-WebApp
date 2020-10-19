@@ -43,6 +43,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         [Display(Name = "Wiązka")]
         public string Filter_Wiazka { get; set; }
         [BindProperty(SupportsGet = true)]
+        [Display(Name = "Litera rodziny")]
+        public string Filter_LiteraRodziny { get; set; }
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Kod wiązki")]
+        public string Filter_KodWiazki { get; set; }
+        [BindProperty(SupportsGet = true)]
         [Display(Name = "Ilość")]
         public int? Filter_Ilosc { get; set; } 
         [BindProperty(SupportsGet = true)]
@@ -80,6 +86,16 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             {
                 var options = Filter_Wiazka.Split(separator).Select(c => c.Trim());
                 query = query.Where(c => options.Contains(c.Technical.Wiazka));
+            }
+            if (Filter_LiteraRodziny != null)
+            {
+                var options = Filter_LiteraRodziny.Split(separator).Select(c => c.Trim());
+                query = query.Where(c => options.Contains(c.Technical.LiterRodziny));
+            }
+            if (Filter_KodWiazki != null)
+            {
+                var options = Filter_KodWiazki.Split(separator).Select(c => c.Trim());
+                query = query.Where(c => options.Contains(c.Technical.KodWiazki));
             }
             if (Filter_Ilosc != null)
                 query = query.Where(c => c.Ilosc == Filter_Ilosc);

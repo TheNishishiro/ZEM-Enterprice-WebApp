@@ -36,6 +36,11 @@
                         <input class="form-control" asp-for="@Model.Filter_KodCiety">
                         <label asp-for="@Model.Filter_Wiazka"></label>
                         <input class="form-control" asp-for="@Model.Filter_Wiazka">
+
+                        <label asp-for="@Model.Filter_KodWiazki"></label>
+                        <input class="form-control" asp-for="@Model.Filter_KodWiazki">
+                        <label asp-for="@Model.Filter_LiteraRodziny"></label>
+                        <input class="form-control" asp-for="@Model.Filter_LiteraRodziny">
                     </div>
                     <div class="col">
                         <label asp-for="@Model.Filter_DataDostawyTo"></label>
@@ -137,6 +142,8 @@
                         <button type="submit" asp-page-handler="DeleteRecord" asp-route-id="@record.VTMagazynId" class="btn btn-sm btn-danger"
                                 asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                                 asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                                asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                                asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                                 asp-route-Filter_Wiazka="@Model.Filter_NumerKompletu"
                                 asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                                 asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
@@ -172,6 +179,8 @@
                    asp-route-CurrentPage="1"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                    asp-route-Filter_Wiazka="@Model.Filter_NumerKompletu"
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
@@ -196,6 +205,8 @@
                    asp-route-CurrentPage="@(Model.Data.PageIndex -1)"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
@@ -219,6 +230,8 @@
                    asp-route-CurrentPage="@(Model.Data.PageIndex + 1)"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
@@ -243,6 +256,8 @@
                    asp-route-CurrentPage="@Model.Data.TotalPages"
                    asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                    asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                   asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                   asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                    asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
                    asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                    asp-route-Filter_Pracownik="@Model.Filter_Pracownik"
@@ -268,6 +283,8 @@
                     asp-route-CurrentPage="@Model.Data.PageIndex"
                     asp-route-Filter_NumerKompletu="@Model.Filter_NumerKompletu"
                     asp-route-Filter_SztukiZeskanowane="@Model.Filter_SztukiZeskanowane"
+                    asp-route-Filter_LiteraRodziny="@Model.Filter_LiteraRodziny"
+                    asp-route-Filter_KodWiazki="@Model.Filter_KodWiazki"
                     asp-route-Filter_Wiazka="@Model.Filter_Wiazka"
                     asp-route-Filter_KodCiety="@Model.Filter_KodCiety"
                     asp-route-Filter_Pracownik="@Model.Filter_Pracownik"

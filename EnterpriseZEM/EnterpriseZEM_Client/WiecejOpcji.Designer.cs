@@ -80,7 +80,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(40, 17);
             this.label4.TabIndex = 3;
-            this.label4.Text = "1.1.3";
+            this.label4.Text = "1.1.4";
             // 
             // binLabel
             // 

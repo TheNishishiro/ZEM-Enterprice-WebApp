@@ -63,7 +63,12 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Dokument dostawy dopis")]
         public string Filter_DokDostawyDopis { get; set; }
-
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Litera rodziny")]
+        public string Filter_LiteraRodziny { get; set; }
+        [BindProperty(SupportsGet = true)]
+        [Display(Name = "Kod wiązki")]
+        public string Filter_KodWiazki { get; set; }
         #region DATY
         [BindProperty(SupportsGet = true)]
         [Display(Name = "Data utworzenia od")]
@@ -118,9 +123,18 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
             completeFilter = new SelectList(filterOptions);
             declaredFilter = new SelectList(filterOptions);
 
-            var query = _db.VTMagazyn.AsNoTracking().AsQueryable();
+            var query = _db.VTMagazyn.AsNoTracking().Include(c=>c.Technical).AsNoTracking().AsQueryable();
             char separator = ',';
-
+            if (Filter_LiteraRodziny != null)
+            {
+                var options = Filter_LiteraRodziny.Split(separator).Select(c => c.Trim());
+                query = query.Where(c => options.Contains(c.Technical.LiterRodziny));
+            }
+            if (Filter_KodWiazki != null)
+            {
+                var options = Filter_KodWiazki.Split(separator).Select(c => c.Trim());
+                query = query.Where(c => options.Contains(c.Technical.KodWiazki));
+            }
             if (Filter_NumerKompletu != null)
             {
                 var options = Filter_NumerKompletu.Split(separator).Select(c => int.Parse(c.Trim()));

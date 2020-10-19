@@ -335,10 +335,11 @@
             // kodwiazki_label
             // 
             this.kodwiazki_label.AutoSize = true;
+            this.kodwiazki_label.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.kodwiazki_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.kodwiazki_label.Location = new System.Drawing.Point(119, 396);
             this.kodwiazki_label.Name = "kodwiazki_label";
-            this.kodwiazki_label.Size = new System.Drawing.Size(239, 54);
+            this.kodwiazki_label.Size = new System.Drawing.Size(241, 56);
             this.kodwiazki_label.TabIndex = 21;
             this.kodwiazki_label.Text = "kod wiazki";
             // 
