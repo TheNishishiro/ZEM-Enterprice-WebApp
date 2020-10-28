@@ -76,19 +76,19 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(699, 3);
+            this.label4.Location = new System.Drawing.Point(874, 4);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(40, 17);
+            this.label4.Size = new System.Drawing.Size(50, 21);
             this.label4.TabIndex = 3;
-            this.label4.Text = "1.1.4";
+            this.label4.Text = "1.1.5";
             // 
             // binLabel
             // 
             this.binLabel.AutoSize = true;
             this.binLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.binLabel.Location = new System.Drawing.Point(151, 246);
+            this.binLabel.Location = new System.Drawing.Point(189, 308);
             this.binLabel.Name = "binLabel";
-            this.binLabel.Size = new System.Drawing.Size(147, 69);
+            this.binLabel.Size = new System.Drawing.Size(184, 86);
             this.binLabel.TabIndex = 2;
             this.binLabel.Text = "BIN:";
             // 
@@ -96,17 +96,17 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 22.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(250, 78);
+            this.label1.Location = new System.Drawing.Point(313, 98);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(195, 44);
+            this.label1.Size = new System.Drawing.Size(244, 55);
             this.label1.TabIndex = 1;
             this.label1.Text = "Kod Cięty:";
             // 
             // binCutCodeTextBox
             // 
-            this.binCutCodeTextBox.Location = new System.Drawing.Point(172, 139);
+            this.binCutCodeTextBox.Location = new System.Drawing.Point(137, 112);
             this.binCutCodeTextBox.Name = "binCutCodeTextBox";
-            this.binCutCodeTextBox.Size = new System.Drawing.Size(345, 22);
+            this.binCutCodeTextBox.Size = new System.Drawing.Size(276, 18);
             this.binCutCodeTextBox.TabIndex = 0;
             this.binCutCodeTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.binCutCodeTextBox_KeyDown);
             // 

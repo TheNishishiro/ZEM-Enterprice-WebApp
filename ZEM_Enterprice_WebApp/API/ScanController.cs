@@ -43,7 +43,7 @@ namespace ZEM_Enterprice_WebApp.API
                 return missingCodes;
             }
             var wiazka = techEntry.Wiazka;
-            var SetIDs = vTInsert.GetCompleteID(new ScannedCode { kodCiety = cutcode, dataDostawyOld = deliveryDate });
+            var SetIDs = vTInsert.GetSetIDsForBundle(new ScannedCode { Wiazka = wiazka, dataDostawyOld = deliveryDate });
             if (SetIDs.Count() == 0)
                 SetIDs.Add(0);
 

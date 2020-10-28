@@ -179,6 +179,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                 rec.wymuszonaIlosc = Input.isForcedDeclared;
                 rec.NaKomplet = Input.NaKomplet;
                 rec.ZeskanowanychNaKomplet = Input.ZeskanowanychNaKomplet;
+                rec.DataDostawy = Input.DeliveryDate;
                 _db.Update(rec);
                 await _db.SaveChangesAsync();
             }
@@ -250,6 +251,7 @@ namespace ZEM_Enterprice_WebApp.Pages.Department.Office
                     rec.wymuszonaIlosc = Input.isForcedDeclared;
                     rec.NaKomplet = Input.NaKomplet;
                     rec.ZeskanowanychNaKomplet = Input.ZeskanowanychNaKomplet;
+                    rec.DataDostawy = Input.DeliveryDate;
                     _db.Update(rec);
                 }
                 

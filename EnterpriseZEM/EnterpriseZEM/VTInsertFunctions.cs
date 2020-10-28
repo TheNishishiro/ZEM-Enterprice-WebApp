@@ -275,6 +275,18 @@ namespace EnterpriseZEM
             }
         }
 
+        public List<int> GetSetIDsForBundle(ScannedCode scanned)
+        {
+            try
+            {
+                return _db.VTMagazyn.AsNoTracking().Where(c => c.Wiazka == scanned.Wiazka && c.DataDostawy.Date == scanned.dataDostawyOld.Date).Select(c => c.NumerKompletu).Distinct().ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<int>();
+            }
+        }
+
         public bool shouldPrintSpecial(ScannedCode sc)
         {
             var scan = _db.VTMagazyn.Include(c => c.Technical).Where(

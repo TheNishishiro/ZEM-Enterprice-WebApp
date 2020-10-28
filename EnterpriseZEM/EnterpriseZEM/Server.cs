@@ -287,7 +287,7 @@ namespace EnterpriseZEM
                     return response;
                 }
                 var wiazka = techEntry.Wiazka;
-                var SetIDs = vTInsert.GetCompleteID(new ScannedCode { kodCiety = cutcode, dataDostawyOld = date });
+                var SetIDs = vTInsert.GetSetIDsForBundle(new ScannedCode { Wiazka = wiazka, dataDostawyOld = date });
                 if (SetIDs.Count() == 0)
                     SetIDs.Add(0);
 
