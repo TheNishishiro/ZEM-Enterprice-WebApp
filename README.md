@@ -1,7 +1,7 @@
 # ZEM Enterprice WebApp
 A web application written in ASP .NET Core 3.1 for managing scanning for a company.
 
-It's my first ever ASP .NET Core and .NET Core in general application so I probably butchered it a bunch, I never really done and JS or CSS so there is that as well! :D
+It's my first ever ASP .NET Core and .NET Core in general application so I probably butchered it a bunch, I never really done any JS or CSS so there is that as well! :D
 
 ## About
 
